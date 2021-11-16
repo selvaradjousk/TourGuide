@@ -23,7 +23,6 @@ public class TourGuideService implements ITourGuideService {
 
 
 
-
 	private Logger logger = LoggerFactory
 			.getLogger(TourGuideService.class);
 
@@ -33,6 +32,7 @@ public class TourGuideService implements ITourGuideService {
 	public final Tracker tracker;
 	boolean testMode = true;
 
+	
 	private InternalTestHelper internalTestHelper
 						= new InternalTestHelper();
 
@@ -41,18 +41,18 @@ public class TourGuideService implements ITourGuideService {
 	// ##############################################################
 
 
-	public TourGuideService(
-			GpsUtil gpsUtil,
-			RewardsService rewardsService,
-			Tracker tracker,
-			InternalTestHelper internalTestHelper) {
-
-		super();
-		this.gpsUtil = gpsUtil;
-		this.rewardsService = rewardsService;
-		this.tracker = tracker;
-		this.internalTestHelper = internalTestHelper;
-	}
+//	public TourGuideService(
+//			GpsUtil gpsUtil,
+//			RewardsService rewardsService,
+//			Tracker tracker,
+//			InternalTestHelper internalTestHelper) {
+//
+//		super();
+//		this.gpsUtil = gpsUtil;
+//		this.rewardsService = rewardsService;
+//		this.tracker = tracker;
+//		this.internalTestHelper = internalTestHelper;
+//	}
 
 
 
@@ -69,14 +69,24 @@ public class TourGuideService implements ITourGuideService {
 
 
 		if(testMode) {
+
 			logger.info("TestMode enabled");
+
 			logger.debug("Initializing users");
+
 			internalTestHelper.initializeInternalUsers();
+
 			logger.debug("Finished initializing users");
 		}
 
 		tracker = new Tracker(this);
+
+		logger.info("## Tracker instance initiated");
+
 		addShutDownHook();
+
+		logger.info("## addShutDownHook() called");
+
 	}
 
 
@@ -87,6 +97,10 @@ public class TourGuideService implements ITourGuideService {
 
 	@Override
 	public List<UserReward> getUserRewards(User user) {
+
+		logger.info("## getUserRewards list for"
+				+ " user {} retrieved ", user );
+
 		return user.getUserRewards();
 	}
 
@@ -99,10 +113,15 @@ public class TourGuideService implements ITourGuideService {
 	@Override
 	public VisitedLocation getUserLocation(User user) {
 
+		logger.info("## getUserLocation for user {} invoked ", user );
+
 		VisitedLocation visitedLocation
 				= (user.getVisitedLocations().size() > 0) ?
 						user.getLastVisitedLocation() :
 							trackUserLocation(user);
+
+		logger.info("## Visited Location for"
+				+ " user {} is: {} ", user, visitedLocation);
 
 		return visitedLocation;
 	}
@@ -115,6 +134,8 @@ public class TourGuideService implements ITourGuideService {
 
 	@Override
 	public User getUser(String userName) {
+
+		logger.info("## getUser() for user {} invoked ", userName );
 
 		return internalTestHelper
 				.internalUserMap
@@ -129,6 +150,8 @@ public class TourGuideService implements ITourGuideService {
 
 	@Override
 	public List<User> getAllUsers() {
+
+		logger.info("## getAllUser() method invoked");
 
 		return internalTestHelper
 				.internalUserMap
@@ -146,9 +169,15 @@ public class TourGuideService implements ITourGuideService {
 	@Override
 	public void addUser(User user) {
 
+		logger.info("## addUser() for user {} invoked ", user );
+
 		if(!internalTestHelper
 				.internalUserMap
 				.containsKey(user.getUserName())) {
+
+			logger.info("## addUser() for"
+					+ " user {} gets added"
+					+ " to map ", user.getUserName() );
 
 			internalTestHelper
 			.internalUserMap.put(
@@ -166,11 +195,18 @@ public class TourGuideService implements ITourGuideService {
 	@Override
 	public List<Provider> getTripDeals(User user) {
 
-		int cumulatativeRewardPoints = user
+		logger.info("## getTripDeals() method for"
+				+ " user {} invoked", user);
+
+		int cumulativeRewardPoints = user
 				.getUserRewards()
 				.stream()
 				.mapToInt(i -> i.getRewardPoints())
 				.sum();
+
+		logger.info("## cumulative points for"
+				+ " user {} : {}", user.getUserName(), cumulativeRewardPoints);
+
 
 		List<Provider> providers = tripPricer.getPrice(
 				internalTestHelper
@@ -179,9 +215,16 @@ public class TourGuideService implements ITourGuideService {
 				user.getUserPreferences().getNumberOfAdults(), 
 				user.getUserPreferences().getNumberOfChildren(),
 				user.getUserPreferences().getTripDuration(),
-				cumulatativeRewardPoints);
+				cumulativeRewardPoints);
+
+		logger.info("## Providers for"
+				+ " user {} : {}", user.getUserName(), providers);
+
 
 		user.setTripDeals(providers);
+
+		logger.info("## TripDeals for"
+				+ " user {} : {}", user.getUserName(), user.getTripDeals());
 
 		return providers;
 	}
@@ -195,8 +238,14 @@ public class TourGuideService implements ITourGuideService {
 	@Override
 	public VisitedLocation trackUserLocation(User user) {
 
+		logger.info("## trackUserLocation() for"
+				+ " user {} invoked", user.getUserName());
+
 		VisitedLocation visitedLocation
 					= gpsUtil.getUserLocation(user.getUserId());
+
+		logger.info("## visitedLocation for"
+				+ " user {} : {}", user.getUserName(), visitedLocation);
 
 		user.addToVisitedLocations(visitedLocation);
 
@@ -215,6 +264,9 @@ public class TourGuideService implements ITourGuideService {
 	public List<Attraction> getNearByAttractions(
 			VisitedLocation visitedLocation) {
 
+		logger.info("## getNearByAttractions() for"
+				+ " visitedLocation - {} called", visitedLocation);
+
 		List<Attraction> nearbyAttractions = new ArrayList<>();
 
 		for(Attraction attraction : gpsUtil.getAttractions()) {
@@ -226,6 +278,11 @@ public class TourGuideService implements ITourGuideService {
 				nearbyAttractions.add(attraction);
 
 			}
+
+			logger.info("## NearByAttractions for"
+					+ " visitedLocation - {}"
+					+ " : {}", visitedLocation, nearbyAttractions);
+
 		}
 		
 		return nearbyAttractions;
@@ -239,12 +296,17 @@ public class TourGuideService implements ITourGuideService {
 
 	private void addShutDownHook() {
 
+		logger.info("## addShutDownHook invoked ");
+
 		Runtime.getRuntime().addShutdownHook(new Thread() { 
 
 			public void run() {
 		        tracker.stopTracking();
 
-			} 
+				logger.info("## tracker.stopTracking invoked ");
+
+			}
+
 		}); 
 	}
 

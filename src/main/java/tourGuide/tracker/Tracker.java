@@ -47,8 +47,12 @@ public class Tracker extends Thread {
 	 */
 	public void stopTracking() {
 
+		logger.info("stropTracking Called");
+
 		stop = true;
 		executorService.shutdownNow();
+
+		logger.info("shutdownNow executed = {}", stop);
 
 	}
 
@@ -59,6 +63,8 @@ public class Tracker extends Thread {
 
 	@Override
 	public void run() {
+
+		logger.info("Run Tracker invoked");
 
 		StopWatch stopWatch = new StopWatch();
 
@@ -78,15 +84,23 @@ public class Tracker extends Thread {
 
 			stopWatch.start();
 
+			logger.info("stopWatch starts");
+
 			users.forEach(u -> tourGuideService.trackUserLocation(u));
 
+			logger.info("tracking user size : {} ", users.size());
+
 			stopWatch.stop();
+
+			logger.info("stopwatch stops");
 
 			logger.debug("Tracker Time Elapsed:"
 					+ " " + TimeUnit.MILLISECONDS
 					.toSeconds(stopWatch.getTime()) + " seconds."); 
 
 			stopWatch.reset();
+
+			logger.info("stopwatch reset");
 
 			try {
 

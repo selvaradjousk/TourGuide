@@ -1,5 +1,7 @@
 package tourGuide.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,11 +14,18 @@ import tourGuide.service.RewardsService;
 public class TourGuideModule {
 
 
+	private Logger logger = LoggerFactory
+			.getLogger(TourGuideModule.class);
+
+
 	// ##############################################################
 
 
 	@Bean
 	public GpsUtil getGpsUtil() {
+
+        logger.info("## getGpsUtil() BEAN invoked");
+
 		return new GpsUtil();
 	}
 
@@ -27,6 +36,9 @@ public class TourGuideModule {
 	
 	@Bean
 	public IRewardService getRewardsService() {
+
+        logger.info("## getRewardsService() BEAN invoked");
+
 		return new RewardsService(getGpsUtil(), getRewardCentral());
 	}
 
@@ -37,6 +49,9 @@ public class TourGuideModule {
 
 	@Bean
 	public RewardCentral getRewardCentral() {
+
+        logger.info("## getRewardCentral() BEAN invoked");
+
 		return new RewardCentral();
 	}
 

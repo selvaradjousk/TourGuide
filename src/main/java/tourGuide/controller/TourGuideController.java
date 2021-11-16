@@ -2,6 +2,8 @@ package tourGuide.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,10 +19,17 @@ import tripPricer.Provider;
 @RestController
 public class TourGuideController {
 
+
+	private Logger logger = LoggerFactory
+			.getLogger(TourGuideController.class);
+
 	@Autowired
 	ITourGuideService tourGuideService;
 
-
+    public TourGuideController(ITourGuideService tourGuideService) {
+		super();
+		this.tourGuideService = tourGuideService;
+	}
 
 
 	//###############################################################
@@ -31,9 +40,15 @@ public class TourGuideController {
 	// More info				: 
 	//###############################################################
 
-    @RequestMapping("/")
+
+
+
+	@RequestMapping("/")
     public String index() {
-        return "Greetings from TourGuide!";
+
+        logger.info("## index() page requested");
+
+		return "Greetings from TourGuide!";
     }
 
 
@@ -49,8 +64,17 @@ public class TourGuideController {
 
     @RequestMapping("/getLocation") 
     public String getLocation(@RequestParam String userName) {
-    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-		return JsonStream.serialize(visitedLocation.location);
+
+        logger.info("## getLocation() page requested"
+        		+ " for user {} : ", userName);
+
+    	VisitedLocation visitedLocation = tourGuideService
+    			.getUserLocation(getUser(userName));
+
+        logger.info("## visitedLocation {} "
+        		+ " for user {} : ", visitedLocation, userName);
+
+    	return JsonStream.serialize(visitedLocation.location);
     }
 
 
@@ -75,8 +99,18 @@ public class TourGuideController {
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @RequestMapping("/getNearbyAttractions") 
     public String getNearbyAttractions(@RequestParam String userName) {
-    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-    	return JsonStream.serialize(tourGuideService.getNearByAttractions(visitedLocation));
+
+        logger.info("## getNearbyAttractions() page requested"
+        		+ " for user {} : ", userName);
+
+    	VisitedLocation visitedLocation = tourGuideService
+    			.getUserLocation(getUser(userName));
+
+        logger.info("## visitedLocation {} "
+        		+ " for user {} : ", visitedLocation, userName);
+
+    	return JsonStream.serialize(tourGuideService
+    			.getNearByAttractions(visitedLocation));
     }
 
 
@@ -92,7 +126,11 @@ public class TourGuideController {
 
     @RequestMapping("/getRewards") 
     public String getRewards(@RequestParam String userName) {
-    	return JsonStream.serialize(tourGuideService.getUserRewards(getUser(userName)));
+
+        logger.info("## getRewards for user {} requested", userName);
+
+    	return JsonStream.serialize(tourGuideService
+    			.getUserRewards(getUser(userName)));
     }
 
 
@@ -118,6 +156,8 @@ public class TourGuideController {
     	//        "019b04a9-067a-4c76-8817-ee75088c3822": {"longitude":-48.188821,"latitude":74.84371} 
     	//        ...
     	//     }
+
+        logger.info("## getAllCurrentLocations requested");
     	
     	return JsonStream.serialize("");
     }
@@ -150,7 +190,15 @@ public class TourGuideController {
     
     @RequestMapping("/getTripDeals")
     public String getTripDeals(@RequestParam String userName) {
+
+        logger.info("## getTripDeals"
+        		+ " for user {} : ", userName);
+
     	List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
+
+        logger.info("## providers {} "
+        		+ " for user {} : ", providers.size(), userName);
+
     	return JsonStream.serialize(providers);
     }
 
@@ -170,6 +218,10 @@ public class TourGuideController {
 
     @RequestMapping("/getUser")
     private User getUser(String userName) {
+
+        logger.info("## getUser "
+        		+ " for user {} : ", userName);
+
     	return tourGuideService.getUser(userName);
     }
    
