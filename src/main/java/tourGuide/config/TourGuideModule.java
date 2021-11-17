@@ -1,5 +1,8 @@
 package tourGuide.config;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +20,14 @@ public class TourGuideModule {
 	private Logger logger = LoggerFactory
 			.getLogger(TourGuideModule.class);
 
+
+	// ##############################################################
+
+
+	@Bean
+	public ExecutorService getExecutorService() {
+		return Executors.newFixedThreadPool(1000);
+	}
 
 	// ##############################################################
 

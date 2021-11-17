@@ -1,9 +1,14 @@
 package tourGuide.service;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -27,21 +32,40 @@ public class RewardsService implements IRewardService {
 
 	// proximity in miles
     private int defaultProximityBuffer = 10;
-	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
-	private final GpsUtil gpsUtil;
+
+
+
 	private final RewardCentral rewardsCentral;
+	private final List<Attraction> attractions;
+	//	private final GpsUtil gpsUtil;
+
+
+	// ##############################################################
+
+
+	// Concurrency JDK API interface that simplifies running tasks
+	//  in asynchronous mode as threads
+    private final ExecutorService executorService = Executors
+    		.newFixedThreadPool(1000);
+    private int proximityBuffer = defaultProximityBuffer;
+
+    // Concurrency construct that allows one or more threads
+    // to wait for a given set of operations to complete
+    CountDownLatch countDownLatch = new CountDownLatch(0);
 
 
 
 	// ##############################################################
 
 
+
+    @Autowired
 	public RewardsService(
 			GpsUtil gpsUtil,
 			RewardCentral rewardCentral) {
 
-		this.gpsUtil = gpsUtil;
+		attractions =  gpsUtil.getAttractions();;
 		this.rewardsCentral = rewardCentral;
 	}
 
@@ -80,45 +104,51 @@ public class RewardsService implements IRewardService {
 	@Override
 	public void calculateRewards(User user) {
 
-		logger.info("## calculateRewards() for user {}"
-				+ " called: ", user.getUserName());
+		// Concurrency construct for thread pool is initiated
+		// for this service
+        executorService.submit(() -> {
+            user.getVisitedLocations().forEach(userlocation -> {
 
-		List<VisitedLocation> userLocations = user.getVisitedLocations();
+            	attractions.stream()
+            	
+            	// check if the visited spot is near attraction spot
+                        .filter(attractionn -> nearAttraction(
+                        		userlocation,
+                        		attractionn))
 
-		logger.info("## userLocations() for user {} : {}"
-				+ " ", user.getUserName(), userLocations);
+                        // scanning for each attractions around
+                        .forEach(attractionn -> {
 
-		List<Attraction> attractions = gpsUtil.getAttractions();
+                        	// check if user has been offered reward
+                        	// for this attraction spot
+                        	if (user.getUserRewards()
+                            		.stream()
+                            		.noneMatch(r -> r
+                            				.attraction
+                            				.attractionName
+                            				.equals(attractionn
+                            						.attractionName))) {
 
-		logger.info("## attractions() for user {} : {}"
-				+ " ", user.getUserName(), attractions);
+                        		// if not yet rewards offered
+                        		// reward is added to user's list
+                        		// along with reward points
+                            	user.addUserReward(
+                            			new UserReward(
+                            					userlocation,
+                            					attractionn,
+                            					getRewardPoints(
+                            							attractionn,
+                            							user)));
+                            }
+                        });
+            });
 
-		for(VisitedLocation visitedLocation : userLocations) {
+            // synchronizer allows one Thread to wait for one or more Threads
+            // before it starts processing - Concurrency construct
+            countDownLatch.countDown();
 
-			for(Attraction attraction : attractions) {
-				if(user
-						.getUserRewards()
-						.stream()
-						.filter(r -> r.attraction.attractionName.equals(
-								attraction.attractionName)).count() == 0) {
-
-					if(nearAttraction(visitedLocation, attraction)) {
-
-						user.addUserReward(
-								new UserReward(
-										visitedLocation,
-										attraction,
-										getRewardPoints(attraction, user)));
-
-					}
-				}
-			}
-
-			logger.info("## userRewards() for user {} : {}"
-					+ " ", user.getUserName(), user.getUserRewards());
-
-		}
-	}
+        });
+    }
 
 
 
@@ -129,13 +159,11 @@ public class RewardsService implements IRewardService {
 			Attraction attraction,
 			Location location) {
 
-		logger.info("## isWithinAttractionProximity()"
-				+ " for attraction {} & location {} called ", attraction, location);
+//		logger.info("## isWithinAttractionProximity()"
+//				+ " for attraction {} & location {} called ", attraction, location);
 
-		return getDistance(attraction, location)
-				> attractionProximityRange ?
-						false
-						: true;
+		return !(getDistance(attraction, location)
+				> attractionProximityRange);
 
 	}
 
@@ -148,16 +176,14 @@ public class RewardsService implements IRewardService {
 			VisitedLocation visitedLocation,
 			Attraction attraction) {
 
-		logger.info("## nearAttraction()"
-				+ " for attraction {} & visitedLocation"
-				+ " {} called ", attraction, visitedLocation);
+//		logger.info("## nearAttraction()"
+//				+ " for attraction {} & visitedLocation"
+//				+ " {} called ", attraction, visitedLocation);
 
-		return getDistance(
+		return !(getDistance(
 				attraction,
 				visitedLocation.location)
-				> proximityBuffer ?
-						false
-						: true;
+				> proximityBuffer);
 	}
 
 
@@ -169,8 +195,8 @@ public class RewardsService implements IRewardService {
 			Attraction attraction,
 			User user) {
 
-		logger.info("## getRewardPoints()"
-				+ " for attraction {} & user {} called ", attraction, user.getUserName());
+//		logger.info("## getRewardPoints()"
+//				+ " for attraction {} & user {} called ", attraction, user.getUserName());
 
 		return rewardsCentral
 				.getAttractionRewardPoints(
@@ -186,42 +212,61 @@ public class RewardsService implements IRewardService {
 
 	public double getDistance(Location loc1, Location loc2) {
 
-		logger.info("## getDistance location1 {}"
-				+ " & location2 {} called: ",
-				loc1, loc2);
+//		logger.info("## getDistance location1 {}"
+//				+ " & location2 {} called: ",
+//				loc1, loc2);
 
 		double lat1 = Math.toRadians(loc1.latitude);
         double lon1 = Math.toRadians(loc1.longitude);
         double lat2 = Math.toRadians(loc2.latitude);
         double lon2 = Math.toRadians(loc2.longitude);
 
-        logger.info("## latitude1: {}", lat1);
-        logger.info("## latitude2: {}", lat2);
-        logger.info("## longitude1: {}", lon1);
-        logger.info("## longitude2: {}", lon2);
+//        logger.info("## latitude1: {}", lat1);
+//        logger.info("## latitude2: {}", lat2);
+//        logger.info("## longitude1: {}", lon1);
+//        logger.info("## longitude2: {}", lon2);
 
         double angle = Math.acos(Math.sin(lat1) * Math.sin(lat2)
                                + Math.cos(lat1)
                                * Math.cos(lat2)
                                * Math.cos(lon1 - lon2));
 
-        logger.info("## angle: {}", angle);
+//        logger.info("## angle: {}", angle);
 
         double nauticalMiles = 60 * Math.toDegrees(angle);
 
-        logger.info("## nauticalMiles: {}", nauticalMiles);
+//        logger.info("## nauticalMiles: {}", nauticalMiles);
 
         double statuteMiles = STATUTE_MILES_PER_NAUTICAL_MILE
         		* nauticalMiles;
 
-        logger.info("## statuteMiles: {}", statuteMiles);
+//        logger.info("## statuteMiles: {}", statuteMiles);
 
         return statuteMiles;
 	}
 
 
 
+
+
 	// ##############################################################
 
+    // Methods used for Testing Purpose
+    @Profile("test")
+    public void rewardAndWait(List<User> users)
+    					throws InterruptedException {
+        
+    	countDownLatch = new CountDownLatch(users.size());
+
+    	users.forEach(this::calculateRewards);
+
+    	// Concurrency construct synchronizer waits Threads
+    	// for the user list size to complete the tasks
+    	countDownLatch.await();
+    }
+
+
+
+	// ##############################################################
 
 }

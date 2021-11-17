@@ -2,7 +2,6 @@ package tourGuide.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,7 @@ public class TourGuideService implements ITourGuideService {
 			.getLogger(TourGuideService.class);
 
 	private final GpsUtil gpsUtil;
-	private final RewardsService rewardsService;
+	private final IRewardService rewardsService;
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
 	boolean testMode = true;
@@ -62,7 +61,7 @@ public class TourGuideService implements ITourGuideService {
 
 	public TourGuideService(
 			GpsUtil gpsUtil,
-			RewardsService rewardsService) {
+			IRewardService rewardsService) {
 
 		this.gpsUtil = gpsUtil;
 		this.rewardsService = rewardsService;
@@ -79,7 +78,7 @@ public class TourGuideService implements ITourGuideService {
 			logger.debug("Finished initializing users");
 		}
 
-		tracker = new Tracker(this);
+		this.tracker = new Tracker(this, gpsUtil, rewardsService);
 
 		logger.info("## Tracker instance initiated");
 
@@ -113,12 +112,19 @@ public class TourGuideService implements ITourGuideService {
 	@Override
 	public VisitedLocation getUserLocation(User user) {
 
-		logger.info("## getUserLocation for user {} invoked ", user );
+		logger.info("## getUserLocation"
+				+ " for user {} invoked ", user.getUserName() );
 
-		VisitedLocation visitedLocation
-				= (user.getVisitedLocations().size() > 0) ?
-						user.getLastVisitedLocation() :
-							trackUserLocation(user);
+		VisitedLocation visitedLocation;
+
+		// get user location if not null
+		if(user.getVisitedLocations().size() > 0) {
+			visitedLocation = user.getLastVisitedLocation();
+		} else {
+			// gpsUtil used to fetch location if found null
+			visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+			user.addToVisitedLocations(visitedLocation);
+		}
 
 		logger.info("## Visited Location for"
 				+ " user {} is: {} ", user, visitedLocation);
@@ -153,11 +159,13 @@ public class TourGuideService implements ITourGuideService {
 
 		logger.info("## getAllUser() method invoked");
 
-		return internalTestHelper
-				.internalUserMap
-				.values()
-				.stream()
-				.collect(Collectors.toList());
+		return new ArrayList<>(internalTestHelper.internalUserMap.values());
+		
+//		return internalTestHelper
+//				.internalUserMap
+//				.values()
+//				.stream()
+//				.collect(Collectors.toList());
 	}
 
 
@@ -201,7 +209,8 @@ public class TourGuideService implements ITourGuideService {
 		int cumulativeRewardPoints = user
 				.getUserRewards()
 				.stream()
-				.mapToInt(i -> i.getRewardPoints())
+//				.mapToInt(i -> i.getRewardPoints())
+				.mapToInt(UserReward::getRewardPoints)
 				.sum();
 
 		logger.info("## cumulative points for"
@@ -234,26 +243,26 @@ public class TourGuideService implements ITourGuideService {
 	// ##############################################################
 
 
-
-	@Override
-	public VisitedLocation trackUserLocation(User user) {
-
-		logger.info("## trackUserLocation() for"
-				+ " user {} invoked", user.getUserName());
-
-		VisitedLocation visitedLocation
-					= gpsUtil.getUserLocation(user.getUserId());
-
-		logger.info("## visitedLocation for"
-				+ " user {} : {}", user.getUserName(), visitedLocation);
-
-		user.addToVisitedLocations(visitedLocation);
-
-		rewardsService.calculateRewards(user);
-
-		return visitedLocation;
-	}
-
+//
+//	@Override
+//	public VisitedLocation trackUserLocation(User user) {
+//
+////		logger.info("## trackUserLocation() for"
+////				+ " user {} invoked", user.getUserName());
+//
+//		VisitedLocation visitedLocation
+//					= gpsUtil.getUserLocation(user.getUserId());
+//
+////		logger.info("## visitedLocation for"
+////				+ " user {} : {}", user.getUserName(), visitedLocation);
+//
+//		user.addToVisitedLocations(visitedLocation);
+//
+//		rewardsService.calculateRewards(user);
+//
+//		return visitedLocation;
+//	}
+//
 
 
 	// ##############################################################
@@ -301,7 +310,10 @@ public class TourGuideService implements ITourGuideService {
 		Runtime.getRuntime().addShutdownHook(new Thread() { 
 
 			public void run() {
-		        tracker.stopTracking();
+
+				 if (!testMode) {
+					 tracker.stopTracking();
+				 }
 
 				logger.info("## tracker.stopTracking invoked ");
 

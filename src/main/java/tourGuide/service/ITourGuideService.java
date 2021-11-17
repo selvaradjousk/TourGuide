@@ -22,7 +22,7 @@ public interface ITourGuideService {
 
 	List<Provider> getTripDeals(User user);
 
-	VisitedLocation trackUserLocation(User user);
+//	VisitedLocation trackUserLocation(User user);
 
 	List<Attraction> getNearByAttractions(VisitedLocation visitedLocation);
 
