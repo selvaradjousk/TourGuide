@@ -191,7 +191,7 @@ public class RewardsService implements IRewardService {
 	// ##############################################################
 
 
-	private int getRewardPoints(
+	public int getRewardPoints(
 			Attraction attraction,
 			User user) {
 

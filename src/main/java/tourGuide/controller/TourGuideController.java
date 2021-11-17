@@ -97,20 +97,24 @@ public class TourGuideController {
         // The distance in miles between the user's location and each of the attractions.
         // The reward points for visiting each Attraction.
         //    Note: Attraction reward points can be gathered from RewardsCentral
-    @RequestMapping("/getNearbyAttractions") 
+    @RequestMapping("/getNearbyAttractions")
     public String getNearbyAttractions(@RequestParam String userName) {
 
         logger.info("## getNearbyAttractions() page requested"
         		+ " for user {} : ", userName);
 
-    	VisitedLocation visitedLocation = tourGuideService
-    			.getUserLocation(getUser(userName));
+//    	VisitedLocation visitedLocation = tourGuideService
+//    			.getUserLocation(getUser(userName));
+//
+//        logger.info("## visitedLocation {} "
+//        		+ " for user {} : ", visitedLocation, userName);
 
-        logger.info("## visitedLocation {} "
-        		+ " for user {} : ", visitedLocation, userName);
+//    	return JsonStream.serialize(tourGuideService
+//    			.getNearByAttractions(visitedLocation));
 
-    	return JsonStream.serialize(tourGuideService
-    			.getNearByAttractions(visitedLocation));
+        return JsonStream.serialize(tourGuideService
+        		.getUserAttractionRecommendation(userName));
+
     }
 
 

@@ -1,8 +1,11 @@
 package tourGuide.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +15,8 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import tourGuide.dto.NearbyAttraction;
+import tourGuide.dto.UserAttractionRecommendation;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
@@ -189,7 +194,6 @@ public class TourGuideService implements ITourGuideService {
 
 	}
 
-
 	// ##############################################################
 
 
@@ -284,7 +288,40 @@ public class TourGuideService implements ITourGuideService {
 //
 
 
+
+
+
 	// ##############################################################
+
+
+
+	public UserAttractionRecommendation getUserAttractionRecommendation(String username) {
+
+		VisitedLocation userLastLocation = getUser(username).getLastVisitedLocation();
+
+		List<Attraction> nearbyAttractions = getNearByAttractions(userLastLocation);
+
+		Map<String, NearbyAttraction> nearbyAttractionHashMap = new HashMap<>();
+
+		nearbyAttractions.forEach(att ->
+				nearbyAttractionHashMap.put(
+						att.attractionName,
+						new NearbyAttraction(
+								att.latitude,
+								att.longitude,
+								rewardsService.getDistance(att, userLastLocation.location),
+								rewardsService.getRewardPoints(att, getUser(username))))
+		);
+
+		return new UserAttractionRecommendation(
+				userLastLocation.location,
+				nearbyAttractionHashMap);
+
+	}
+
+
+	// ##############################################################
+
 
 
 
@@ -295,23 +332,20 @@ public class TourGuideService implements ITourGuideService {
 		logger.info("## getNearByAttractions() for"
 				+ " visitedLocation - {} called", visitedLocation);
 
-		List<Attraction> nearbyAttractions = new ArrayList<>();
+		List<Attraction> nearbyAttractions = gpsUtil.getAttractions();
 
-		for(Attraction attraction : gpsUtil.getAttractions()) {
-
-			if(rewardsService.isWithinAttractionProximity(
-					attraction,
-					visitedLocation.location)) {
-
-				nearbyAttractions.add(attraction);
-
-			}
+        nearbyAttractions = nearbyAttractions.stream()
+                .sorted(Comparator.comparing(
+                        attraction -> rewardsService.getDistance(
+                        		visitedLocation.location,
+                        		attraction)))
+                .limit(5)
+                .collect(Collectors.toList());
 
 			logger.info("## NearByAttractions for"
 					+ " visitedLocation - {}"
 					+ " : {}", visitedLocation, nearbyAttractions);
 
-		}
 		
 		return nearbyAttractions;
 	}

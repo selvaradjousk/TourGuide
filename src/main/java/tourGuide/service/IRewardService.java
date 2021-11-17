@@ -12,4 +12,8 @@ public interface IRewardService {
 			Attraction attraction,
 			Location location);
 
+	double getDistance(Location loc1, Location loc2);
+
+	int getRewardPoints(Attraction attraction,	User user);
+
 }
