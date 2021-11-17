@@ -1,9 +1,14 @@
 package tourGuide;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -15,8 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.jsoniter.output.JsonStream;
+
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
@@ -129,7 +137,57 @@ public class TestTourGuideService {
 
 	// ##############################################################
 
+	@Test
+	public void getAllUsersCurrentLocations() {
 
+		gpsUtil = new GpsUtil();
+
+		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+
+		InternalTestHelper.setInternalUserNumber(100);
+
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+
+		LinkedHashMap<String, Location> allUsersLastLocation
+						= new LinkedHashMap<>(tourGuideService.getAllUsersLastLocation());
+
+		String generatedJson = JsonStream.serialize(allUsersLastLocation);
+
+		System.out.println(generatedJson);
+
+		StringBuilder manualJson = new StringBuilder("{");
+
+		allUsersLastLocation.forEach((id, location) ->
+				manualJson
+					.append("\"")
+					.append(id)
+					.append("\":")
+					.append("{\"longitude\":")
+						.append(
+								BigDecimal
+								.valueOf(location.longitude)
+								.setScale(6, RoundingMode.HALF_UP)
+								.doubleValue())
+					.append(",")
+					.append("\"latitude\":")
+						.append(
+								BigDecimal
+								.valueOf(location.latitude)
+								.setScale(6, RoundingMode.HALF_UP)
+								.doubleValue())
+					.append("},")
+		);
+
+		manualJson.deleteCharAt(manualJson.length() - 1).append("}");
+
+		System.out.println(manualJson.toString());
+
+		assertThat(manualJson.toString())
+				.isEqualToIgnoringWhitespace(generatedJson);
+	}
+
+
+	// ##############################################################
 	
 	@Test
 	public void trackUser() {

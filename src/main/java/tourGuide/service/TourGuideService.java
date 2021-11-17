@@ -1,6 +1,7 @@
 package tourGuide.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.User;
@@ -172,6 +174,23 @@ public class TourGuideService implements ITourGuideService {
 
 	// ##############################################################
 
+
+	public HashMap<String, Location> getAllUsersLastLocation() {
+
+		HashMap<String, Location> usersLastLocation = new HashMap<>();
+
+		getAllUsers()
+				.forEach(u -> usersLastLocation
+						.put(u
+								.getLastVisitedLocation().userId.toString(),
+								u.getLastVisitedLocation().location));
+
+		return usersLastLocation;
+
+	}
+
+
+	// ##############################################################
 
 
 	@Override
