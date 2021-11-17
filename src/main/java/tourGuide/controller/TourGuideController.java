@@ -13,6 +13,7 @@ import com.jsoniter.output.JsonStream;
 
 import gpsUtil.location.VisitedLocation;
 import tourGuide.model.User;
+import tourGuide.model.UserReward;
 import tourGuide.service.ITourGuideService;
 import tripPricer.Provider;
 
@@ -133,8 +134,13 @@ public class TourGuideController {
 
         logger.info("## getRewards for user {} requested", userName);
 
-    	return JsonStream.serialize(tourGuideService
-    			.getUserRewards(getUser(userName)));
+        List<UserReward> userRewards = tourGuideService
+    			.getUserRewards(getUser(userName));
+
+        logger.info("## getRewards for user rewards size"
+        		+ " {} requested", userRewards.size());
+
+        return JsonStream.serialize(userRewards);
     }
 
 

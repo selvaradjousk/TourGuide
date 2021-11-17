@@ -77,9 +77,9 @@ public class TestPerformance {
 //		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		
 		// ----------------------------------------------------------------------------
-		// Users should be incremented up to 100,000, and test finishes within 15 minutes
+		// Users should be incremented up to 100,000, > 15 minutes and test finishes within 15 minutes
 		// ----------------------------------------------------------------------------
-		InternalTestHelper.setInternalUserNumber(10000);
+		InternalTestHelper.setInternalUserNumber(6667);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 	    StopWatch stopWatch = new StopWatch();
 		
@@ -133,8 +133,9 @@ public class TestPerformance {
             assertEquals(initialVisitedLocationsCount.get(i) + 1, (int) newVisitedLocationsCount.get(i));
         }
 
+        System.out.println("highVolumeTrackLocation check if (6667 users < 1 minute) : Actual Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 		System.out.println("highVolumeTrackLocation: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
-		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
+		assertTrue(TimeUnit.MINUTES.toSeconds(1) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
 
@@ -153,11 +154,11 @@ public class TestPerformance {
 //		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 
 		// ----------------------------------------------------------------------------
-		// Users should be incremented up to 100,000, and test finishes within 20 minutes
+		// Users should be incremented up to 100,000, < 20 minutes (5000 < 1 minutes) and test finishes within 20 minutes
 		// ----------------------------------------------------------------------------
 		
 		// InternalTestHelper.setInternalUserNumber(100);
-		InternalTestHelper.setInternalUserNumber(10000);
+		InternalTestHelper.setInternalUserNumber(5000);
 
 		StopWatch stopWatch = new StopWatch();
 
@@ -184,13 +185,14 @@ public class TestPerformance {
 		stopWatch.stop();
 //		tourGuideService.tracker.stopTracking();
 
+		System.out.println("highVolumeGetRewards check if (5000 rewards < 1 minute) : Actual Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 
 		for(User user : allUsers) {
 		assertTrue(user.getUserRewards().size() > 0);
 		}
 		
-		assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
+		assertTrue(TimeUnit.MINUTES.toSeconds(1) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 
 	}
 

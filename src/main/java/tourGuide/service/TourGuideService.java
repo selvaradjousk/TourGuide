@@ -107,6 +107,7 @@ public class TourGuideService implements ITourGuideService {
 		logger.info("## getUserRewards list for"
 				+ " user {} retrieved ", user );
 
+
 		return user.getUserRewards();
 	}
 
