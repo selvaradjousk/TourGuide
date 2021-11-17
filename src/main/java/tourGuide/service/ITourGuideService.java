@@ -6,7 +6,8 @@ import java.util.List;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
-import tourGuide.dto.UserAttractionRecommendation;
+import tourGuide.dto.UserAttractionRecommendationDTO;
+import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
 import tripPricer.Provider;
@@ -19,7 +20,8 @@ public interface ITourGuideService {
 
 	HashMap<String, Location> getAllUsersLastLocation();
 
-	UserAttractionRecommendation getUserAttractionRecommendation(String username);
+	UserAttractionRecommendationDTO getUserAttractionRecommendation(
+			String username);
 
 	User getUser(String userName);
 
@@ -32,5 +34,9 @@ public interface ITourGuideService {
 //	VisitedLocation trackUserLocation(User user);
 
 	List<Attraction> getNearByAttractions(VisitedLocation visitedLocation);
+
+	UserPreferencesDTO updateUserPreferences(
+			String userName,
+			UserPreferencesDTO userPreferences);
 
 }

@@ -8,7 +8,7 @@ import gpsUtil.location.Location;
 import lombok.Getter;
 import lombok.Setter;
 
-public class UserAttractionRecommendation {
+public class UserAttractionRecommendationDTO {
 
 
 	@Getter @Setter
@@ -17,19 +17,19 @@ public class UserAttractionRecommendation {
 
 	@Getter @Setter
 	@JsonProperty("nearbyAttractions")
-    Map<String, NearbyAttraction> nearbyAttractions;
+    Map<String, NearbyAttractionDTO> nearbyAttractionDTOs;
 
 
 
 	// ##############################################################
 
 
-    public UserAttractionRecommendation(
+    public UserAttractionRecommendationDTO(
     		Location userPosition,
-    		Map<String, NearbyAttraction> nearbyAttractions) {
+    		Map<String, NearbyAttractionDTO> nearbyAttractionDTOs) {
 
     	this.userPosition = userPosition;
-        this.nearbyAttractions = nearbyAttractions;
+        this.nearbyAttractionDTOs = nearbyAttractionDTOs;
     }
 
 

@@ -7,18 +7,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
-import tourGuide.dto.NearbyAttraction;
-import tourGuide.dto.UserAttractionRecommendation;
+import tourGuide.Utils.UserPreferencesMapper;
+import tourGuide.dto.NearbyAttractionDTO;
+import tourGuide.dto.UserAttractionRecommendationDTO;
+import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.User;
+import tourGuide.model.UserPreferences;
 import tourGuide.model.UserReward;
 import tourGuide.tracker.Tracker;
 import tripPricer.Provider;
@@ -42,6 +47,8 @@ public class TourGuideService implements ITourGuideService {
 	private InternalTestHelper internalTestHelper
 						= new InternalTestHelper();
 
+	@Autowired
+	private UserPreferencesMapper userPreferencesMapper;
 
 
 	// ##############################################################
@@ -266,6 +273,50 @@ public class TourGuideService implements ITourGuideService {
 
 	// ##############################################################
 
+    public UserPreferencesDTO updateUserPreferences(
+    		String userName,
+    		UserPreferencesDTO userPreferences) {
+
+        User user = getUser(userName);
+
+        UserPreferences preferences = user
+        		.getUserPreferences();
+
+        preferences.setAttractionProximity(
+        		userPreferences.getAttractionProximity());
+
+        preferences.setHighPricePoint(
+        		Money.of(
+        				userPreferences.getHighPricePoint(),
+        				preferences.getCurrency()));
+
+        preferences.setLowerPricePoint(
+        		Money.of(
+        				userPreferences.getLowerPricePoint(),
+        				preferences.getCurrency()));
+
+        preferences.setTripDuration(
+        		userPreferences.getTripDuration());
+
+        preferences.setTicketQuantity(
+        		userPreferences.getTicketQuantity());
+
+        preferences.setNumberOfAdults(
+        		userPreferences.getNumberOfAdults());
+
+        preferences.setNumberOfChildren(
+        		userPreferences.getNumberOfChildren());
+
+        UserPreferencesDTO userPreferencesUpdated = userPreferencesMapper
+        		.toUserPreferencesDTO(preferences);
+
+        return userPreferencesUpdated;
+    }
+
+
+
+	// ##############################################################
+
 
 //
 //	@Override
@@ -296,25 +347,25 @@ public class TourGuideService implements ITourGuideService {
 
 
 
-	public UserAttractionRecommendation getUserAttractionRecommendation(String username) {
+	public UserAttractionRecommendationDTO getUserAttractionRecommendation(String username) {
 
 		VisitedLocation userLastLocation = getUser(username).getLastVisitedLocation();
 
 		List<Attraction> nearbyAttractions = getNearByAttractions(userLastLocation);
 
-		Map<String, NearbyAttraction> nearbyAttractionHashMap = new HashMap<>();
+		Map<String, NearbyAttractionDTO> nearbyAttractionHashMap = new HashMap<>();
 
 		nearbyAttractions.forEach(att ->
 				nearbyAttractionHashMap.put(
 						att.attractionName,
-						new NearbyAttraction(
+						new NearbyAttractionDTO(
 								att.latitude,
 								att.longitude,
 								rewardsService.getDistance(att, userLastLocation.location),
 								rewardsService.getRewardPoints(att, getUser(username))))
 		);
 
-		return new UserAttractionRecommendation(
+		return new UserAttractionRecommendationDTO(
 				userLastLocation.location,
 				nearbyAttractionHashMap);
 

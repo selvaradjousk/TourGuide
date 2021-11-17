@@ -4,7 +4,7 @@ import com.jsoniter.annotation.JsonProperty;
 
 import lombok.Getter;
 
-public class NearbyAttraction {
+public class NearbyAttractionDTO {
 
 	@Getter
     @JsonProperty("latitude")
@@ -27,7 +27,7 @@ public class NearbyAttraction {
 	// ##############################################################
 
 
-    public NearbyAttraction(
+    public NearbyAttractionDTO(
     		double latitude,
     		double longitude,
     		double distance,
