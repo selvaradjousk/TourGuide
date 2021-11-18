@@ -78,12 +78,22 @@ public class TourGuideController {
 	//###############################################################
 
     @RequestMapping("/getLocation") 
-    public String getLocation(@RequestParam String userName) {
+    public String getLocation(
+    		@Valid @RequestParam String userName)
+    				throws BadRequestException {
 
         logger.info("## getLocation() page requested"
         		+ " for user {} : ", userName);
 
-    	VisitedLocation visitedLocation = tourGuideService
+        checkUserNameNotFound(userName);
+
+        // if userName null => BadRequestException 
+        checkInputVariableNotNull(userName);
+
+        // if userName empty => BadRequestException 
+        checkInputVariableLengthNotZeroValue(userName);
+
+        VisitedLocation visitedLocation = tourGuideService
     			.getUserLocation(getUser(userName));
 
         logger.info("## visitedLocation {} "
@@ -253,12 +263,22 @@ public class TourGuideController {
 
 
 	//###############################################################
+
+
+	private void checkUserNameNotFound(
+			String userName) throws UserNotFoundException {
+
+		if (getUser(userName) == null) {
+    		
+    		throw new BadRequestException("USERNAME required");
+    	}
+	}    
     
     
 
 	private void checkUserNameFound(
 			String userName,
-			UserPreferencesDTO userPreferences) {
+			UserPreferencesDTO userPreferences) throws UserNotFoundException {
 
 		if (!tourGuideService.updateUserPreferences(
         		userName, userPreferences)) {
@@ -269,9 +289,18 @@ public class TourGuideController {
 
 
 	private void checkInputVariableLengthNotZeroValue(
-			String userName) {
+			String userName) throws BadRequestException  {
 
 		if (userName.length() == 0) {
+            throw new BadRequestException("USERNAME required");
+        }
+	}
+   
+
+	private void checkInputVariableNotNull(
+			String userName) throws BadRequestException  {
+
+		if (userName == null) {
             throw new BadRequestException("USERNAME required");
         }
 	}
@@ -311,10 +340,16 @@ public class TourGuideController {
 	//###############################################################    
 
     @RequestMapping("/getUser")
-    private User getUser(String userName) {
+    private User getUser(String userName) throws BadRequestException  {
 
         logger.info("## getUser "
         		+ " for user {} : ", userName);
+
+        // if userName null => BadRequestException
+        checkInputVariableNotNull(userName);
+
+    	// if userName empty => BadRequestException 
+        checkInputVariableLengthNotZeroValue(userName);        
 
     	return tourGuideService.getUser(userName);
     }

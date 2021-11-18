@@ -5,12 +5,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 
 public class User {
 
 	private final UUID userId;
+
+	@NotNull
+	@Length(min=1, message = "USERNAME required")
 	private final String userName;
 	private String phoneNumber;
 	private String emailAddress;

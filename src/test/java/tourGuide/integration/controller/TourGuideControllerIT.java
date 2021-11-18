@@ -2,6 +2,7 @@ package tourGuide.integration.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
@@ -85,9 +86,34 @@ public class TourGuideControllerIT {
 
 
 
-
+	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
 	@Test
 	public void testGetLocationUrlWithEmptyUserName() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USERS_LOCATION_URL
+						+ "?userName=", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	    		response.getStatusCodeValue());
+                
+	    assertTrue(response.getBody().contains("USERNAME required"));
+	
+	    }
+
+	// ##############################################################
+
+
+
+	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+	@Test
+	public void testGetLocationUrlWithNullValueUserName() {
 	
 		ResponseEntity<String> response = restTemplate
 				.getForEntity(
@@ -99,15 +125,66 @@ public class TourGuideControllerIT {
 	    assertNotNull(response);
 	    
 	    assertEquals("request status",
-	    		HttpStatus.BAD_REQUEST.value(),
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
 	    		response.getStatusCodeValue());
-	
-	    assertTrue(response.getBody().contains("longitude"));
-	    assertTrue(response.getBody().contains("latitude"));
-	                     
+                
+	    assertNull(response.getBody());
 	
 	    }
 
 	// ##############################################################
-		
-}
+
+
+
+	@Test
+	public void testGetLocationUrlWithMissingParameter() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USERS_LOCATION_URL, String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.BAD_REQUEST.value(),
+	    		response.getStatusCodeValue());
+
+       
+	    assertTrue(response.getBody().contains("Required String parameter 'userName' is not present"));
+	
+	    }
+
+	// ##############################################################
+
+
+	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+	@Test
+	public void testGetLocationUrlWithInvalidUserName() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USERS_LOCATION_URL
+						+ "?userName=unkownuser", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	    		response.getStatusCodeValue());
+
+//      assertEquals("request body",
+//		 "Greetings from TourGuide!",
+//		 response.getBody());
+	    
+	    assertTrue(response.getBody().contains("USERNAME required"));
+	
+	    }
+
+	// ##############################################################
+			
+}	
+
