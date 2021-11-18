@@ -2,6 +2,7 @@ package tourGuide.integration.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ public class TourGuideControllerIT {
     private int port;
     
     private final static String INDEX_URL = "/";
-
+    private final static String USERS_LOCATION_URL = "/getLocation/";
 
 	// ##############################################################
 
@@ -52,5 +53,35 @@ public class TourGuideControllerIT {
         		 response.getBody());
          
 	    }
+	
+
+	// ##############################################################
+	
+	
+	@Test
+	public void testGetLocationUrlValid() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USERS_LOCATION_URL
+						+ "?userName=internalUser6", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.OK.value(),
+	    		response.getStatusCodeValue());
+	
+	    assertTrue(response.getBody().contains("longitude"));
+	    assertTrue(response.getBody().contains("latitude"));
+	                     
+	
+	    }
+
+
+	//##############################################################
+
 	
 }
