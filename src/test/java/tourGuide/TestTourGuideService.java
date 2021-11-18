@@ -3,6 +3,7 @@ package tourGuide;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,6 +27,7 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
+import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.User;
 import tourGuide.service.RewardsService;
@@ -40,8 +42,12 @@ public class TestTourGuideService {
 
 	@Autowired
 	private GpsUtil gpsUtil;
+
 	@Autowired
 	private RewardsService rewardsService;
+
+    @Autowired
+    TourGuideService tourGuideService;
 
 
 
@@ -50,7 +56,7 @@ public class TestTourGuideService {
 
 
 	@Test
-	public void getUserLocation() {
+	public void testGetUserLocation() {
 
 		Locale.setDefault(Locale.US);
 
@@ -59,7 +65,7 @@ public class TestTourGuideService {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 //		tourGuideService.tracker.stopTracking();
 
@@ -77,7 +83,7 @@ public class TestTourGuideService {
 
 	
 	@Test
-	public void addUser() {
+	public void testAddUser() {
 
 		Locale.setDefault(Locale.US);
 
@@ -86,8 +92,8 @@ public class TestTourGuideService {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
+		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
+		User user2 = new User(UUID.randomUUID(), "testUser2", "000", "testUser2@tourGuide.com");
 
 		tourGuideService.addUser(user);
 		tourGuideService.addUser(user2);
@@ -108,7 +114,7 @@ public class TestTourGuideService {
 
 	
 	@Test
-	public void getAllUsers() {
+	public void testGetAllUsers() {
 
 		Locale.setDefault(Locale.US);
 
@@ -117,8 +123,8 @@ public class TestTourGuideService {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
+		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
+		User user2 = new User(UUID.randomUUID(), "testUser2", "000", "testUser2@tourGuide.com");
 
 		tourGuideService.addUser(user);
 		tourGuideService.addUser(user2);
@@ -137,7 +143,7 @@ public class TestTourGuideService {
 	// ##############################################################
 
 	@Test
-	public void getAllUsersCurrentLocations() {
+	public void testGetAllUsersCurrentLocations() {
 
 		gpsUtil = new GpsUtil();
 
@@ -189,7 +195,7 @@ public class TestTourGuideService {
 	// ##############################################################
 	
 	@Test
-	public void trackUser() {
+	public void testTrackUser() {
 
 		Locale.setDefault(Locale.US);
 
@@ -198,7 +204,7 @@ public class TestTourGuideService {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
 
 		List<User> users = new ArrayList<>();
 		users.add(user);
@@ -220,7 +226,7 @@ public class TestTourGuideService {
 	
 //	@Ignore // Not yet implemented
 	@Test
-	public void getNearbyAttractions() {
+	public void testGetNearbyAttractions() {
 
 		Locale.setDefault(Locale.US);
 
@@ -229,7 +235,7 @@ public class TestTourGuideService {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 		
 		List<Attraction> attractions = tourGuideService.getNearByAttractions(visitedLocation);
@@ -255,7 +261,7 @@ public class TestTourGuideService {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
 
 		List<Provider> providers = tourGuideService.getTripDeals(user);
 		
@@ -269,6 +275,63 @@ public class TestTourGuideService {
 	// ##############################################################
 
 
-	
-	
+    @Test
+    public void testUpdateUserPreferences() {
+        InternalTestHelper.setInternalUserNumber(0);
+
+        final User user = new User(
+        		UUID.randomUUID(),
+        		"testUser1",
+        		"000",
+        		"testUser@tourGuide.com");
+
+
+        UserPreferencesDTO testUserPreferencesDto = new UserPreferencesDTO(
+        		"testUser",
+        		999,
+        		999,
+        		999,
+        		999,
+        		999,
+        		999,
+        		999);
+
+        tourGuideService.addUser(user);
+
+        UserPreferencesDTO userPreferencesDto = new UserPreferencesDTO();
+        userPreferencesDto.setTripDuration(999);
+        userPreferencesDto.setTicketQuantity(999);
+        userPreferencesDto.setNumberOfAdults(999);
+        userPreferencesDto.setNumberOfChildren(999);
+        userPreferencesDto.setCurrency("EUR");
+        userPreferencesDto.setHighPricePoint(999);
+        userPreferencesDto.setLowerPricePoint(999);
+        userPreferencesDto.setAttractionProximity(999);
+
+        // WHEN
+        boolean result = tourGuideService
+        		.updateUserPreferences(
+        				"testUser1",
+        				userPreferencesDto);
+
+        // THEN
+        assertNotNull(result);
+//        assertEquals(true, result);
+        assertEquals(testUserPreferencesDto.getTripDuration().intValue(),
+        		user.getUserPreferences().getTripDuration());
+        assertEquals(testUserPreferencesDto.getTicketQuantity().intValue(),
+        		user.getUserPreferences().getTicketQuantity());
+        assertEquals(testUserPreferencesDto.getNumberOfAdults().intValue(),
+        		user.getUserPreferences().getNumberOfAdults());
+        assertEquals(testUserPreferencesDto.getNumberOfChildren().intValue(),
+        		user.getUserPreferences().getNumberOfChildren());
+        assertEquals("EUR "+ testUserPreferencesDto.getHighPricePoint().intValue(),
+        		user.getUserPreferences().getHighPricePoint().toString());
+        assertEquals("EUR "+ testUserPreferencesDto.getLowerPricePoint().intValue(),
+        		user.getUserPreferences().getLowerPricePoint().toString());
+        assertEquals(testUserPreferencesDto.getAttractionProximity().intValue(),
+        		user.getUserPreferences().getAttractionProximity());        
+        
+    }
+
 }
