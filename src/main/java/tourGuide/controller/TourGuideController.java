@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.jsoniter.output.JsonStream;
 
@@ -30,8 +31,12 @@ import tripPricer.Provider;
 public class TourGuideController {
 
 
+
 	private Logger logger = LoggerFactory
 			.getLogger(TourGuideController.class);
+
+//	@Autowired
+//	private RestTemplate restTemplate;
 
 	@Autowired
 	ITourGuideService tourGuideService;

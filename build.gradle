@@ -67,13 +67,27 @@ dependencies {
     implementation(name:'TripPricer', ext:'jar')
     
     // Junit
-    testImplementation("junit:junit")
+    // testImplementation("junit:junit")
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.6.RELEASE'
+
+	testCompileOnly 'junit:junit:4.12' 
+	testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.3.1'
+    
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    
+    // testImplementation 'org.junit.jupiter:junit-jupiter'
     
     // Use JUnit Jupiter for testing
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    // testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    // testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     
 }
+
+test {
+    useJUnitPlatform()
+}
+
 
 // Jacoco
 jacoco {
