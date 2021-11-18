@@ -17,6 +17,7 @@ import com.jsoniter.output.JsonStream;
 
 import gpsUtil.location.VisitedLocation;
 import tourGuide.dto.UserPreferencesDTO;
+import tourGuide.exception.BadRequestException;
 import tourGuide.exception.UserNotFoundException;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
@@ -229,14 +230,40 @@ public class TourGuideController {
     		@RequestParam String userName,
     		@RequestBody UserPreferencesDTO userPreferences) throws UserNotFoundException {
 
-    	if (!tourGuideService.updateUserPreferences(
+    	
+    	checkInputVariableLengthNotZeroValue(userName);
+
+    	checkUserNameFound(userName, userPreferences);
+
+    	return userPreferences;
+    }
+
+
+
+
+	//###############################################################
+    
+    
+
+	private void checkUserNameFound(
+			String userName,
+			UserPreferencesDTO userPreferences) {
+
+		if (!tourGuideService.updateUserPreferences(
         		userName, userPreferences)) {
     		
     		throw new UserNotFoundException("User Not Found");
     	}
+	}
 
-    	return userPreferences;
-    }
+
+	private void checkInputVariableLengthNotZeroValue(
+			String userName) {
+
+		if (userName.length() == 0) {
+            throw new BadRequestException("USERNAME required");
+        }
+	}
    
 
 
