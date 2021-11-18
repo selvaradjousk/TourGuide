@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import tourGuide.model.User;
+import tourGuide.service.TourGuideService;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -25,6 +28,9 @@ public class TourGuideControllerIT {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private TourGuideService tourGuideService;
 
     @LocalServerPort
     private int port;
@@ -176,15 +182,40 @@ public class TourGuideControllerIT {
 	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
 	    		response.getStatusCodeValue());
 
-//      assertEquals("request body",
-//		 "Greetings from TourGuide!",
-//		 response.getBody());
 	    
 	    assertTrue(response.getBody().contains("USERNAME required"));
 	
 	    }
 
 	// ##############################################################
-			
+
+	
+	@Test
+	public void testGetLocationUrlWithUserWithoutVisitedLocationHistory() {
+
+        User user = tourGuideService.getUser("internalUser1");
+        user.clearVisitedLocations();
+
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USERS_LOCATION_URL
+						+ "?userName=internalUser1", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	    		response.getStatusCodeValue());
+
+//      assertEquals("request body",
+//		 "Greetings from TourGuide!",
+//		 response.getBody());
+
+	}
+
+	// ##############################################################
+				
 }	
 
