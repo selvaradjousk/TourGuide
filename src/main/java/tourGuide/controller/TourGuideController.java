@@ -85,6 +85,7 @@ public class TourGuideController {
         logger.info("## getLocation() page requested"
         		+ " for user {} : ", userName);
 
+        // check for username validity
         checkUserNameNotFound(userName);
 
         // if userName null => BadRequestException 
@@ -128,14 +129,15 @@ public class TourGuideController {
         logger.info("## getNearbyAttractions() page requested"
         		+ " for user {} : ", userName);
 
-//    	VisitedLocation visitedLocation = tourGuideService
-//    			.getUserLocation(getUser(userName));
-//
-//        logger.info("## visitedLocation {} "
-//        		+ " for user {} : ", visitedLocation, userName);
+        // check for username validity
+        checkUserNameNotFound(userName);
 
-//    	return JsonStream.serialize(tourGuideService
-//    			.getNearByAttractions(visitedLocation));
+        // if userName null => BadRequestException 
+        checkInputVariableNotNull(userName);
+
+        // if userName empty => BadRequestException 
+        checkInputVariableLengthNotZeroValue(userName);
+
 
         return JsonStream.serialize(tourGuideService
         		.getUserAttractionRecommendation(userName));

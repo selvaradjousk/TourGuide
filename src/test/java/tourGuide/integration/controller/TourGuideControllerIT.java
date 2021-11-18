@@ -37,7 +37,10 @@ public class TourGuideControllerIT {
     
     private final static String INDEX_URL = "/";
     private final static String USERS_LOCATION_URL = "/getLocation/";
-
+    private final static String NEARBY_ATTRACTIONS_URL = "/getNearbyAttractions/";
+    
+    
+    
 	// ##############################################################
 
 	@Test
@@ -209,13 +212,168 @@ public class TourGuideControllerIT {
 	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
 	    		response.getStatusCodeValue());
 
+
+	}
+
+	// ##############################################################
+	
+	
+	@Test
+	public void testGetNearbyAttractionsValidInput() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ NEARBY_ATTRACTIONS_URL
+						+ "?userName=internalUser6", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.OK.value(),
+	    		response.getStatusCodeValue());
+
+    
+
+      assertTrue(response.getBody().contains("longitude"));
+      assertTrue(response.getBody().contains("latitude"));
+      assertTrue(response.getBody().contains("userPosition"));
+      assertTrue(response.getBody().contains("nearbyAttractions"));
+      assertTrue(response.getBody().contains("rewardPoints"));
+      assertTrue(response.getBody().contains("distance"));
+	                     
+	
+	    }
+
+
+	//##############################################################
+
+
+
+	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+	@Test
+	public void testGetNearbyAttractionsUrlWithEmptyUserName() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ NEARBY_ATTRACTIONS_URL
+						+ "?userName=", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	    		response.getStatusCodeValue());
+                
+	    assertTrue(response.getBody().contains("USERNAME required"));
+	
+	    }
+
+	// ##############################################################
+
+
+
+	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+	@Test
+	public void testGetNearbyAttractionsUrlWithNullValueUserName() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ NEARBY_ATTRACTIONS_URL
+						+ "?userName=", null);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	    		response.getStatusCodeValue());
+                
+	    assertNull(response.getBody());
+	
+	    }
+
+	// ##############################################################
+
+
+
+	@Test
+	public void testGetNearbyAttractionsUrlWithMissingParameter() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ NEARBY_ATTRACTIONS_URL, String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.BAD_REQUEST.value(),
+	    		response.getStatusCodeValue());
+
+       
+	    assertTrue(response.getBody().contains("Required String parameter 'userName' is not present"));
+	
+	    }
+
+	// ##############################################################
+
+
+	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+	@Test
+	public void testGetNearbyAttractionsnUrlWithInvalidUserName() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ NEARBY_ATTRACTIONS_URL
+						+ "?userName=unkownuser", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	    		response.getStatusCodeValue());
+
+	    
+	    assertTrue(response.getBody().contains("USERNAME required"));
+	
+	    }
+
+	// ##############################################################
+
+	
+	@Test
+	public void testGetNearbyAttractionsUrlWithUserWithoutVisitedLocationHistory() {
+
+        User user = tourGuideService.getUser("internalUser1");
+        user.clearVisitedLocations();
+
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ NEARBY_ATTRACTIONS_URL
+						+ "?userName=internalUser1", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	    		response.getStatusCodeValue());
+
 //      assertEquals("request body",
 //		 "Greetings from TourGuide!",
 //		 response.getBody());
 
 	}
 
-	// ##############################################################
 				
 }	
 
