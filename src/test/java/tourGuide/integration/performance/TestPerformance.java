@@ -1,4 +1,4 @@
-package tourGuide;
+package tourGuide.integration.performance;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;

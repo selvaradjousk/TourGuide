@@ -15,7 +15,6 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
-import tourGuide.Utils.UserPreferencesMapper;
 import tourGuide.dto.NearbyAttractionDTO;
 import tourGuide.dto.UserAttractionRecommendationDTO;
 import tourGuide.dto.UserPreferencesDTO;
@@ -24,6 +23,7 @@ import tourGuide.model.User;
 import tourGuide.model.UserPreferences;
 import tourGuide.model.UserReward;
 import tourGuide.tracker.Tracker;
+import tourGuide.util.UserPreferencesMapper;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
