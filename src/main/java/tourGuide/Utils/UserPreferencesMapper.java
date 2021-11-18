@@ -13,9 +13,10 @@ import tourGuide.model.UserPreferences;
 public class UserPreferencesMapper {
 
     public UserPreferences toUserPreferences (
-    		UserPreferencesDTO userPreferencesDTO){
+    		UserPreferencesDTO userPreferencesDTO) {
 
         UserPreferences userPreferences = new UserPreferences();
+
 
         CurrencyUnit currency;
 
@@ -122,23 +123,6 @@ public class UserPreferencesMapper {
 
 	// ##############################################################
 
-
-    public UserPreferencesDTO toUserPreferencesDTO(
-    		UserPreferences preferences) {
-
-        return new UserPreferencesDTO(
-        		preferences.getAttractionProximity(),
-        		preferences.getCurrency().toString(),
-        		preferences.getLowerPricePoint().getNumber().intValue(),
-        		preferences.getHighPricePoint().getNumber().intValue(),
-                preferences.getTripDuration(),
-                preferences.getTicketQuantity(),
-                preferences.getNumberOfAdults(),
-                preferences.getNumberOfChildren());
-    }
-
-
-	// ##############################################################
 
 
 }

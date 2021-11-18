@@ -35,8 +35,8 @@ public interface ITourGuideService {
 
 	List<Attraction> getNearByAttractions(VisitedLocation visitedLocation);
 
-	UserPreferencesDTO updateUserPreferences(
-			String userName,
-			UserPreferencesDTO userPreferences);
+	boolean updateUserPreferences(
+    		String userName,
+    		UserPreferencesDTO userPreferencesDTO) ;
 
 }

@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -47,8 +45,6 @@ public class TourGuideService implements ITourGuideService {
 	private InternalTestHelper internalTestHelper
 						= new InternalTestHelper();
 
-	@Autowired
-	private UserPreferencesMapper userPreferencesMapper;
 
 
 	// ##############################################################
@@ -273,44 +269,26 @@ public class TourGuideService implements ITourGuideService {
 
 	// ##############################################################
 
-    public UserPreferencesDTO updateUserPreferences(
+    public boolean updateUserPreferences(
     		String userName,
-    		UserPreferencesDTO userPreferences) {
+    		UserPreferencesDTO userPreferencesDTO) {
 
-        User user = getUser(userName);
+    	if (!internalTestHelper.internalUserMap.containsKey(userName)) {
+            return false;
+        }
 
-        UserPreferences preferences = user
-        		.getUserPreferences();
+//        User user = getUser(userName);
+    	User user = internalTestHelper
+    			.internalUserMap.get(userName);
 
-        preferences.setAttractionProximity(
-        		userPreferences.getAttractionProximity());
+    	UserPreferences userPreferences = new UserPreferencesMapper()
+    			.toUserPreferences(userPreferencesDTO);
 
-        preferences.setHighPricePoint(
-        		Money.of(
-        				userPreferences.getHighPricePoint(),
-        				preferences.getCurrency()));
+        user.setUserPreferences(userPreferences);
 
-        preferences.setLowerPricePoint(
-        		Money.of(
-        				userPreferences.getLowerPricePoint(),
-        				preferences.getCurrency()));
+        internalTestHelper.internalUserMap.put(userName, user);
 
-        preferences.setTripDuration(
-        		userPreferences.getTripDuration());
-
-        preferences.setTicketQuantity(
-        		userPreferences.getTicketQuantity());
-
-        preferences.setNumberOfAdults(
-        		userPreferences.getNumberOfAdults());
-
-        preferences.setNumberOfChildren(
-        		userPreferences.getNumberOfChildren());
-
-        UserPreferencesDTO userPreferencesUpdated = userPreferencesMapper
-        		.toUserPreferencesDTO(preferences);
-
-        return userPreferencesUpdated;
+        return true;
     }
 
 
