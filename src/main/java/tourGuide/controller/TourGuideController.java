@@ -160,6 +160,16 @@ public class TourGuideController {
 
         logger.info("## getRewards for user {} requested", userName);
 
+        // check for username validity
+        checkUserNameNotFound(userName);
+
+        // if userName null => BadRequestException 
+        checkInputVariableNotNull(userName);
+
+        // if userName empty => BadRequestException 
+        checkInputVariableLengthNotZeroValue(userName);
+
+
         List<UserReward> userRewards = tourGuideService
     			.getUserRewards(getUser(userName));
 
