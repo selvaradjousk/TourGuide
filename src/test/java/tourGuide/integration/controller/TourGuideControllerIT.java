@@ -83,5 +83,31 @@ public class TourGuideControllerIT {
 
 	//##############################################################
 
+
+
+
+	@Test
+	public void testGetLocationUrlWithEmptyUserName() {
 	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USERS_LOCATION_URL
+						+ "?userName=", null);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.BAD_REQUEST.value(),
+	    		response.getStatusCodeValue());
+	
+	    assertTrue(response.getBody().contains("longitude"));
+	    assertTrue(response.getBody().contains("latitude"));
+	                     
+	
+	    }
+
+	// ##############################################################
+		
 }
