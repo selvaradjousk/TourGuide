@@ -241,6 +241,16 @@ public class TourGuideController {
         logger.info("## getTripDeals"
         		+ " for user {} : ", userName);
 
+        // check for username validity
+        checkUserNameNotFound(userName);
+
+        // if userName null => BadRequestException 
+        checkInputVariableNotNull(userName);
+
+        // if userName empty => BadRequestException 
+        checkInputVariableLengthNotZeroValue(userName);
+
+
     	List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
 
         logger.info("## providers {} "
