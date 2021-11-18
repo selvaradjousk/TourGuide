@@ -41,6 +41,8 @@ public class TourGuideControllerIT {
     private final static String NEARBY_ATTRACTIONS_URL = "/getNearbyAttractions/";
     private final static String USER_REWARDS_URL = "/getRewards/";
     private final static String USER_CURRENT_LOCATION_URL = "/getAllCurrentLocations/";
+    private final static String USER_TRIP_DEALS_URL = "/getTripDeals/";
+    
     
 	// ##############################################################
 
@@ -567,8 +569,142 @@ public class TourGuideControllerIT {
 
 
 	//##############################################################
-
+	//##############################################################
 	
+	
+	@Test
+	public void testGetTripDealsUrlValid() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USER_TRIP_DEALS_URL
+						+ "?userName=internalUser6", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.OK.value(),
+	    		response.getStatusCodeValue());
+	    
+   
+	    assertTrue(response.getBody().contains("name"));
+	    assertTrue(response.getBody().contains("tripId"));
+	    assertTrue(response.getBody().contains("price"));
+	    assertTrue(response.getBody().contains("mostSigBits"));
+	    assertTrue(response.getBody().contains("leastSigBits"));
+	    assertTrue(response.getBody().contains("leastSignificantBits"));
+	    assertTrue(response.getBody().contains("mostSignificantBits"));
+	                     
+	
+	    }
+
+
+	//##############################################################
+
+
+
+	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+	@Test
+	public void testGetTripDealsUrlWithEmptyUserName() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USER_TRIP_DEALS_URL
+						+ "?userName=", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	    		response.getStatusCodeValue());
+                
+	    assertTrue(response.getBody().contains("USERNAME required"));
+	
+	    }
+
+	// ##############################################################
+
+
+
+	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+	@Test
+	public void testGetTripDealsUrlWithNullValueUserName() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USER_TRIP_DEALS_URL
+						+ "?userName=", null);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	    		response.getStatusCodeValue());
+                
+	    assertNull(response.getBody());
+	
+	    }
+
+	// ##############################################################
+
+
+
+	@Test
+	public void testGetTripDealsUrlWithMissingParameter() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USER_TRIP_DEALS_URL, String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.BAD_REQUEST.value(),
+	    		response.getStatusCodeValue());
+
+       
+	    assertTrue(response.getBody().contains("Required String parameter 'userName' is not present"));
+	
+	    }
+
+	// ##############################################################
+
+
+	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+	@Test
+	public void testGetTripDealsUrlWithInvalidUserName() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ USER_TRIP_DEALS_URL
+						+ "?userName=unkownuser", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals("request status",
+	    		HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	    		response.getStatusCodeValue());
+
+//      assertEquals("request body",
+//		 "Greetings from TourGuide!",
+//		 response.getBody());
+	    
+
+	    }
+
+	// ##############################################################
+
+		
 									
 }	
 
