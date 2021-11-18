@@ -2,6 +2,8 @@ package tourGuide.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -226,17 +228,21 @@ public class TourGuideController {
     
     @PutMapping("/updateUserPreferences")
     @ResponseStatus(HttpStatus.CREATED)
-    private UserPreferencesDTO updateUserPreferences(
+    private String updateUserPreferences(
     		@RequestParam String userName,
-    		@RequestBody UserPreferencesDTO userPreferences) throws UserNotFoundException {
+    		@Valid @RequestBody UserPreferencesDTO userPreferences) throws UserNotFoundException {
 
-    	
     	checkInputVariableLengthNotZeroValue(userName);
 
     	checkUserNameFound(userName, userPreferences);
 
-    	return userPreferences;
+    	String updateSuccess = messageAfterUpdate(userName, userPreferences); 
+
+    	return updateSuccess;
     }
+
+
+
 
 
 
@@ -266,6 +272,22 @@ public class TourGuideController {
 	}
    
 
+
+	private String messageAfterUpdate(String userName, UserPreferencesDTO userPreferences) {
+		String updatedMessage = "Your New User Preferences are updated."
+    			+ " Enjoy our service & Have a good Day " + "\n"
+    			+ "UserName: " + userPreferences.getUsername() + "\n"
+    			+ "Currency : " + userPreferences.getCurrency() + "\n"
+    			+ "AttractionProximity : " + userPreferences.getAttractionProximity() + "\n"
+    	    	+ "LowerPricePoint : " + userPreferences.getLowerPricePoint() + "\n"
+    	    	+ "HighPricePoint : " + userPreferences.getHighPricePoint() + "\n"
+    	    	+ "TripDuration : " + userPreferences.getTripDuration() + "\n"
+    	    	+ "TicketQuantity : " + userPreferences.getTicketQuantity() + "\n"
+    	    	+ "NumberOfAdults : " + userPreferences.getNumberOfAdults() + "\n"
+    	    	+ "NumberOfChildren : " + userPreferences.getNumberOfChildren() + "\n";
+
+		return updatedMessage;
+	}
 
 	//###############################################################
     

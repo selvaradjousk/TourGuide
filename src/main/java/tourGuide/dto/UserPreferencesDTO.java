@@ -1,24 +1,54 @@
 package tourGuide.dto;
 
+import javax.validation.constraints.Min;
+
+import org.hibernate.validator.constraints.Length;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tourGuide.constant.Constraints;
 import tourGuide.model.UserPreferences;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class UserPreferencesDTO {
-	
-	    private String username;
-	    private Integer attractionProximity;
-	    private String currency;
-	    private Integer lowerPricePoint;
-	    private Integer highPricePoint;
-	    private Integer tripDuration;
-	    private Integer ticketQuantity;
-	    private Integer numberOfAdults;
-	    private Integer numberOfChildren;
+
+//	@Length(max = Constraints.USERNAME_MIN_LENGTH,
+//	    	message = "Username cannot be empty")
+	private String username;
+
+	@Min(value = Constraints.PROXIMITY_LOWER_LIMIT,
+			message = "Valid value required")
+	private Integer attractionProximity;
+
+
+	private String currency;
+
+	@Min(value = Constraints.LOWERPRICEPOINT_VALUE,
+			message = "Valid value required")
+	private Integer lowerPricePoint;
+
+	@Min(value = Constraints.HIGHPRICEPOINT_VALUE,
+			message = "Valid value required")
+	private Integer highPricePoint;
+
+	@Min(value = Constraints.TRIP_DURATION_MIN_VALUE,
+			message = "Minimum stay period should be atleast 1")
+	private Integer tripDuration;
+
+	@Min(value = Constraints.TICKET_QUANTITY_MIN_VALUE,
+			message = "Minimum ticket quantity value (1) required")
+	private Integer ticketQuantity;
+
+	@Min(value = Constraints.ADULT_NUMBER_MIN_VALUE,
+			message = "Minimum number of adults (1) required")
+	private Integer numberOfAdults;
+
+	@Min(value = Constraints.CHILD_NUMBER_MIN_VALUE,
+			message = "Valid value required")
+	private Integer numberOfChildren;
 
 
 
