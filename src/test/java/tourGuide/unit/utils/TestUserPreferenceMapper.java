@@ -25,16 +25,7 @@ public class TestUserPreferenceMapper {
 	@Test
 	public void testToUserPreferences() {
 
-//    	UserPreferencesDTO testUserPreferencesDto = new UserPreferencesDTO(
-//        		"",
-//        		999,
-//        		999,
-//        		999,
-//        		999,
-//        		999,
-//        		999,
-//        		999);
-		
+	
         UserPreferencesDTO userPreferencesDto = new UserPreferencesDTO();
         userPreferencesDto.setTripDuration(999);
         userPreferencesDto.setTicketQuantity(999);
@@ -66,5 +57,8 @@ public class TestUserPreferenceMapper {
 
 
 	// ##############################################################
+
+
+
 
 }

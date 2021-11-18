@@ -17,6 +17,7 @@ import com.jsoniter.output.JsonStream;
 
 import gpsUtil.location.VisitedLocation;
 import tourGuide.dto.UserPreferencesDTO;
+import tourGuide.exception.UserNotFoundException;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
 import tourGuide.service.ITourGuideService;
@@ -226,10 +227,13 @@ public class TourGuideController {
     @ResponseStatus(HttpStatus.CREATED)
     private UserPreferencesDTO updateUserPreferences(
     		@RequestParam String userName,
-    		@RequestBody UserPreferencesDTO userPreferences) {
+    		@RequestBody UserPreferencesDTO userPreferences) throws UserNotFoundException {
 
-    	tourGuideService.updateUserPreferences(
-        		userName, userPreferences);
+    	if (!tourGuideService.updateUserPreferences(
+        		userName, userPreferences)) {
+    		
+    		throw new UserNotFoundException("User Not Found");
+    	}
 
     	return userPreferences;
     }
