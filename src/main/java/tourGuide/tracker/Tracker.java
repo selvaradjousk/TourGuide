@@ -84,7 +84,7 @@ public class Tracker extends Thread {
 	 */
 	public void stopTracking() {
 
-//		logger.info("stopTracking Called");
+		logger.info("stopTracking Called");
 
 		stop = true;
 
@@ -124,18 +124,20 @@ public class Tracker extends Thread {
 			// Tracks all users
 			List<User> users = tourGuideService.getAllUsers();
 
-//			logger.debug("Begin Tracker. Tracking"
-//					+ " " + users.size() + " users.");
+			logger.debug("Begin Tracker. Tracking"
+					+ " " + users.size() + " users.");
 
 			stopWatch.start();
 
-//			logger.info("stopWatch starts");
+			logger.info("stopWatch starts");
 
 //			users.forEach(u -> tourGuideService.trackUserLocation(u));
 
+			// ############################################################
 			// parallel stream method
 			users.parallelStream().forEach(u -> trackUserLocation(u));
-			 
+
+			// ############################################################
 			 // async method
 //			users.forEach(u -> trackUserLocation(u));
 
@@ -144,7 +146,7 @@ public class Tracker extends Thread {
 
 			stopWatch.stop();
 
-//			logger.info("stopwatch stops");
+			logger.info("stopwatch stops");
 
 			logger.debug("Tracker Time Elapsed:"
 					+ " " + TimeUnit.MILLISECONDS

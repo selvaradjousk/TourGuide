@@ -13,12 +13,12 @@ public class NearbyAttractionDTO {
 	@Getter
 	@JsonProperty("longitude")
 	double longitude;
-    @JsonProperty("distance")
 
+	@JsonProperty("distance")
     @Getter
     double distance;
-    @JsonProperty("rewardPoints")
 
+	@JsonProperty("rewardPoints")
     @Getter
     int rewardPoints;
 

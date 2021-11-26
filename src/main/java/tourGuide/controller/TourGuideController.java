@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.jsoniter.output.JsonStream;
 
@@ -85,14 +84,14 @@ public class TourGuideController {
         logger.info("## getLocation() page requested"
         		+ " for user {} : ", userName);
 
-        // check for username validity
-        checkUserNameNotFound(userName);
-
-        // if userName null => BadRequestException 
-        checkInputVariableNotNull(userName);
-
-        // if userName empty => BadRequestException 
-        checkInputVariableLengthNotZeroValue(userName);
+//        // check for username validity
+//        checkUserNameNotFound(userName);
+//
+//        // if userName null => BadRequestException 
+//        checkInputVariableNotNull(userName);
+//
+//        // if userName empty => BadRequestException 
+//        checkInputVariableLengthNotZeroValue(userName);
 
         VisitedLocation visitedLocation = tourGuideService
     			.getUserLocation(getUser(userName));
@@ -129,14 +128,14 @@ public class TourGuideController {
         logger.info("## getNearbyAttractions() page requested"
         		+ " for user {} : ", userName);
 
-        // check for username validity
-        checkUserNameNotFound(userName);
-
-        // if userName null => BadRequestException 
-        checkInputVariableNotNull(userName);
-
-        // if userName empty => BadRequestException 
-        checkInputVariableLengthNotZeroValue(userName);
+//        // check for username validity
+//        checkUserNameNotFound(userName);
+//
+//        // if userName null => BadRequestException 
+//        checkInputVariableNotNull(userName);
+//
+//        // if userName empty => BadRequestException 
+//        checkInputVariableLengthNotZeroValue(userName);
 
 
         return JsonStream.serialize(tourGuideService
@@ -160,14 +159,14 @@ public class TourGuideController {
 
         logger.info("## getRewards for user {} requested", userName);
 
-        // check for username validity
-        checkUserNameNotFound(userName);
-
-        // if userName null => BadRequestException 
-        checkInputVariableNotNull(userName);
-
-        // if userName empty => BadRequestException 
-        checkInputVariableLengthNotZeroValue(userName);
+//        // check for username validity
+//        checkUserNameNotFound(userName);
+//
+//        // if userName null => BadRequestException 
+//        checkInputVariableNotNull(userName);
+//
+//        // if userName empty => BadRequestException 
+//        checkInputVariableLengthNotZeroValue(userName);
 
 
         List<UserReward> userRewards = tourGuideService
@@ -241,14 +240,14 @@ public class TourGuideController {
         logger.info("## getTripDeals"
         		+ " for user {} : ", userName);
 
-        // check for username validity
-        checkUserNameNotFound(userName);
-
-        // if userName null => BadRequestException 
-        checkInputVariableNotNull(userName);
-
-        // if userName empty => BadRequestException 
-        checkInputVariableLengthNotZeroValue(userName);
+//        // check for username validity
+//        checkUserNameNotFound(userName);
+//
+//        // if userName null => BadRequestException 
+//        checkInputVariableNotNull(userName);
+//
+//        // if userName empty => BadRequestException 
+//        checkInputVariableLengthNotZeroValue(userName);
 
 
     	List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
@@ -287,14 +286,14 @@ public class TourGuideController {
 	//###############################################################
 
 
-	private void checkUserNameNotFound(
-			String userName) throws UserNotFoundException {
-
-		if (getUser(userName) == null) {
-    		
-    		throw new BadRequestException("USERNAME required");
-    	}
-	}    
+//	private void checkUserNameNotFound(
+//			String userName) throws BadRequestException {
+//
+//		if (getUser(userName) == null) {
+//    		
+//    		throw new BadRequestException("USERNAME required");
+//    	}
+//	}    
     
     
 

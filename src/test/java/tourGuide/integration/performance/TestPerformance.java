@@ -80,6 +80,7 @@ public class TestPerformance {
 		// Users should be incremented up to 100,000, > 15 minutes and test finishes within 15 minutes
 		// ----------------------------------------------------------------------------
 		InternalTestHelper.setInternalUserNumber(6667);
+		InternalTestHelper.setInternalUserNumber(100000);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 	    StopWatch stopWatch = new StopWatch();
 		
@@ -136,6 +137,7 @@ public class TestPerformance {
         System.out.println("highVolumeTrackLocation check if (6667 users < 1 minute) : Actual Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 		System.out.println("highVolumeTrackLocation: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 		assertTrue(TimeUnit.MINUTES.toSeconds(1) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
+		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
 

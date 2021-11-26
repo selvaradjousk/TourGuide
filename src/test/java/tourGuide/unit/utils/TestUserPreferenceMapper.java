@@ -24,7 +24,7 @@ import tourGuide.util.UserPreferencesMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 public class TestUserPreferenceMapper {
 
     private UserPreferencesMapper userPreferencesMapper = new UserPreferencesMapper();
