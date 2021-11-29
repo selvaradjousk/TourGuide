@@ -131,7 +131,25 @@ public class UserPreferencesMapper {
 
 
 	// ##############################################################
+	// ##############################################################
 
+
+
+    public UserPreferencesDTO toUserPreferencesDTO(
+    		final UserPreferences preferences) {
+
+        return new UserPreferencesDTO(
+        		null, preferences.getAttractionProximity(),
+        		preferences.getLowerPricePoint().getNumber().intValue(),
+                preferences.getHighPricePoint().getNumber().intValue(),
+                preferences.getTripDuration(),
+                preferences.getTicketQuantity(),
+                preferences.getNumberOfAdults(),
+                preferences.getNumberOfChildren());
+    }
+
+
+	// ##############################################################
 
 
 }
