@@ -17,11 +17,15 @@ import tourGuide.model.User;
 import tourGuide.service.IRewardService;
 import tourGuide.service.ITourGuideService;
 
+/**
+ * The Class Tracker.
+ */
 public class Tracker extends Thread {
 
 	private Logger logger
 					= LoggerFactory.getLogger(Tracker.class);
 
+	/** The Constant trackingPollingInterval. */
 	private static final long trackingPollingInterval
 							= TimeUnit.MINUTES.toSeconds(5);
 
@@ -34,14 +38,21 @@ public class Tracker extends Thread {
 
 	// Concurrency JDK API interface that simplifies running tasks
 	//  in asynchronous mode as threads
-    private final ExecutorService executorService = Executors
+	/** The executor service. */
+	private final ExecutorService executorService = Executors
     		.newFixedThreadPool(1000);
 
 
+    /** The tour guide service. */
     private final ITourGuideService tourGuideService;
+
+    /** The gps util. */
     private final GpsUtil gpsUtil;
+
+    /** The rewards service. */
     private final IRewardService rewardsService;
 
+    /** The stop. */
     private boolean stop = false;
 
 
@@ -49,6 +60,13 @@ public class Tracker extends Thread {
 
 
 
+	/**
+	 * Instantiates a new tracker.
+	 *
+	 * @param tourGuideService the tour guide service
+	 * @param gpsUtil the gps util
+	 * @param rewardsService the rewards service
+	 */
 	public Tracker(
 			ITourGuideService tourGuideService,
 			GpsUtil gpsUtil,
@@ -65,7 +83,7 @@ public class Tracker extends Thread {
 
 
 	/**
-	 * Triggers to start the Tracker thread
+	 * Triggers to start the Tracker thread.
 	 */
     public void startTracking() {
         stop = false;
@@ -102,6 +120,9 @@ public class Tracker extends Thread {
 	// ##############################################################
 
 
+	/**
+	 * Run Tracker.
+	 */
 	@Override
 	public void run() {
 
@@ -186,6 +207,12 @@ public class Tracker extends Thread {
 	// ExecutorService changed from
 	// .newSingleThreadPool to .newFixedThreadPool(1000)
 	// improved performance drastically > 10 folds
+	/**
+	 * Track user location.
+	 *
+	 * @param user the user
+	 * @return the completable future
+	 */
 	public CompletableFuture<?> trackUserLocation(User user) {
 		return CompletableFuture.supplyAsync(() -> {
 			VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
@@ -200,7 +227,12 @@ public class Tracker extends Thread {
 
 	// ##############################################################
 
-    // Methods used for Testing Purpose
+	// Methods used for Testing Purpose
+    /**
+	 * Track and wait.
+	 *
+	 * @param users the users
+	 */
     @Profile("test")
     public void trackAndWait(List<User> users) {
 

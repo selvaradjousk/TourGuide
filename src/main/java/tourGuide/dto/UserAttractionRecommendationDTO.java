@@ -8,13 +8,18 @@ import gpsUtil.location.Location;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The Class UserAttractionRecommendationDTO.
+ */
 public class UserAttractionRecommendationDTO {
 
 
+	/** The user position. */
 	@Getter @Setter
     @JsonProperty("userPosition")
     Location userPosition;
 
+	/** The nearby attraction DT os. */
 	@Getter @Setter
 	@JsonProperty("nearbyAttractions")
     Map<String, NearbyAttractionDTO> nearbyAttractionDTOs;
@@ -24,7 +29,13 @@ public class UserAttractionRecommendationDTO {
 	// ##############################################################
 
 
-    public UserAttractionRecommendationDTO(
+    /**
+	 * Instantiates a new user attraction recommendation DTO.
+	 *
+	 * @param userPosition the user position
+	 * @param nearbyAttractionDTOs the nearby attraction DT os
+	 */
+	public UserAttractionRecommendationDTO(
     		Location userPosition,
     		Map<String, NearbyAttractionDTO> nearbyAttractionDTOs) {
 

@@ -9,9 +9,18 @@ import org.springframework.stereotype.Component;
 import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.model.UserPreferences;
 
+/**
+ * The Class UserPreferencesMapper.
+ */
 @Component
 public class UserPreferencesMapper {
 
+    /**
+     * To user preferences.
+     *
+     * @param userPreferencesDTO the user preferences DTO
+     * @return the user preferences
+     */
     public UserPreferences toUserPreferences (
     		UserPreferencesDTO userPreferencesDTO) {
 
