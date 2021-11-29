@@ -19,37 +19,49 @@ import rewardCentral.RewardCentral;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
 
+/**
+ * The Class RewardsService.
+ */
 @Service
 public class RewardsService implements IRewardService {
 
 
 
+	/** The logger. */
 	private Logger logger = LoggerFactory
 			.getLogger(RewardsService.class);
 
+	/** The Constant STATUTE_MILES_PER_NAUTICAL_MILE. */
 	private static final double STATUTE_MILES_PER_NAUTICAL_MILE
 													= 1.15077945;
 
+	/** The default proximity buffer. */
 	// proximity in miles
     private int defaultProximityBuffer = 10;
+	
+	/** The attraction proximity range. */
 	private int attractionProximityRange = 200;
 
 
 
+	/** The rewards central. */
 	private final RewardCentral rewardsCentral;
+	
+	/** The attractions. */
 	private final List<Attraction> attractions;
 	//	private final GpsUtil gpsUtil;
 
 
 	// ##############################################################
 
-
+	/** The executor service. */
 	// Concurrency JDK API interface that simplifies running tasks
 	//  in asynchronous mode as threads
     private final ExecutorService executorService = Executors
     		.newFixedThreadPool(1000);
     private int proximityBuffer = defaultProximityBuffer;
 
+    /** The count down latch. */
     // Concurrency construct that allows one or more threads
     // to wait for a given set of operations to complete
     CountDownLatch countDownLatch = new CountDownLatch(0);
@@ -60,7 +72,13 @@ public class RewardsService implements IRewardService {
 
 
 
-    @Autowired
+    /**
+	 * Instantiates a new rewards service.
+	 *
+	 * @param gpsUtil the gps util
+	 * @param rewardCentral the reward central
+	 */
+	@Autowired
 	public RewardsService(
 			GpsUtil gpsUtil,
 			RewardCentral rewardCentral) {
@@ -74,6 +92,11 @@ public class RewardsService implements IRewardService {
 	// ##############################################################
 
 
+	/**
+	 * Sets the proximity buffer.
+	 *
+	 * @param proximityBuffer the new proximity buffer
+	 */
 	public void setProximityBuffer(int proximityBuffer) {
 
 		logger.info("## setProximityBuffer() called"
@@ -88,6 +111,9 @@ public class RewardsService implements IRewardService {
 	// ##############################################################
 
 
+	/**
+	 * Sets the default proximity buffer.
+	 */
 	public void setDefaultProximityBuffer() {
 
 		logger.info("## setDefaultProximityBuffer() called");
@@ -101,6 +127,11 @@ public class RewardsService implements IRewardService {
 	// ##############################################################
 
 
+	/**
+	 * Calculate rewards.
+	 *
+	 * @param user the user
+	 */
 	@Override
 	public void calculateRewards(User user) {
 
@@ -155,6 +186,13 @@ public class RewardsService implements IRewardService {
 	// ##############################################################
 
 
+	/**
+	 * Checks if is within attraction proximity.
+	 *
+	 * @param attraction the attraction
+	 * @param location the location
+	 * @return true, if is within attraction proximity
+	 */
 	public boolean isWithinAttractionProximity(
 			Attraction attraction,
 			Location location) {
@@ -172,6 +210,13 @@ public class RewardsService implements IRewardService {
 	// ##############################################################
 
 
+	/**
+	 * Near attraction.
+	 *
+	 * @param visitedLocation the visited location
+	 * @param attraction the attraction
+	 * @return true, if successful
+	 */
 	private boolean nearAttraction(
 			VisitedLocation visitedLocation,
 			Attraction attraction) {
@@ -191,6 +236,13 @@ public class RewardsService implements IRewardService {
 	// ##############################################################
 
 
+	/**
+	 * Gets the reward points.
+	 *
+	 * @param attraction the attraction
+	 * @param user the user
+	 * @return the reward points
+	 */
 	public int getRewardPoints(
 			Attraction attraction,
 			User user) {
@@ -210,6 +262,13 @@ public class RewardsService implements IRewardService {
 	// ##############################################################
 
 
+	/**
+	 * Gets the distance.
+	 *
+	 * @param loc1 the loc 1
+	 * @param loc2 the loc 2
+	 * @return the distance
+	 */
 	public double getDistance(Location loc1, Location loc2) {
 
 //		logger.info("## getDistance location1 {}"
@@ -251,7 +310,13 @@ public class RewardsService implements IRewardService {
 
 	// ##############################################################
 
-    // Methods used for Testing Purpose
+    /**
+	 * Reward and wait.
+	 *
+	 * @param users the users
+	 * @throws InterruptedException the interrupted exception
+	 */
+	// Methods used for Testing Purpose
     @Profile("test")
     public void rewardAndWait(List<User> users)
     					throws InterruptedException {

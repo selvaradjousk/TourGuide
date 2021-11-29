@@ -16,24 +16,38 @@ import tourGuide.dto.VisitedLocationDTO;
 import tourGuide.util.AttractionMapper;
 import tourGuide.util.VisitedLocationMapper;
 
+/**
+ * The Class GpsUtilMicroService.
+ */
 @Service
 public class GpsUtilMicroService implements IGpsUtilMicroService {
 
+	/** The logger. */
 	private Logger logger = LoggerFactory
 			.getLogger(GpsUtilMicroService.class);
 
 
+    /** The gps util. */
     private final GpsUtil gpsUtil;
 
+    /** The visited location mapper. */
     private final VisitedLocationMapper visitedLocationMapper;
 
+    /** The attraction mapper. */
     private final AttractionMapper attractionMapper;
     
 
 	// ##############################################################
 
 
-    public GpsUtilMicroService(
+    /**
+	 * Instantiates a new gps util micro service.
+	 *
+	 * @param gpsUtil the gps util
+	 * @param visitedLocationMapper the visited location mapper
+	 * @param attractionMapper the attraction mapper
+	 */
+	public GpsUtilMicroService(
     		GpsUtil gpsUtil,
     		VisitedLocationMapper visitedLocationMapper,
     		AttractionMapper attractionMapper) {
@@ -47,7 +61,13 @@ public class GpsUtilMicroService implements IGpsUtilMicroService {
 	// ##############################################################
 
     
-    @Override
+    /**
+	 * Gets the user location.
+	 *
+	 * @param userId the user id
+	 * @return the user location
+	 */
+	@Override
 	public VisitedLocationDTO getUserLocation(
 			final UUID userId) {
 
@@ -67,7 +87,12 @@ public class GpsUtilMicroService implements IGpsUtilMicroService {
 	// ##############################################################
 
     
-    @Override
+    /**
+	 * Gets the attractions.
+	 *
+	 * @return the attractions
+	 */
+	@Override
 	public List<AttractionDTO> getAttractions() {
 
 		logger.info("## getAttractions() called");

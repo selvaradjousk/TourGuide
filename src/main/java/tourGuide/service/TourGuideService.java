@@ -27,21 +27,35 @@ import tourGuide.util.UserPreferencesMapper;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
+/**
+ * The Class TourGuideService.
+ */
 @Service
 public class TourGuideService implements ITourGuideService {
 
 
 
+	/** The logger. */
 	private Logger logger = LoggerFactory
 			.getLogger(TourGuideService.class);
 
+	/** The gps util. */
 	private final GpsUtil gpsUtil;
+
+	/** The rewards service. */
 	private final IRewardService rewardsService;
+
+	/** The trip pricer. */
 	private final TripPricer tripPricer = new TripPricer();
+
+	/** The tracker. */
 	public final Tracker tracker;
+
+	/** The test mode. */
 	boolean testMode = true;
 
 	
+	/** The internal test helper. */
 	private InternalTestHelper internalTestHelper
 						= new InternalTestHelper();
 
@@ -69,6 +83,12 @@ public class TourGuideService implements ITourGuideService {
 
 
 
+	/**
+	 * Instantiates a new tour guide service.
+	 *
+	 * @param gpsUtil the gps util
+	 * @param rewardsService the rewards service
+	 */
 	public TourGuideService(
 			GpsUtil gpsUtil,
 			IRewardService rewardsService) {
@@ -104,6 +124,12 @@ public class TourGuideService implements ITourGuideService {
 
 
 
+	/**
+	 * Gets the user rewards.
+	 *
+	 * @param user the user
+	 * @return the user rewards
+	 */
 	@Override
 	public List<UserReward> getUserRewards(User user) {
 
@@ -120,6 +146,12 @@ public class TourGuideService implements ITourGuideService {
 
 
 	
+	/**
+	 * Gets the user location.
+	 *
+	 * @param user the user
+	 * @return the user location
+	 */
 	@Override
 	public VisitedLocation getUserLocation(User user) {
 
@@ -149,6 +181,12 @@ public class TourGuideService implements ITourGuideService {
 
 
 
+	/**
+	 * Gets the user.
+	 *
+	 * @param userName the user name
+	 * @return the user
+	 */
 	@Override
 	public User getUser(String userName) {
 
@@ -165,6 +203,11 @@ public class TourGuideService implements ITourGuideService {
 
 
 
+	/**
+	 * Gets the all users.
+	 *
+	 * @return the all users
+	 */
 	@Override
 	public List<User> getAllUsers() {
 
@@ -184,6 +227,11 @@ public class TourGuideService implements ITourGuideService {
 	// ##############################################################
 
 
+	/**
+	 * Gets the all users last location.
+	 *
+	 * @return the all users last location
+	 */
 	public HashMap<String, Location> getAllUsersLastLocation() {
 
 		HashMap<String, Location> usersLastLocation = new HashMap<>();
@@ -201,6 +249,11 @@ public class TourGuideService implements ITourGuideService {
 	// ##############################################################
 
 
+	/**
+	 * Adds the user.
+	 *
+	 * @param user the user
+	 */
 	@Override
 	public void addUser(User user) {
 
@@ -227,6 +280,12 @@ public class TourGuideService implements ITourGuideService {
 
 
 
+	/**
+	 * Gets the trip deals.
+	 *
+	 * @param user the user
+	 * @return the trip deals
+	 */
 	@Override
 	public List<Provider> getTripDeals(User user) {
 
@@ -269,7 +328,14 @@ public class TourGuideService implements ITourGuideService {
 
 	// ##############################################################
 
-    public boolean updateUserPreferences(
+    /**
+	 * Update user preferences.
+	 *
+	 * @param userName the user name
+	 * @param userPreferencesDTO the user preferences DTO
+	 * @return true, if successful
+	 */
+	public boolean updateUserPreferences(
     		String userName,
     		UserPreferencesDTO userPreferencesDTO) {
 
@@ -325,6 +391,12 @@ public class TourGuideService implements ITourGuideService {
 
 
 
+	/**
+	 * Gets the user attraction recommendation.
+	 *
+	 * @param username the username
+	 * @return the user attraction recommendation
+	 */
 	public UserAttractionRecommendationDTO getUserAttractionRecommendation(String username) {
 
 		VisitedLocation userLastLocation = getUser(username).getLastVisitedLocation();
@@ -355,6 +427,12 @@ public class TourGuideService implements ITourGuideService {
 
 
 
+	/**
+	 * Gets the near by attractions.
+	 *
+	 * @param visitedLocation the visited location
+	 * @return the near by attractions
+	 */
 	@Override
 	public List<Attraction> getNearByAttractions(
 			VisitedLocation visitedLocation) {
@@ -386,6 +464,9 @@ public class TourGuideService implements ITourGuideService {
 
 
 
+	/**
+	 * Adds the shut down hook.
+	 */
 	private void addShutDownHook() {
 
 		logger.info("## addShutDownHook invoked ");

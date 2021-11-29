@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import gpsUtil.GpsUtil;
 import rewardCentral.RewardCentral;
 
+/**
+ * The Class RewardsMicroService.
+ */
 @Service
 public class RewardsMicroService implements IRewardsMicroService {
 
@@ -23,7 +26,13 @@ public class RewardsMicroService implements IRewardsMicroService {
 	// ##############################################################
 
 
-    @Autowired
+    /**
+	 * Instantiates a new rewards micro service.
+	 *
+	 * @param gpsUtil the gps util
+	 * @param rewardCentral the reward central
+	 */
+	@Autowired
     public RewardsMicroService(
     		final GpsUtil gpsUtil,
     		final RewardCentral rewardCentral) {
@@ -35,7 +44,14 @@ public class RewardsMicroService implements IRewardsMicroService {
 
 	// ##############################################################
 
-    @Override
+    /**
+	 * Gets the attraction reward points.
+	 *
+	 * @param attractionId the attraction id
+	 * @param userId the user id
+	 * @return the attraction reward points
+	 */
+	@Override
 	public int getAttractionRewardPoints(
 			final UUID attractionId,
 			final UUID userId) {
