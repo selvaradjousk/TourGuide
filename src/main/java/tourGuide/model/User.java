@@ -9,30 +9,49 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import gpsUtil.location.VisitedLocation;
-import tripPricer.Provider;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+/**
+ * The Class User.
+ */
+@Getter
+@Setter
+@NoArgsConstructor
 public class User {
 
-	private final UUID userId;
+	/** The user id. */
+	private UUID userId;
 
+	/** The user name. */
 	@NotNull
 	@Length(min=1, message = "USERNAME required")
-	private final String userName;
+	private String userName;
+
+	/** The phone number. */
 	private String phoneNumber;
+
+	/** The email address. */
 	private String emailAddress;
 
+	/** The latest location timestamp. */
 	private Date latestLocationTimestamp;
 
+	/** The visited locations. */
 	private List<VisitedLocation> visitedLocations
 								= new ArrayList<>();
 
+	/** The user rewards. */
 	private List<UserReward> userRewards
 								= new ArrayList<>();
 
+	/** The user preferences. */
 	private UserPreferences userPreferences
 								= new UserPreferences();
 
+	/** The trip deals. */
 	private List<Provider> tripDeals
 								= new ArrayList<>();
 
@@ -41,6 +60,14 @@ public class User {
 	// ##############################################################
 
 
+	/**
+	 * Instantiates a new user.
+	 *
+	 * @param userId the user id
+	 * @param userName the user name
+	 * @param phoneNumber the phone number
+	 * @param emailAddress the email address
+	 */
 	public User(
 			UUID userId,
 			String userName,
@@ -53,46 +80,21 @@ public class User {
 		this.emailAddress = emailAddress;
 	}
 
-	public UUID getUserId() {
-		return userId;
-	}
+	// ##############################################################
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
-
-	public String getEmailAddress() {
-		return emailAddress;
-	}
-
-	public void setLatestLocationTimestamp(Date latestLocationTimestamp) {
-		this.latestLocationTimestamp = latestLocationTimestamp;
-	}
-
-	public Date getLatestLocationTimestamp() {
-		return latestLocationTimestamp;
-	}
-
-	public void addToVisitedLocations(VisitedLocation visitedLocation) {
+	/**
+	 * Adds the to visited locations.
+	 *
+	 * @param visitedLocation the visited location
+	 */
+	public void addToVisitedLocations(
+			VisitedLocation visitedLocation) {
 		visitedLocations.add(visitedLocation);
 	}
 
-	public List<VisitedLocation> getVisitedLocations() {
-		return visitedLocations;
-	}
-
+	/**
+	 * Clear visited locations.
+	 */
 	public void clearVisitedLocations() {
 		visitedLocations.clear();
 	}
@@ -102,7 +104,12 @@ public class User {
 	// ##############################################################
 
 
-	public void addUserReward(UserReward userReward) {
+	/**
+	 * Adds the user reward.
+	 *
+	 * @param userReward the user reward
+	 */
+	public void addUserReward(final UserReward userReward) {
 //		if(userRewards.stream()
 //				.filter(
 //						r -> !r.attraction.attractionName
@@ -118,28 +125,14 @@ public class User {
 	// ##############################################################
 
 
-	public List<UserReward> getUserRewards() {
-		return userRewards;
-	}
 
-	public UserPreferences getUserPreferences() {
-		return userPreferences;
-	}
-
-	public void setUserPreferences(UserPreferences userPreferences) {
-		this.userPreferences = userPreferences;
-	}
-
+	/**
+	 * Gets the last visited location.
+	 *
+	 * @return the last visited location
+	 */
 	public VisitedLocation getLastVisitedLocation() {
 		return visitedLocations.get(visitedLocations.size() - 1);
-	}
-
-	public void setTripDeals(List<Provider> tripDeals) {
-		this.tripDeals = tripDeals;
-	}
-
-	public List<Provider> getTripDeals() {
-		return tripDeals;
 	}
 
 

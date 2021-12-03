@@ -3,7 +3,9 @@ package tourGuide.dto;
 import java.util.Date;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tourGuide.model.Location;
 
@@ -12,6 +14,8 @@ import tourGuide.model.Location;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class VisitedLocationDTO {
 
     /** The user id. */
@@ -23,16 +27,5 @@ public class VisitedLocationDTO {
     /** The time visited. */
     private Date timeVisited;
 
-    /**
-     * Instantiates a new visited location DTO.
-     *
-     * @param userId the user id
-     * @param location the location
-     * @param timeVisited the time visited
-     */
-    public VisitedLocationDTO(UUID userId, Location location, Date timeVisited) {
-        this.userId = userId;
-        this.location = location;
-        this.timeVisited = timeVisited;
-      }
+
 }

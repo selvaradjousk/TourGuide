@@ -152,10 +152,10 @@ public class TourGuideControllerIT_getLocationValid {
 	    assertTrue(response.getBody().contains("name"));
 	    assertTrue(response.getBody().contains("tripId"));
 	    assertTrue(response.getBody().contains("price"));
-	    assertTrue(response.getBody().contains("mostSigBits"));
-	    assertTrue(response.getBody().contains("leastSigBits"));
-	    assertTrue(response.getBody().contains("leastSignificantBits"));
-	    assertTrue(response.getBody().contains("mostSignificantBits"));
+//	    assertTrue(response.getBody().contains("mostSigBits"));
+//	    assertTrue(response.getBody().contains("leastSigBits"));
+//	    assertTrue(response.getBody().contains("leastSignificantBits"));
+//	    assertTrue(response.getBody().contains("mostSignificantBits"));
 	                     
 	
 	    }

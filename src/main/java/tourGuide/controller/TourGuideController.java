@@ -1,6 +1,7 @@
 package tourGuide.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -15,48 +16,58 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsoniter.output.JsonStream;
-
-import gpsUtil.location.VisitedLocation;
+import tourGuide.dto.LocationDTO;
+import tourGuide.dto.ProviderDTO;
+import tourGuide.dto.UserAttractionRecommendationDTO;
 import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.exception.BadRequestException;
-import tourGuide.exception.UserNotFoundException;
 import tourGuide.model.User;
-import tourGuide.model.UserReward;
 import tourGuide.service.ITourGuideService;
-import tripPricer.Provider;
 
+/**
+ * The Class TourGuideController.
+ */
 @RestController
 public class TourGuideController {
 
 
 
+	/** The logger. */
 	private Logger logger = LoggerFactory
 			.getLogger(TourGuideController.class);
 
-//	@Autowired
-//	private RestTemplate restTemplate;
 
+	/** The tour guide service. */
 	@Autowired
 	ITourGuideService tourGuideService;
 
-    public TourGuideController(ITourGuideService tourGuideService) {
-		super();
-		this.tourGuideService = tourGuideService;
-	}
+
+	// ##############################################################
+
+
+    /**
+     * Instantiates a new tour guide controller.
+     *
+     * @param tourGuideService the tour guide service
+     */
+    public TourGuideController(
+    		final ITourGuideService tourGuideService) {
+        this.tourGuideService = tourGuideService;
+    }
+
 
 
 	//###############################################################
-	// PORT 					: 8080
-	// Endpoint					: GET http://localhost:8080/
-	// POSTMAN Endpoint status	: 200 OK
-	// POSTMAN Response body	: Greetings from TourGuide!
-	// More info				: 
-	//###############################################################
 
 
+	
+	
 
-
+	/**
+	 * Index.
+	 *
+	 * @return the string
+	 */
 	@RequestMapping("/")
     public String index() {
 
@@ -69,463 +80,236 @@ public class TourGuideController {
 
 
 	//###############################################################
-	// PORT 					: 8080
-	// Endpoint					: GET http://localhost:8080/getLocation?userName=internalUser1
-	// POSTMAN Endpoint status	: 200 OK
-	// POSTMAN Response body	: {"longitude":-11.776629,"latitude":79.513937}
-	// More info				: 
-	//###############################################################
 
-    @RequestMapping("/getLocation") 
-    public String getLocation(
+
+	
+	
+    /**
+	 * Gets the location.
+	 *
+	 * @param userName the user name
+	 * @return the location
+	 * @throws BadRequestException the bad request exception
+	 */
+	@RequestMapping("/getLocation") 
+    public LocationDTO getLocation(
     		@Valid @RequestParam String userName)
     				throws BadRequestException {
 
         logger.info("## getLocation() page requested"
         		+ " for user {} : ", userName);
 
-//        // check for username validity
-//        checkUserNameNotFound(userName);
-//
-//        // if userName null => BadRequestException 
-//        checkInputVariableNotNull(userName);
-//
-//        // if userName empty => BadRequestException 
-//        checkInputVariableLengthNotZeroValue(userName);
 
-        VisitedLocation visitedLocation = tourGuideService
-    			.getUserLocation(getUser(userName));
+        if (userName.length() == 0) {
+            throw new BadRequestException("username is required");
+        }
+        LocationDTO userLocation = tourGuideService.getUserLocation(userName);
 
-        logger.info("## visitedLocation {} "
-        		+ " for user {} : ", visitedLocation, userName);
-
-    	return JsonStream.serialize(visitedLocation.location);
+      logger.info("## visitedLocation {} "
+		+ " for user {} : ", userLocation, userName);
+        return userLocation;
     }
 
 
 
 
 	//###############################################################
-	// PORT 					: 8080
-	// Endpoint					: GET http://localhost:8080/getNearbyAttractions?userName=internalUser1
-	// POSTMAN Endpoint status	: 200 OK
-	// POSTMAN Response body	: []
-	// More info				:  !!! EMPTY ARRAY !!!  TODO Task
-	//###############################################################
 
-    //  TODO: Change this method to no longer return a List of Attractions.
- 	//  Instead: Get the closest five tourist attractions to the user - no matter how far away they are.
- 	//  Return a new JSON object that contains:
-    	// Name of Tourist attraction, 
-        // Tourist attractions lat/long, 
-        // The user's location lat/long, 
-        // The distance in miles between the user's location and each of the attractions.
-        // The reward points for visiting each Attraction.
-        //    Note: Attraction reward points can be gathered from RewardsCentral
-    @RequestMapping("/getNearbyAttractions")
-    public String getNearbyAttractions(@RequestParam String userName) {
+
+
+
+
+    /**
+	 * Gets the user recommended attractions.
+	 *
+	 * @param userName the user name
+	 * @return the user recommended attractions
+	 */
+	@RequestMapping("/getNearbyAttractions")
+    public UserAttractionRecommendationDTO getUserRecommendedAttractions(
+    		@RequestParam final String userName) {
 
         logger.info("## getNearbyAttractions() page requested"
         		+ " for user {} : ", userName);
 
-//        // check for username validity
-//        checkUserNameNotFound(userName);
-//
-//        // if userName null => BadRequestException 
-//        checkInputVariableNotNull(userName);
-//
-//        // if userName empty => BadRequestException 
-//        checkInputVariableLengthNotZeroValue(userName);
 
-
-        return JsonStream.serialize(tourGuideService
-        		.getUserAttractionRecommendation(userName));
-
+        if (userName.length() == 0) {
+            throw new BadRequestException("username is required");
+        }
+        UserAttractionRecommendationDTO nearByAttractions = tourGuideService
+        		.getUserAttractionRecommendation(userName);
+        
+        return nearByAttractions;
     }
 
 
 
 
-	//###############################################################
-	// PORT 					: 8080
-	// Endpoint					: GET http://localhost:8080/getRewards?userName=internalUser1
-	// POSTMAN Endpoint status	: 200 OK
-	// POSTMAN Response body	: []
-	// More info				: !!! EMPTY ARRAY !!!
+
 	//###############################################################
 
-    @RequestMapping("/getRewards") 
-    public String getRewards(@RequestParam String userName) {
+
+
+
+
+    /**
+	 * Gets the user rewards.
+	 *
+	 * @param userName the user name
+	 * @return the user rewards
+	 */
+	@RequestMapping("/getRewards") 
+    public int getUserRewards(
+    		@RequestParam final String userName) {
 
         logger.info("## getRewards for user {} requested", userName);
 
-//        // check for username validity
-//        checkUserNameNotFound(userName);
-//
-//        // if userName null => BadRequestException 
-//        checkInputVariableNotNull(userName);
-//
-//        // if userName empty => BadRequestException 
-//        checkInputVariableLengthNotZeroValue(userName);
+        if (userName.length() == 0) {
+            throw new BadRequestException("username is required");
+        }
+        int userRewards = tourGuideService.getTotalRewardPointsForUser(userName);
 
+        logger.info("## getRewards for user rewardPointsTotalValue"
+        		+ " {} requested", userRewards);
 
-        List<UserReward> userRewards = tourGuideService
-    			.getUserRewards(getUser(userName));
-
-        logger.info("## getRewards for user rewards size"
-        		+ " {} requested", userRewards.size());
-
-        return JsonStream.serialize(userRewards);
+        return userRewards;
     }
 
-
-
+//
+//    @RequestMapping("/getRewards") 
+//    public List<UserRewardDTO> getUserRewards(
+//    		@RequestParam final String userName) {
+//
+//        logger.info("## getRewards for user {} requested", userName);
+//
+//        if (userName.length() == 0) {
+//            throw new BadRequestException("username is required");
+//        }
+//        List<UserRewardDTO> userRewards = tourGuideService
+//        		.getUserRewards(userName);
+//
+//        logger.info("## getRewards for user rewards size"
+//        		+ " {} requested", userRewards.size());
+//
+//        return userRewards;
+//    }
 
 
 	//###############################################################
-	// PORT 					: 8080
-	// Endpoint					: GET http://localhost:8080/getAllCurrentLocations
-	// POSTMAN Endpoint status	: 200 OK
-	// POSTMAN Response body	: ""
-	// More info				: !!! EMPTY String !!! TODO Task
-	//###############################################################
 
-    @RequestMapping("/getAllCurrentLocations")
-    public String getAllCurrentLocations() {
-    	// TODO: Get a list of every user's most recent location as JSON
-    	//- Note: does not use gpsUtil to query for their current location, 
-    	//        but rather gathers the user's current location from their stored location history.
-    	//		SOLUTIONS: List<Location> userCurrentLocations, List<Location> userLocationHistory
-    	// Return object should be the just a JSON mapping of userId to Locations similar to:
-    	//     {
-    	//        "019b04a9-067a-4c76-8817-ee75088c3822": {"longitude":-48.188821,"latitude":74.84371}
-    	//        ...
-    	//     }
+
+
+
+
+    /**
+ * Gets the users recent location.
+ *
+ * @return the users recent location
+ */
+@RequestMapping("/getAllCurrentLocations")
+    public Map<String, LocationDTO> getUsersRecentLocation() {
 
         logger.info("## getAllCurrentLocations requested");
-    	
-//    	return JsonStream.serialize("");
-        return JsonStream.serialize(tourGuideService.getAllUsersLastLocation());        
+
+        Map<String, LocationDTO> usersRecentLocation = tourGuideService
+        		.getAllUserRecentLocation();
+        
+        return usersRecentLocation;
     }
 
 
 
 
-
 	//###############################################################
-	// PORT 					: 8080
-	// Endpoint					: GET http://localhost:8080/getTripDeals?userName=internalUser1
-	// POSTMAN Endpoint status	: 200 OK
-	// POSTMAN Response body	: [{"name":"FlyAway Trips",
-    //								"price":261.99,
-    // 								"tripId":{
-    // 										"mostSigBits":2020962664642464876,
-    // 										"leastSigBits":-5580671602236548359,
-    // 										"leastSignificantBits":-5580671602236548359,
-    // 										"mostSignificantBits":2020962664642464876
-    // 										}
-    // 								},
-    // 								{"name":"AdventureCo","price":337.99,"tripId":{"mostSigBits":2020962664642464876,"leastSigBits":-5580671602236548359,"leastSignificantBits":-5580671602236548359,"mostSignificantBits":2020962664642464876}},
-    // 								{"name":"Enterprize Ventures Limited","price":306.99,"tripId":{"mostSigBits":2020962664642464876,"leastSigBits":-5580671602236548359,"leastSignificantBits":-5580671602236548359,"mostSignificantBits":2020962664642464876}},
-    // 								{"name":"United Partners Vacations","price":493.99,"tripId":{"mostSigBits":2020962664642464876,"leastSigBits":-5580671602236548359,"leastSignificantBits":-5580671602236548359,"mostSignificantBits":2020962664642464876}},
-    // 								{"name":"Holiday Travels","price":109.99,"tripId":{"mostSigBits":2020962664642464876,"leastSigBits":-5580671602236548359,"leastSignificantBits":-5580671602236548359,"mostSignificantBits":2020962664642464876}}]
-	// More info				: 
 
-    // 
-	//###############################################################
-    
-    @RequestMapping("/getTripDeals")
-    public String getTripDeals(@RequestParam String userName) {
+
+
+
+
+    /**
+	 * Gets the user trip deals.
+	 *
+	 * @param userName the user name
+	 * @return the user trip deals
+	 */
+	@RequestMapping("/getTripDeals")
+    public List<ProviderDTO> getUserTripDeals(
+    		@RequestParam final String userName) {
 
         logger.info("## getTripDeals"
         		+ " for user {} : ", userName);
 
-//        // check for username validity
-//        checkUserNameNotFound(userName);
-//
-//        // if userName null => BadRequestException 
-//        checkInputVariableNotNull(userName);
-//
-//        // if userName empty => BadRequestException 
-//        checkInputVariableLengthNotZeroValue(userName);
+        if (userName.length() == 0) {
+            throw new BadRequestException("username is required");
+        }
+        List<ProviderDTO> userTripDeals = tourGuideService
+        		.getUserTripDeals(userName);
 
-
-    	List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
 
         logger.info("## providers {} "
-        		+ " for user {} : ", providers.size(), userName);
+        		+ " for user {} : ", userTripDeals.size(), userName);
 
-    	return JsonStream.serialize(providers);
+        return userTripDeals;
+        
     }
 
 
 	//###############################################################
     
-    
-    @PutMapping("/updateUserPreferences")
+
+
+    /**
+	 * Gets the user preferences.
+	 *
+	 * @param userPreferencesDTO the user preferences DTO
+	 * @param userName the user name
+	 * @return the user preferences
+	 */
+	@PutMapping("/updateUserPreferences")
     @ResponseStatus(HttpStatus.CREATED)
-    private String updateUserPreferences(
-    		@RequestParam String userName,
-    		@Valid @RequestBody UserPreferencesDTO userPreferences) throws UserNotFoundException {
+    public UserPreferencesDTO getUserPreferences(
+    		@Valid @RequestBody final UserPreferencesDTO userPreferencesDTO,
+            @RequestParam final String userName) {
+    	
 
-    	checkInputVariableLengthNotZeroValue(userName);
+        if (userName.length() == 0) {
+            throw new BadRequestException("username is required");
+        }
+        UserPreferencesDTO userPreferences = tourGuideService
+        		.updateUserPreferences(userName, userPreferencesDTO);
 
-    	checkUserNameFound(userName, userPreferences);
+        return userPreferences;
 
-    	String updateSuccess = messageAfterUpdate(userName, userPreferences); 
-
-    	return updateSuccess;
     }
 
 
 
-
-
-
-
 	//###############################################################
 
 
-//	private void checkUserNameNotFound(
-//			String userName) throws BadRequestException {
-//
-//		if (getUser(userName) == null) {
-//    		
-//    		throw new BadRequestException("USERNAME required");
-//    	}
-//	}    
-    
-    
 
-	private void checkUserNameFound(
-			String userName,
-			UserPreferencesDTO userPreferences) throws UserNotFoundException {
-
-		if (!tourGuideService.updateUserPreferences(
-        		userName, userPreferences)) {
-    		
-    		throw new UserNotFoundException("User Not Found");
-    	}
-	}
-
-
-	private void checkInputVariableLengthNotZeroValue(
-			String userName) throws BadRequestException  {
-
-		if (userName.length() == 0) {
-            throw new BadRequestException("USERNAME required");
-        }
-	}
-   
-
-	private void checkInputVariableNotNull(
-			String userName) throws BadRequestException  {
-
-		if (userName == null) {
-            throw new BadRequestException("USERNAME required");
-        }
-	}
-   
-
-
-	private String messageAfterUpdate(String userName, UserPreferencesDTO userPreferences) {
-		String updatedMessage = "Your New User Preferences are updated."
-    			+ " Enjoy our service & Have a good Day " + "\n"
-    			+ "UserName: " + userPreferences.getUsername() + "\n"
-    			+ "Currency : " + userPreferences.getCurrency() + "\n"
-    			+ "AttractionProximity : " + userPreferences.getAttractionProximity() + "\n"
-    	    	+ "LowerPricePoint : " + userPreferences.getLowerPricePoint() + "\n"
-    	    	+ "HighPricePoint : " + userPreferences.getHighPricePoint() + "\n"
-    	    	+ "TripDuration : " + userPreferences.getTripDuration() + "\n"
-    	    	+ "TicketQuantity : " + userPreferences.getTicketQuantity() + "\n"
-    	    	+ "NumberOfAdults : " + userPreferences.getNumberOfAdults() + "\n"
-    	    	+ "NumberOfChildren : " + userPreferences.getNumberOfChildren() + "\n";
-
-		return updatedMessage;
-	}
-
-	//###############################################################
-    
-    
-
-
-
-	//###############################################################
-    // REQUEST MAPPING NEWLY ADDED FOR POSTMAN TEST PURPOSE ONLY
-    // --------------------------------------------------------------
-    // PORT 					: 8080
-	// Endpoint					: GET http://localhost:8080/getUser?userName=internalUser1
-	// POSTMAN Endpoint status	: 200 OK
-	// POSTMAN Response body	: OUTPUT EXTRACT AS BELOW THE METHOD
-	// More info				: UserRewards & TripDeals array are empty !!!
-	//###############################################################    
-
-    @RequestMapping("/getUser")
+    /**
+	 * Gets the user.
+	 *
+	 * @param userName the user name
+	 * @return the user
+	 * @throws BadRequestException the bad request exception
+	 */
+	@RequestMapping("/getUser")
     private User getUser(String userName) throws BadRequestException  {
 
         logger.info("## getUser "
         		+ " for user {} : ", userName);
 
-        // if userName null => BadRequestException
-        checkInputVariableNotNull(userName);
-
-    	// if userName empty => BadRequestException 
-        checkInputVariableLengthNotZeroValue(userName);        
-
     	return tourGuideService.getUser(userName);
     }
-   
-		    
-		    /* {
-		    "userId": "644960a4-4b33-4445-b8ce-4757c67ff6d9",
-		    "userName": "internalUser1",
-		    "phoneNumber": "000",
-		    "emailAddress": "internalUser1@tourGuide.com",
-		    "latestLocationTimestamp": null,
 
-		    "visitedLocations": [
-		        {
-		            "userId": "644960a4-4b33-4445-b8ce-4757c67ff6d9",
-		            "location": {
-		                "longitude": 32.144604268919124,
-		                "latitude": 47.38217151784272
-		            },
-		            "timeVisited": "2021-11-02T13:06:12.074+0000"
-		        },
-		        {
-		            "userId": "644960a4-4b33-4445-b8ce-4757c67ff6d9",
-		            "location": {
-		                "longitude": -12.286082931615795,
-		                "latitude": 19.835172057077244
-		            },
-		            "timeVisited": "2021-11-01T13:06:12.074+0000"
-		        },
-		        {
-		            "userId": "644960a4-4b33-4445-b8ce-4757c67ff6d9",
-		            "location": {
-		                "longitude": 139.27310742909873,
-		                "latitude": 31.727019127142498
-		            },
-		            "timeVisited": "2021-11-03T13:06:12.074+0000"
-		        }
-		    ],
 
-		    "userRewards": [],
-		    
-		    "userPreferences": {
-		        "attractionProximity": 2147483647,
-		        "lowerPricePoint": {
-		            "currency": {
-		                "context": {
-		                    "empty": false,
-		                    "providerName": "java.util.Currency"
-		                },
-		                "currencyCode": "USD",
-		                "defaultFractionDigits": 2,
-		                "numericCode": 840
-		            },
-		            "number": 0,
-		            "factory": {
-		                "defaultMonetaryContext": {
-		                    "precision": 0,
-		                    "maxScale": 63,
-		                    "amountType": "org.javamoney.moneta.Money",
-		                    "fixedScale": false,
-		                    "empty": false,
-		                    "providerName": null
-		                },
-		                "maxNumber": null,
-		                "minNumber": null,
-		                "amountType": "org.javamoney.moneta.Money",
-		                "maximalMonetaryContext": {
-		                    "precision": 0,
-		                    "maxScale": -1,
-		                    "amountType": "org.javamoney.moneta.Money",
-		                    "fixedScale": false,
-		                    "empty": false,
-		                    "providerName": null
-		                }
-		            },
-		            "context": {
-		                "precision": 256,
-		                "maxScale": -1,
-		                "amountType": "org.javamoney.moneta.Money",
-		                "fixedScale": false,
-		                "empty": false,
-		                "providerName": null
-		            },
-		            "zero": true,
-		            "positive": false,
-		            "negative": false,
-		            "negativeOrZero": true,
-		            "positiveOrZero": true,
-		            "numberStripped": 0
-		        },
 
-		        "highPricePoint": {
-		            "currency": {
-		                "context": {
-		                    "empty": false,
-		                    "providerName": "java.util.Currency"
-		                },
-		                "currencyCode": "USD",
-		                "defaultFractionDigits": 2,
-		                "numericCode": 840
-		            },
-		            "number": 2147483647,
-		            "factory": {
-		                "defaultMonetaryContext": {
-		                    "precision": 0,
-		                    "maxScale": 63,
-		                    "amountType": "org.javamoney.moneta.Money",
-		                    "fixedScale": false,
-		                    "empty": false,
-		                    "providerName": null
-		                },
-		                "maxNumber": null,
-		                "minNumber": null,
-		                "amountType": "org.javamoney.moneta.Money",
-		                "maximalMonetaryContext": {
-		                    "precision": 0,
-		                    "maxScale": -1,
-		                    "amountType": "org.javamoney.moneta.Money",
-		                    "fixedScale": false,
-		                    "empty": false,
-		                    "providerName": null
-		                }
-		            },
-		            "context": {
-		                "precision": 256,
-		                "maxScale": -1,
-		                "amountType": "org.javamoney.moneta.Money",
-		                "fixedScale": false,
-		                "empty": false,
-		                "providerName": null
-		            },
-		            "zero": false,
-		            "positive": true,
-		            "negative": false,
-		            "negativeOrZero": false,
-		            "positiveOrZero": true,
-		            "numberStripped": 2147483647
-		        },
-		        "tripDuration": 1,
-		        "ticketQuantity": 1,
-		        "numberOfAdults": 1,
-		        "numberOfChildren": 0
-		    },
+	//###############################################################
 
-		    "tripDeals": [],
 
-		    "lastVisitedLocation": {
-		        "userId": "644960a4-4b33-4445-b8ce-4757c67ff6d9",
-		        "location": {
-		            "longitude": 139.27310742909873,
-		            "latitude": 31.727019127142498
-		        },
-		        "timeVisited": "2021-11-03T13:06:12.074+0000"
-		    }
-		}
-		*/
+
+
 
 }

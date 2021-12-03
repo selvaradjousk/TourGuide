@@ -71,13 +71,13 @@ public class GpsUtilMicroService implements IGpsUtilMicroService {
 	public VisitedLocationDTO getUserLocation(
 			final UUID userId) {
 
-		logger.info("## getUserLocation() called");
+//		logger.info("## getUserLocation() called");
 
         VisitedLocation visitedLocation = gpsUtil
         		.getUserLocation(userId);
 
-		logger.info("## visitedLocation(): {}"
-				+ " returned", visitedLocation);
+//		logger.info("## visitedLocation(): {}"
+//				+ " returned", visitedLocation);
 
         return visitedLocationMapper
         		.toVisitedLocationDTO(visitedLocation);
@@ -95,7 +95,7 @@ public class GpsUtilMicroService implements IGpsUtilMicroService {
 	@Override
 	public List<AttractionDTO> getAttractions() {
 
-		logger.info("## getAttractions() called");
+//		logger.info("## getAttractions() called");
 
         List<AttractionDTO> attractionList = new ArrayList<>();
 
@@ -108,8 +108,8 @@ public class GpsUtilMicroService implements IGpsUtilMicroService {
             		attractionMapper.toAttractionDTO(attraction));
         });
 
-		logger.info("## attractionList: {}"
-				+ " returned", attractionList);
+//		logger.info("## attractionList: {}"
+//				+ " returned", attractionList);
 
         return attractionList;
     }

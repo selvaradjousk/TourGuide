@@ -2,7 +2,9 @@ package tourGuide.dto;
 
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -10,6 +12,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProviderDTO {
 
     /** The name. */
@@ -21,10 +25,5 @@ public class ProviderDTO {
     /** The trip id. */
     private UUID tripId;
 
-    
-    public ProviderDTO(UUID tripId, String name, double price) {
-      this.name = name;
-      this.tripId = tripId;
-      this.price = price;
-    }
+
 }

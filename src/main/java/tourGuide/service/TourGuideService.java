@@ -1,31 +1,49 @@
 package tourGuide.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
+import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
-import tourGuide.dto.NearbyAttractionDTO;
+import tourGuide.dto.AttractionDTO;
+import tourGuide.dto.LocationDTO;
+import tourGuide.dto.NearByAttractionDTO;
+import tourGuide.dto.ProviderDTO;
 import tourGuide.dto.UserAttractionRecommendationDTO;
 import tourGuide.dto.UserPreferencesDTO;
+import tourGuide.dto.UserRewardDTO;
+import tourGuide.dto.VisitedLocationDTO;
+import tourGuide.exception.DataAlreadyRegisteredException;
+import tourGuide.exception.UserNotFoundException;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.model.Location;
+import tourGuide.model.Provider;
 import tourGuide.model.User;
 import tourGuide.model.UserPreferences;
-import tourGuide.model.UserReward;
 import tourGuide.tracker.Tracker;
+import tourGuide.util.DistanceCalculator;
+import tourGuide.util.LocationMapper;
+import tourGuide.util.ProviderMapper;
 import tourGuide.util.UserPreferencesMapper;
-import tripPricer.Provider;
-import tripPricer.TripPricer;
+import tourGuide.util.UserRewardMapper;
+import tourGuide.util.VisitedLocationMapper;
+
 
 /**
  * The Class TourGuideService.
@@ -39,65 +57,118 @@ public class TourGuideService implements ITourGuideService {
 	private Logger logger = LoggerFactory
 			.getLogger(TourGuideService.class);
 
-	/** The gps util. */
-	private final GpsUtil gpsUtil;
+    /** The executor service. */
+    private final ExecutorService executorService = Executors
+    		.newFixedThreadPool(1000);
 
-	/** The rewards service. */
-	private final IRewardService rewardsService;
+    /** The gps util micro service. */
+    private final IGpsUtilMicroService gpsUtilMicroService;
 
-	/** The trip pricer. */
-	private final TripPricer tripPricer = new TripPricer();
+    /** The rewards micro service. */
+    private RewardsMicroService rewardsMicroService;
+
+    /** The trip deals micro service. */
+    private final TripDealsMicroService tripDealsMicroService;
+
+    /** The rewards service. */
+    private final IRewardService rewardsService;
+
+    /** The user preferences mapper. */
+    private final UserPreferencesMapper userPreferencesMapper;
+
+    /** The user reward mapper. */
+    private final UserRewardMapper userRewardMapper;
+
+    /** The location mapper. */
+    private final LocationMapper locationMapper;
+
+    /** The visited location mapper. */
+    private final VisitedLocationMapper visitedLocationMapper;
+    
+    /** The provider mapper. */
+    private final ProviderMapper providerMapper;
+
+    /** The distance calculator. */
+    private final DistanceCalculator distanceCalculator;
 
 	/** The tracker. */
-	public final Tracker tracker;
+	public Tracker tracker;
 
 	/** The test mode. */
-	boolean testMode = true;
+    @Value("${test.mode.enabled}")
+    private boolean isTestMode;
 
+    /** The is performance test. */
+    @Value("${performance.test.enabled}")
+    private boolean isPerformanceTest;
 	
 	/** The internal test helper. */
 	private InternalTestHelper internalTestHelper
 						= new InternalTestHelper();
 
 
-
-	// ##############################################################
-
-
-//	public TourGuideService(
-//			GpsUtil gpsUtil,
-//			RewardsService rewardsService,
-//			Tracker tracker,
-//			InternalTestHelper internalTestHelper) {
-//
-//		super();
-//		this.gpsUtil = gpsUtil;
-//		this.rewardsService = rewardsService;
-//		this.tracker = tracker;
-//		this.internalTestHelper = internalTestHelper;
-//	}
-
-
-
 	// ##############################################################
 
 
 
-	/**
+
+
+    /**
 	 * Instantiates a new tour guide service.
 	 *
-	 * @param gpsUtil the gps util
+	 * @param gpsUtilMicroService the gps util micro service
+	 * @param rewardsMicroService the rewards micro service
+	 * @param tripDealsMicroService the trip deals micro service
 	 * @param rewardsService the rewards service
+	 * @param internalTestHelper the internal test helper
+	 * @param userPreferencesMapper the user preferences mapper
+	 * @param userRewardMapper the user reward mapper
+	 * @param locationMapper the location mapper
+	 * @param visitedLocationMapper the visited location mapper
+	 * @param providerMapper the provider mapper
+	 * @param distanceCalculator the distance calculator
 	 */
-	public TourGuideService(
-			GpsUtil gpsUtil,
-			IRewardService rewardsService) {
+	@Autowired
+    public TourGuideService(
+    		final IGpsUtilMicroService gpsUtilMicroService,
+    		final RewardsMicroService rewardsMicroService,
+    		final TripDealsMicroService tripDealsMicroService,
+    		final IRewardService rewardsService,
+    		final InternalTestHelper internalTestHelper,
+    		final UserPreferencesMapper userPreferencesMapper,
+    		final UserRewardMapper userRewardMapper,
+    		final LocationMapper locationMapper,
+    		final VisitedLocationMapper visitedLocationMapper,
+    		final ProviderMapper providerMapper,
+    		final DistanceCalculator distanceCalculator) {
 
-		this.gpsUtil = gpsUtil;
-		this.rewardsService = rewardsService;
+        this.gpsUtilMicroService = gpsUtilMicroService;
+        this.rewardsMicroService = rewardsMicroService;
+        this.tripDealsMicroService = tripDealsMicroService;
+        this.rewardsService = rewardsService;
+        this.internalTestHelper = internalTestHelper;
+        this.userPreferencesMapper = userPreferencesMapper;
+        this.userRewardMapper = userRewardMapper;
+        this.locationMapper = locationMapper;
+        this.visitedLocationMapper = visitedLocationMapper;
+        this.providerMapper = providerMapper;
+        this.distanceCalculator = distanceCalculator;
+    }
+
+		
 
 
-		if(testMode) {
+	// ##############################################################
+
+
+
+    /**
+	 * Initialization.
+	 */
+	@PostConstruct
+    public void initialization() {
+
+        if (isTestMode) {
 
 			logger.info("TestMode enabled");
 
@@ -106,38 +177,51 @@ public class TourGuideService implements ITourGuideService {
 			internalTestHelper.initializeInternalUsers();
 
 			logger.debug("Finished initializing users");
-		}
+        }
 
-		this.tracker = new Tracker(this, gpsUtil, rewardsService);
-
-		logger.info("## Tracker instance initiated");
-
-		addShutDownHook();
-
-		logger.info("## addShutDownHook() called");
-
-	}
+        if (!isPerformanceTest) {
+        	
+            this.tracker = new Tracker(this);
+    
+    		logger.info("## Tracker instance initiated");
+    
+            tracker.startTracking();
+        }
+    }
 
 
 
 	// ##############################################################
+	// ######################## OK ##################################
 
 
 
 	/**
 	 * Gets the user rewards.
 	 *
-	 * @param user the user
+	 * @param userName the user name
 	 * @return the user rewards
 	 */
 	@Override
-	public List<UserReward> getUserRewards(User user) {
+	public List<UserRewardDTO> getUserRewards(
+			final String userName) {
 
 		logger.info("## getUserRewards list for"
-				+ " user {} retrieved ", user );
+				+ " user {} retrieved ", userName );
+
+        User user = getUser(userName);
 
 
-		return user.getUserRewards();
+        List<UserRewardDTO> userRewards = new ArrayList<>();
+        user.getUserRewards().stream()
+                .forEach(reward -> {
+                    userRewards.add(userRewardMapper
+                    		.toUserRewardDTO(reward));
+                });
+
+        return userRewards;
+		
+//		return user.getUserRewards();
 	}
 
 
@@ -145,37 +229,30 @@ public class TourGuideService implements ITourGuideService {
 	// ##############################################################
 
 
-	
-	/**
+    /**
 	 * Gets the user location.
 	 *
-	 * @param user the user
+	 * @param userName the user name
 	 * @return the user location
 	 */
-	@Override
-	public VisitedLocation getUserLocation(User user) {
+	public LocationDTO getUserLocation(final String userName) {
 
-		logger.info("## getUserLocation"
-				+ " for user {} invoked ", user.getUserName() );
+//    	logger.info("## getUserLocation"
+//		+ " for user {} invoked ", userName );
 
-		VisitedLocation visitedLocation;
+        User user = getUser(userName);
 
-		// get user location if not null
-		if(user.getVisitedLocations().size() > 0) {
-			visitedLocation = user.getLastVisitedLocation();
-		} else {
-			// gpsUtil used to fetch location if found null
-			visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-			user.addToVisitedLocations(visitedLocation);
-		}
+        if (user.getVisitedLocations().size() > 0) {
+            return locationMapper
+            		.toLocationDTO(
+            				user.getLastVisitedLocation().getLocation());
+        }
 
-		logger.info("## Visited Location for"
-				+ " user {} is: {} ", user, visitedLocation);
-
-		return visitedLocation;
-	}
-
-
+        return locationMapper.toLocationDTO(
+        		gpsUtilMicroService.getUserLocation(
+        				user.getUserId()).getLocation());
+    }
+	
 
 	// ##############################################################
 
@@ -190,11 +267,15 @@ public class TourGuideService implements ITourGuideService {
 	@Override
 	public User getUser(String userName) {
 
-		logger.info("## getUser() for user {} invoked ", userName );
+//		logger.info("## getUser() for user {} invoked ", userName );
 
-		return internalTestHelper
-				.internalUserMap
-				.get(userName);
+		User user = internalTestHelper.getInternalUserMap().get(userName);
+
+        if (user == null) {
+            throw new UserNotFoundException("Username not found");
+        }
+
+		return user;
 	}
 
 
@@ -213,13 +294,18 @@ public class TourGuideService implements ITourGuideService {
 
 		logger.info("## getAllUser() method invoked");
 
-		return new ArrayList<>(internalTestHelper.internalUserMap.values());
+		List<User> users = internalTestHelper
+				.getInternalUserMap()
+				.values()
+				.stream()
+				.collect(Collectors.toList());
+
+        if (users.isEmpty()) {
+            throw new UserNotFoundException("User List unavailable");
+        }
+
+        return users;		
 		
-//		return internalTestHelper
-//				.internalUserMap
-//				.values()
-//				.stream()
-//				.collect(Collectors.toList());
 	}
 
 
@@ -232,22 +318,17 @@ public class TourGuideService implements ITourGuideService {
 	 *
 	 * @return the all users last location
 	 */
-	public HashMap<String, Location> getAllUsersLastLocation() {
+	public Map<String, LocationDTO> getAllUserRecentLocation() {
 
-		HashMap<String, Location> usersLastLocation = new HashMap<>();
-
-		getAllUsers()
-				.forEach(u -> usersLastLocation
-						.put(u
-								.getLastVisitedLocation().userId.toString(),
-								u.getLastVisitedLocation().location));
-
-		return usersLastLocation;
-
-	}
+        return getAllUsers()
+        		.stream()
+        		.collect(
+        				Collectors.toMap(
+        						u -> u.getUserId().toString(),
+        						u -> getUserLocation(u.getUserName())));
+    }
 
 	// ##############################################################
-
 
 	/**
 	 * Adds the user.
@@ -255,9 +336,10 @@ public class TourGuideService implements ITourGuideService {
 	 * @param user the user
 	 */
 	@Override
-	public void addUser(User user) {
+	public void addUser(final User user) {
 
 		logger.info("## addUser() for user {} invoked ", user );
+
 
 		if(!internalTestHelper
 				.internalUserMap
@@ -271,6 +353,9 @@ public class TourGuideService implements ITourGuideService {
 			.internalUserMap.put(
 					user.getUserName(),
 					user);
+		} else {
+			throw new DataAlreadyRegisteredException(""
+					+ "Username exists already");
 		}
 	}
 
@@ -283,40 +368,49 @@ public class TourGuideService implements ITourGuideService {
 	/**
 	 * Gets the trip deals.
 	 *
-	 * @param user the user
+	 * @param userName the user name
 	 * @return the trip deals
 	 */
 	@Override
-	public List<Provider> getTripDeals(User user) {
+	public List<ProviderDTO> getUserTripDeals(
+			final String userName) {
 
 		logger.info("## getTripDeals() method for"
-				+ " user {} invoked", user);
+				+ " user {} invoked", userName);
+
+		User user = getUser(userName);
 
 		int cumulativeRewardPoints = user
 				.getUserRewards()
 				.stream()
-//				.mapToInt(i -> i.getRewardPoints())
-				.mapToInt(UserReward::getRewardPoints)
+				.mapToInt(r -> r
+						.getRewardPoints())
 				.sum();
 
 		logger.info("## cumulative points for"
 				+ " user {} : {}", user.getUserName(), cumulativeRewardPoints);
 
 
-		List<Provider> providers = tripPricer.getPrice(
-				internalTestHelper
-				.tripPricerApiKey,
-				user.getUserId(),
-				user.getUserPreferences().getNumberOfAdults(), 
-				user.getUserPreferences().getNumberOfChildren(),
-				user.getUserPreferences().getTripDuration(),
-				cumulativeRewardPoints);
+		List<ProviderDTO> providers = tripDealsMicroService
+				.getProviders(
+						internalTestHelper.getTripPricerApiKey(),
+						user.getUserId(),
+						user.getUserPreferences().getNumberOfAdults(),
+						user.getUserPreferences().getNumberOfChildren(),
+						user.getUserPreferences().getTripDuration(),
+						cumulativeRewardPoints);
 
 		logger.info("## Providers for"
 				+ " user {} : {}", user.getUserName(), providers);
 
 
-		user.setTripDeals(providers);
+        List<Provider> providerList = new ArrayList<>();
+        providers.forEach(provider -> {
+            providerList.add(providerMapper.toProvider(provider));
+        });
+        
+        
+		user.setTripDeals(providerList);
 
 		logger.info("## TripDeals for"
 				+ " user {} : {}", user.getUserName(), user.getTripDeals());
@@ -328,33 +422,48 @@ public class TourGuideService implements ITourGuideService {
 
 	// ##############################################################
 
-    /**
+ 
+	/**
 	 * Update user preferences.
 	 *
 	 * @param userName the user name
 	 * @param userPreferencesDTO the user preferences DTO
-	 * @return true, if successful
+	 * @return the user preferences DTO
 	 */
-	public boolean updateUserPreferences(
-    		String userName,
-    		UserPreferencesDTO userPreferencesDTO) {
+	public UserPreferencesDTO updateUserPreferences(
+    		final String userName,
+    		final UserPreferencesDTO userPreferencesDTO) {
 
-    	if (!internalTestHelper.internalUserMap.containsKey(userName)) {
-            return false;
-        }
 
-//        User user = getUser(userName);
-    	User user = internalTestHelper
-    			.internalUserMap.get(userName);
 
-    	UserPreferences userPreferences = new UserPreferencesMapper()
-    			.toUserPreferences(userPreferencesDTO);
+        User user = getUser(userName);
 
-        user.setUserPreferences(userPreferences);
 
-        internalTestHelper.internalUserMap.put(userName, user);
+        UserPreferences userPreferences = user
+        		.getUserPreferences();
+        userPreferences.setAttractionProximity(userPreferencesDTO
+        		.getAttractionProximity());
+        userPreferences.setHighPricePoint(Money.of(userPreferencesDTO
+        		.getHighPricePoint(), userPreferences
+        		.getCurrency()));
+        userPreferences.setLowerPricePoint(Money.of(userPreferencesDTO
+        		.getLowerPricePoint(), userPreferences
+        		.getCurrency()));
+        userPreferences.setTripDuration(userPreferencesDTO
+        		.getTripDuration());
+        userPreferences.setTicketQuantity(userPreferencesDTO
+        		.getTicketQuantity());
+        userPreferences.setNumberOfAdults(userPreferencesDTO
+        		.getNumberOfAdults());
+        userPreferences.setNumberOfChildren(userPreferencesDTO
+        		.getNumberOfChildren());
 
-        return true;
+        
+        UserPreferencesDTO userPreferencesUpdated = userPreferencesMapper
+        		.toUserPreferencesDTO(user.getUserPreferences());
+
+        return userPreferencesUpdated;
+
     }
 
 
@@ -362,101 +471,191 @@ public class TourGuideService implements ITourGuideService {
 	// ##############################################################
 
 
-//
-//	@Override
-//	public VisitedLocation trackUserLocation(User user) {
-//
-////		logger.info("## trackUserLocation() for"
-////				+ " user {} invoked", user.getUserName());
-//
-//		VisitedLocation visitedLocation
-//					= gpsUtil.getUserLocation(user.getUserId());
-//
-////		logger.info("## visitedLocation for"
-////				+ " user {} : {}", user.getUserName(), visitedLocation);
-//
-//		user.addToVisitedLocations(visitedLocation);
-//
-//		rewardsService.calculateRewards(user);
-//
-//		return visitedLocation;
-//	}
-//
 
+
+	/**
+	 * Track user location.
+	 *
+	 * @param user the user
+	 * @return the completable future
+	 */
+	public CompletableFuture<?> trackUserLocation(final User user) {
+    	
+//	logger.info("## trackUserLocation() for"
+//			+ " user {} invoked", user.getUserName());
+
+
+        return CompletableFuture.supplyAsync(() -> {
+
+        	VisitedLocationDTO visitedLocation = gpsUtilMicroService
+            		.getUserLocation(user.getUserId());
+
+        	user.addToVisitedLocations(visitedLocationMapper
+        			.toVisitedLocation(visitedLocation));
+
+        	CompletableFuture.runAsync(() -> {
+                rewardsService.calculateRewards(user);
+            });
+
+        	return visitedLocation;
+
+        }, executorService);
+    }
 
 
 
 
 	// ##############################################################
+
 
 
 
 	/**
 	 * Gets the user attraction recommendation.
 	 *
-	 * @param username the username
+	 * @param userName the user name
 	 * @return the user attraction recommendation
 	 */
-	public UserAttractionRecommendationDTO getUserAttractionRecommendation(String username) {
+	public UserAttractionRecommendationDTO getUserAttractionRecommendation(
+			final String userName) {
 
-		VisitedLocation userLastLocation = getUser(username).getLastVisitedLocation();
+		
+        User user = getUser(userName);
+        Location userLocation = locationMapper
+        		.toLocation(getUserLocation(userName));
 
-		List<Attraction> nearbyAttractions = getNearByAttractions(userLastLocation);
+    	CompletableFuture.runAsync(() -> {
+            rewardsService.calculateRewards(user);
+        });
+        
+        List<AttractionDTO> attractions = gpsUtilMicroService
+        		.getAttractions();
 
-		Map<String, NearbyAttractionDTO> nearbyAttractionHashMap = new HashMap<>();
+        Map<AttractionDTO, Double> attractionsMap = getAttractiosMap(
+        		userLocation,
+        		attractions);
 
-		nearbyAttractions.forEach(att ->
-				nearbyAttractionHashMap.put(
-						att.attractionName,
-						new NearbyAttractionDTO(
-								att.latitude,
-								att.longitude,
-								rewardsService.getDistance(att, userLastLocation.location),
-								rewardsService.getRewardPoints(att, getUser(username))))
-		);
+        Map<AttractionDTO, Double> closestAttractionsMap = getClosestAttractionsMap(
+        		attractionsMap);
 
-		return new UserAttractionRecommendationDTO(
-				userLastLocation.location,
-				nearbyAttractionHashMap);
 
+        List<NearByAttractionDTO> nearByAttractions = getNearByAttractions(
+        		user,
+        		userLocation,
+        		closestAttractionsMap);
+
+        return new UserAttractionRecommendationDTO(
+        		userLocation,
+        		nearByAttractions);
+    }
+
+
+	
+	// ##############################################################
+
+
+
+	/**
+	 * Gets the attractios map.
+	 *
+	 * @param userLocation the user location
+	 * @param attractions the attractions
+	 * @return the attractios map
+	 */
+	private Map<AttractionDTO, Double> getAttractiosMap(
+			Location userLocation,
+			List<AttractionDTO> attractions) {
+
+		
+		Map<AttractionDTO, Double> attractionsMap = new HashMap<>();
+
+		// ********************************************************
+
+		/*Sequential Streams VS Parallel stream (stream() Vs parallelStream())
+		 Sequential streams outperformed parallel streams
+		  when the number of elements in the collection was
+		   less than 100,000. Parallel streams performed
+		    significantly better than sequential streams
+		     when the number of elements was more than 100,000.*/
+		// ********************************************************
+//        attractions.stream()
+			attractions
+				.stream()
+                .forEach(a -> {
+                    attractionsMap
+                    .put(a, distanceCalculator
+                    		.getDistanceInMiles(a
+                    				.getLocation(), userLocation));
+                });
+		return attractionsMap;
 	}
+	
+
 
 
 	// ##############################################################
 
+
+
+	/**
+	 * Gets the closest attractions map.
+	 *
+	 * @param attractionsMap the attractions map
+	 * @return the closest attractions map
+	 */
+	private Map<AttractionDTO, Double> getClosestAttractionsMap(
+			Map<AttractionDTO, Double> attractionsMap) {
+
+		Map<AttractionDTO, Double> closestAttractionsMap = attractionsMap
+        		.entrySet()
+//        		.stream()
+        		.stream()
+                .sorted(Map.Entry.comparingByValue())
+                .limit(5)
+                .collect(
+                		Collectors
+                		.toMap(
+                				Map.Entry::getKey,
+                				Map.Entry::getValue,
+                				(e1, e2) -> e1,
+                				LinkedHashMap::new));
+		return closestAttractionsMap;
+	}
+
+
+
+
+	// ##############################################################
 
 
 
 	/**
 	 * Gets the near by attractions.
 	 *
-	 * @param visitedLocation the visited location
+	 * @param user the user
+	 * @param userLocation the user location
+	 * @param closestAttractionsMap the closest attractions map
 	 * @return the near by attractions
 	 */
-	@Override
-	public List<Attraction> getNearByAttractions(
-			VisitedLocation visitedLocation) {
+	private List<NearByAttractionDTO> getNearByAttractions(
+			User user, Location userLocation,
+			Map<AttractionDTO, Double> closestAttractionsMap) {
 
-		logger.info("## getNearByAttractions() for"
-				+ " visitedLocation - {} called", visitedLocation);
+		List<NearByAttractionDTO> nearByAttractions = new ArrayList<>();
 
-		List<Attraction> nearbyAttractions = gpsUtil.getAttractions();
-
-        nearbyAttractions = nearbyAttractions.stream()
-                .sorted(Comparator.comparing(
-                        attraction -> rewardsService.getDistance(
-                        		visitedLocation.location,
-                        		attraction)))
-                .limit(5)
-                .collect(Collectors.toList());
-
-			logger.info("## NearByAttractions for"
-					+ " visitedLocation - {}"
-					+ " : {}", visitedLocation, nearbyAttractions);
-
-		
-		return nearbyAttractions;
+		final AtomicInteger indexHolder = new AtomicInteger();
+		final AtomicInteger totalPoints = new AtomicInteger();
+        cumulativeNRewardPointsForUserBasedOnNearbyAtrractions(
+        		user,
+        		closestAttractionsMap,
+        		nearByAttractions,
+				indexHolder,
+				totalPoints);
+        
+		return nearByAttractions;
 	}
+
+
 
 
 
@@ -465,31 +664,121 @@ public class TourGuideService implements ITourGuideService {
 
 
 	/**
-	 * Adds the shut down hook.
+	 * Gets the attractions reward points.
+	 *
+	 * @param user the user
+	 * @param a the a
+	 * @return the attractions reward points
 	 */
-	private void addShutDownHook() {
-
-		logger.info("## addShutDownHook invoked ");
-
-		Runtime.getRuntime().addShutdownHook(new Thread() { 
-
-			public void run() {
-
-				 if (!testMode) {
-					 tracker.stopTracking();
-				 }
-
-				logger.info("## tracker.stopTracking invoked ");
-
-			}
-
-		}); 
+	private int getAttractionsRewardPoints(
+			User user,
+			Entry<AttractionDTO,
+			Double> a) {
+		return rewardsMicroService
+				.getAttractionRewardPoints(
+					a.getKey().getAttractionId(),
+					user.getUserId());
 	}
 
+
+	
 
 
 	// ##############################################################
 
+
+		/**
+	 * Gets the total reward points for user.
+	 *
+	 * @param userName the user name
+	 * @return the total reward points for user
+	 */
+	public int getTotalRewardPointsForUser(
+				final String userName) {
+
+
+	        User user = getUser(userName);
+	        Location userLocation = locationMapper
+	        		.toLocation(getUserLocation(userName));
+
+	    	CompletableFuture.runAsync(() -> {
+	            rewardsService.calculateRewards(user);
+	        });
+	        
+	        List<AttractionDTO> attractions = gpsUtilMicroService
+	        		.getAttractions();
+
+	        Map<AttractionDTO, Double> attractionsMap = getAttractiosMap(
+	        		userLocation,
+	        		attractions);
+
+	        Map<AttractionDTO, Double> closestAttractionsMap = getClosestAttractionsMap(
+	        		attractionsMap);
+
+			List<NearByAttractionDTO> nearByAttractions = new ArrayList<>();
+
+			final AtomicInteger indexHolder = new AtomicInteger();
+			final AtomicInteger totalPoints = new AtomicInteger();
+
+			cumulativeNRewardPointsForUserBasedOnNearbyAtrractions(
+	        		user,
+	        		closestAttractionsMap,
+	        		nearByAttractions,
+					indexHolder,
+					totalPoints);
+	        
+		return totalPoints.intValue();
+	}
+
+
+
+
+		// ##############################################################
+
+
+
+
+		/**
+		 * Cumulative N reward points for user based on nearby atrractions.
+		 *
+		 * @param user the user
+		 * @param closestAttractionsMap the closest attractions map
+		 * @param nearByAttractions the near by attractions
+		 * @param indexHolder the index holder
+		 * @param totalPoints the total points
+		 */
+		private void cumulativeNRewardPointsForUserBasedOnNearbyAtrractions(
+				User user,
+				Map<AttractionDTO, Double> closestAttractionsMap,
+				List<NearByAttractionDTO> nearByAttractions,
+				final AtomicInteger indexHolder,
+				final AtomicInteger totalPoints) {
+
+			closestAttractionsMap.entrySet()
+	        	.stream()
+	                .forEach(a -> {
+	                	final int index = indexHolder.getAndIncrement();
+	                	
+	                    nearByAttractions
+	                    .add(new NearByAttractionDTO(
+	                    		a.getKey().getAttractionName(),
+	                            a.getKey().getLocation(),
+	                            a.getValue(),
+	                            getAttractionsRewardPoints(user, a)));
+	                    logger.info("###########" + nearByAttractions
+	                    		.get(index).getRewardPoints());
+	                    
+	                    totalPoints.addAndGet(nearByAttractions
+	                    		.get(index).getRewardPoints());
+	                    
+	                    logger.info("###########" + totalPoints);
+	                });
+		}
+
+
+
+
+	// ##############################################################
 
 
 }

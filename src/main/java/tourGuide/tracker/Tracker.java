@@ -9,19 +9,17 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.VisitedLocation;
 import tourGuide.model.User;
-import tourGuide.service.IRewardService;
 import tourGuide.service.ITourGuideService;
+import tourGuide.service.TourGuideService;
 
 /**
  * The Class Tracker.
  */
 public class Tracker extends Thread {
 
+	/** The logger. */
 	private Logger logger
 					= LoggerFactory.getLogger(Tracker.class);
 
@@ -39,18 +37,18 @@ public class Tracker extends Thread {
 	// Concurrency JDK API interface that simplifies running tasks
 	//  in asynchronous mode as threads
 	/** The executor service. */
+//	private final ExecutorService executorService = Executors
+//    		.newFixedThreadPool(1000);
 	private final ExecutorService executorService = Executors
-    		.newFixedThreadPool(1000);
-
+			.newSingleThreadExecutor();
 
     /** The tour guide service. */
     private final ITourGuideService tourGuideService;
 
-    /** The gps util. */
-    private final GpsUtil gpsUtil;
+//    /** The gps util. */
+//    private final GpsUtil gpsUtil;
 
-    /** The rewards service. */
-    private final IRewardService rewardsService;
+
 
     /** The stop. */
     private boolean stop = false;
@@ -60,24 +58,14 @@ public class Tracker extends Thread {
 
 
 
-	/**
+    /**
 	 * Instantiates a new tracker.
 	 *
 	 * @param tourGuideService the tour guide service
-	 * @param gpsUtil the gps util
-	 * @param rewardsService the rewards service
 	 */
-	public Tracker(
-			ITourGuideService tourGuideService,
-			GpsUtil gpsUtil,
-			IRewardService rewardsService) {
-
-		this.tourGuideService = tourGuideService;
-        this.gpsUtil = gpsUtil;
-        this.rewardsService = rewardsService;
-
+	public Tracker(final TourGuideService tourGuideService) {
+        this.tourGuideService = tourGuideService;
     }
-
 
 	// ##############################################################
 
@@ -111,7 +99,6 @@ public class Tracker extends Thread {
 		// will be stopped at the same time
 		executorService.shutdownNow();
 
-//		logger.info("shutdownNow executed = {}", stop);
 
 	}
 
@@ -119,132 +106,84 @@ public class Tracker extends Thread {
 
 	// ##############################################################
 
+	   @Override
+	    public void run() {
+	        StopWatch stopWatch = new StopWatch();
 
+	        while (true) {
+
+	            if (Thread.currentThread().isInterrupted() || stop) {
+	            	logger.info("Run Tracker invoked");
+	            	break;
+	            }
+
+	            List<User> users = tourGuideService.getAllUsers();
+	            logger.info("Begin Tracker. Tracking "
+	            + users.size() + " users.");
+
+	            stopWatch.start();
+	            CompletableFuture<?>[] futures = trackingUsersWithSequentialStreaming(
+	            		users);
+	            stopWatch.stop();
+
+	            logger.info("Finished tracking users, tracker Time Elapsed: "
+	                    + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
+	                    + " seconds.");
+
+	            stopWatch.reset();
+
+	            try {
+	                
+	            	logger.info("Tracker sleeping");
+	            	TimeUnit.SECONDS.sleep(trackingPollingInterval);
+
+	            } catch (InterruptedException e) {
+	            	break;
+	            }
+	        }
+	    }
+
+	   
+	   
+	   
+	   
 	/**
-	 * Run Tracker.
-	 */
-	@Override
-	public void run() {
-
-		logger.info("Run Tracker invoked");
-
-		// Method to calculate timing or elapsed time
-		StopWatch stopWatch = new StopWatch();
-
-		while(true) {
-
-			// Method return a reference to the currently executing thread object
-			// is interrupted or stopped
-			if(Thread.currentThread().isInterrupted() || stop) {
-
-				logger.debug("Tracker stopping");
-
-				break;
-			}
-
-			// Tracks all users
-			List<User> users = tourGuideService.getAllUsers();
-
-			logger.debug("Begin Tracker. Tracking"
-					+ " " + users.size() + " users.");
-
-			stopWatch.start();
-
-			logger.info("stopWatch starts");
-
-//			users.forEach(u -> tourGuideService.trackUserLocation(u));
-
-			// ############################################################
-			// parallel stream method
-			users.parallelStream().forEach(u -> trackUserLocation(u));
-
-			// ############################################################
-			 // async method
-//			users.forEach(u -> trackUserLocation(u));
-
-
-			logger.info("tracking user size : {} ", users.size());
-
-			stopWatch.stop();
-
-			logger.info("stopwatch stops");
-
-			logger.debug("Tracker Time Elapsed:"
-					+ " " + TimeUnit.MILLISECONDS
-					.toSeconds(stopWatch.getTime()) + " seconds."); 
-
-			stopWatch.reset();
-
-//			logger.info("stopwatch reset");
-
-			try {
-
-				logger.debug("Tracker sleeping");
-
-				TimeUnit.SECONDS.sleep(trackingPollingInterval);
-
-			} catch (InterruptedException e) {
-
-				break;
-			}
-		}
-		
-	}
-
-
-
-	// ##############################################################
-
-
-//    private CompletableFuture<?> trackUserLocation(User user) {
-//
-//    	return CompletableFuture
-//        		.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()))
-//                .thenAcceptAsync(user::addToVisitedLocations)
-//                .thenRunAsync(() -> rewardsService.calculateRewards(user));
-//    }
-
-	// ExecutorService changed from
-	// .newSingleThreadPool to .newFixedThreadPool(1000)
-	// improved performance drastically > 10 folds
-	/**
-	 * Track user location.
-	 *
-	 * @param user the user
-	 * @return the completable future
-	 */
-	public CompletableFuture<?> trackUserLocation(User user) {
-		return CompletableFuture.supplyAsync(() -> {
-			VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-			user.addToVisitedLocations(visitedLocation);
-			rewardsService.calculateRewards(user);
-			return visitedLocation;
-		}, executorService);
-		
-	}
-
-
-
-	// ##############################################################
-
-	// Methods used for Testing Purpose
-    /**
-	 * Track and wait.
+	 * Tracking users with sequential streaming.
 	 *
 	 * @param users the users
+	 * @return the completable future[]
 	 */
-    @Profile("test")
-    public void trackAndWait(List<User> users) {
+	private CompletableFuture<?>[] trackingUsersWithSequentialStreaming(
+			List<User> users) {
 
-    	CompletableFuture<?>[] futures = users.stream()
-                .map(this::trackUserLocation)
-                .toArray(CompletableFuture[]::new);
-        CompletableFuture.allOf(futures).join();
+		CompletableFuture<?>[] futures = users.stream()
+		        .map(tourGuideService::trackUserLocation)
+		        .toArray(CompletableFuture[]::new);
 
-    }
+		CompletableFuture.allOf(futures).join();
+		return futures;
+	}
+
+	
+	
+	   
+	/**
+	 * Tracking users with parallel streaming.
+	 *
+	 * @param users the users
+	 * @return the completable future[]
+	 */
+	public CompletableFuture<?>[] trackingUsersWithParallelStreaming(
+			List<User> users) {
+
+		CompletableFuture<?>[] futures = users.parallelStream()
+		        .map(tourGuideService::trackUserLocation)
+		        .toArray(CompletableFuture[]::new);
+
+		CompletableFuture.allOf(futures).join();
+		return futures;
+	}
 
 
-
-	// ##############################################################
 
 }

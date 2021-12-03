@@ -1,5 +1,6 @@
 package tourGuide.config;
 
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -10,13 +11,17 @@ import org.springframework.context.annotation.Configuration;
 
 import gpsUtil.GpsUtil;
 import rewardCentral.RewardCentral;
-import tourGuide.service.IRewardService;
-import tourGuide.service.RewardsService;
+import tourGuide.service.RewardsMicroService;
+import tripPricer.TripPricer;
 
+/**
+ * The Class TourGuideModule.
+ */
 @Configuration
 public class TourGuideModule {
 
 
+	/** The logger. */
 	private Logger logger = LoggerFactory
 			.getLogger(TourGuideModule.class);
 
@@ -24,6 +29,11 @@ public class TourGuideModule {
 	// ##############################################################
 
 
+	/**
+	 * Gets the executor service.
+	 *
+	 * @return the executor service
+	 */
 	@Bean
 	public ExecutorService getExecutorService() {
 		return Executors.newFixedThreadPool(1000);
@@ -32,6 +42,11 @@ public class TourGuideModule {
 	// ##############################################################
 
 
+	/**
+	 * Gets the gps util.
+	 *
+	 * @return the gps util
+	 */
 	@Bean
 	public GpsUtil getGpsUtil() {
 
@@ -45,12 +60,17 @@ public class TourGuideModule {
 	// ##############################################################
 
 	
+	/**
+	 * Gets the rewards service.
+	 *
+	 * @return the rewards service
+	 */
 	@Bean
-	public IRewardService getRewardsService() {
+	public RewardsMicroService getRewardsService() {
 
-        logger.info("## getRewardsService() BEAN invoked");
+        logger.info("## RewardsMicroService() BEAN invoked");
 
-		return new RewardsService(getGpsUtil(), getRewardCentral());
+		return new RewardsMicroService(getGpsUtil(), getRewardCentral());
 	}
 
 
@@ -58,6 +78,11 @@ public class TourGuideModule {
 	// ##############################################################
 
 
+	/**
+	 * Gets the reward central.
+	 *
+	 * @return the reward central
+	 */
 	@Bean
 	public RewardCentral getRewardCentral() {
 
@@ -70,5 +95,31 @@ public class TourGuideModule {
 
 	// ##############################################################
 
+    /**
+	 * Gets the locale.
+	 *
+	 * @return the locale
+	 */
+	@Bean
+    public Locale getLocale() {
+        Locale.setDefault(Locale.US);
+        return Locale.getDefault();
+    }
+    
+
+
+	// ##############################################################
+
+    /**
+	 * Gets the trip pricer.
+	 *
+	 * @return the trip pricer
+	 */
+	@Bean
+    public TripPricer getTripPricer() {
+        return new TripPricer();
+    }  
+
+	// ##############################################################
 
 }

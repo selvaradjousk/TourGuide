@@ -2,6 +2,7 @@ package tourGuide.model;
 
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
 public class Provider {
 
     /** The name. */
@@ -21,10 +23,5 @@ public class Provider {
     /** The trip id. */
     private UUID tripId;
 
-    
-    public Provider(UUID tripId, String name, double price) {
-      this.name = name;
-      this.tripId = tripId;
-      this.price = price;
-    }
+
 }

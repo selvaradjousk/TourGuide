@@ -36,15 +36,14 @@ public class TestUserPreferenceMapper {
 	public void testToUserPreferences() {
 
 		
-        UserPreferencesDTO userPreferencesDto = new UserPreferencesDTO();
-        userPreferencesDto.setTripDuration(999);
-        userPreferencesDto.setTicketQuantity(999);
-        userPreferencesDto.setNumberOfAdults(999);
-        userPreferencesDto.setNumberOfChildren(999);
-        userPreferencesDto.setCurrency(Monetary.getCurrency("EUR").toString());
-        userPreferencesDto.setHighPricePoint(999);
-        userPreferencesDto.setLowerPricePoint(999);
-        userPreferencesDto.setAttractionProximity(999);
+        UserPreferences userPreferences = new UserPreferences();
+        userPreferences.setTripDuration(999);
+        userPreferences.setTicketQuantity(999);
+        userPreferences.setNumberOfAdults(999);
+        userPreferences.setNumberOfChildren(999);
+        userPreferences.setHighPricePoint(Money.of(999, Monetary.getCurrency("EUR")));
+        userPreferences.setLowerPricePoint(Money.of(999, Monetary.getCurrency("EUR")));
+        userPreferences.setAttractionProximity(999);
     	
 
     	UserPreferences testUserPreferences = new UserPreferences();
@@ -52,16 +51,19 @@ public class TestUserPreferenceMapper {
     	testUserPreferences.setTicketQuantity(999);
     	testUserPreferences.setNumberOfAdults(999);
     	testUserPreferences.setNumberOfChildren(999);
-    	testUserPreferences.setCurrency(Monetary.getCurrency("EUR"));
     	testUserPreferences.setHighPricePoint(Money.of(999, Monetary.getCurrency("EUR")));
     	testUserPreferences.setLowerPricePoint(Money.of(999, Monetary.getCurrency("EUR")));
     	testUserPreferences.setAttractionProximity(999);
     	
 
 
-        UserPreferences result = userPreferencesMapper.toUserPreferences(userPreferencesDto);
+        UserPreferencesDTO result = userPreferencesMapper.toUserPreferencesDTO(userPreferences);
 
-        assertThat(result).isEqualToComparingFieldByField(testUserPreferences);
+        assertEquals(testUserPreferences.getTripDuration(), result.getTripDuration());
+        assertEquals(testUserPreferences.getTicketQuantity(), result.getTicketQuantity());
+        assertEquals(testUserPreferences.getNumberOfAdults(), result.getNumberOfAdults());
+        assertEquals(testUserPreferences.getNumberOfChildren(), result.getNumberOfChildren());
+        assertEquals(testUserPreferences.getAttractionProximity(), result.getAttractionProximity());
 	}
 
 
@@ -72,7 +74,7 @@ public class TestUserPreferenceMapper {
 	    public void testForAllInputsValid() {
 	 
 	    	// GIVEN
-			UserPreferencesDTO userPreferencesDtoOK = new UserPreferencesDTO("testUser", 999, 999, 999, 999, 999, 999, 999);
+			UserPreferencesDTO userPreferencesDtoOK = new UserPreferencesDTO(999, 999, 999, 999, 999, 999, 999);
 			
 	        // WHEN
 	        Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =
@@ -89,7 +91,7 @@ public class TestUserPreferenceMapper {
     public void testForAttractionProximityInvalid() {
  
     	// GIVEN
-    	UserPreferencesDTO userPreferencesDtoProximityInvalid = new UserPreferencesDTO("testUser", -10, 999, 999, 999, 999, 999, 999);
+    	UserPreferencesDTO userPreferencesDtoProximityInvalid = new UserPreferencesDTO(-10, 999, 999, 999, 999, 999, 999);
     	
         // WHEN
         Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =
@@ -106,7 +108,7 @@ public class TestUserPreferenceMapper {
     public void testForLowerPricePointInvalid() {
  
     	// GIVEN
-    	UserPreferencesDTO userPreferencesDtoLowerPriceInvalid = new UserPreferencesDTO("testUser", 999, -999, 999, 999, 999, 999, 999);
+    	UserPreferencesDTO userPreferencesDtoLowerPriceInvalid = new UserPreferencesDTO(999, -999, 999, 999, 999, 999, 999);
     	
         // WHEN
         Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =
@@ -124,7 +126,7 @@ public class TestUserPreferenceMapper {
     public void testForHighPricePointInvalid() {
  
     	// GIVEN
-    	UserPreferencesDTO userPreferencesDtoHighPriceInvalid = new UserPreferencesDTO("testUser", 999, 999, -999, 999, 999, 999, 999);
+    	UserPreferencesDTO userPreferencesDtoHighPriceInvalid = new UserPreferencesDTO(999, 999, -999, 999, 999, 999, 999);
     	
         // WHEN
         Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =
@@ -143,7 +145,7 @@ public class TestUserPreferenceMapper {
 		public void testForTripDurationZero() {
 		
 			// GIVEN
-			UserPreferencesDTO userPreferencesDtoTripDurationZero = new UserPreferencesDTO("testUser", 999, 999, 999, 0, 999, 999, 999);
+			UserPreferencesDTO userPreferencesDtoTripDurationZero = new UserPreferencesDTO(999, 999, 999, 0, 999, 999, 999);
 			
 		    // WHEN
 		    Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =
@@ -162,7 +164,7 @@ public class TestUserPreferenceMapper {
     public void testForTripDurationInvalid() {
  
     	// GIVEN
-    	UserPreferencesDTO userPreferencesDtoTripDurationInvalid = new UserPreferencesDTO("testUser", 999, 999, 999, -999, 999, 999, 999);
+    	UserPreferencesDTO userPreferencesDtoTripDurationInvalid = new UserPreferencesDTO(999, 999, 999, -999, 999, 999, 999);
     	
         // WHEN
         Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =
@@ -182,7 +184,7 @@ public class TestUserPreferenceMapper {
 		public void testForTicketQuantityZero() {
 		
 		// GIVEN
-		UserPreferencesDTO userPreferencesDtoTicketQuantityZero = new UserPreferencesDTO("testUser", 999, 999, 999, 999, 0, 999, 999);
+		UserPreferencesDTO userPreferencesDtoTicketQuantityZero = new UserPreferencesDTO(999, 999, 999, 999, 0, 999, 999);
 		
 		// WHEN
 		Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =
@@ -202,7 +204,7 @@ public class TestUserPreferenceMapper {
     public void testForTicketQuantityInvalid() {
  
     	// GIVEN
-    	UserPreferencesDTO userPreferencesDtoTicketQuantityInvalid = new UserPreferencesDTO("testUser", 999, 999, 999, 999, -999, 999, 999);
+    	UserPreferencesDTO userPreferencesDtoTicketQuantityInvalid = new UserPreferencesDTO(999, 999, 999, 999, -999, 999, 999);
     	
         // WHEN
         Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =
@@ -222,7 +224,7 @@ public class TestUserPreferenceMapper {
     public void testForTicketAdultNumberZero() {
  
     	// GIVEN
-    	UserPreferencesDTO userPreferencesDtoAdultNumberZero = new UserPreferencesDTO("testUser", 999, 999, 999, 999, 999, 0, 999);
+    	UserPreferencesDTO userPreferencesDtoAdultNumberZero = new UserPreferencesDTO(999, 999, 999, 999, 999, 0, 999);
     	
         // WHEN
         Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =
@@ -242,7 +244,7 @@ public class TestUserPreferenceMapper {
     public void testForTicketAdultNumberInvalid() {
  
     	// GIVEN
-    	UserPreferencesDTO userPreferencesDtoAdultNumberInvalid = new UserPreferencesDTO("testUser", 999, 999, 999, 999, 999, -999, 999);
+    	UserPreferencesDTO userPreferencesDtoAdultNumberInvalid = new UserPreferencesDTO(999, 999, 999, 999, 999, -999, 999);
     	
         // WHEN
         Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =
@@ -263,7 +265,7 @@ public class TestUserPreferenceMapper {
     public void testForTicketChildrenNumberInvalid() {
  
     	// GIVEN
-    	UserPreferencesDTO userPreferencesDtoChildrenNumberInvalid = new UserPreferencesDTO("testUser", 999, 999, 999, 999, 999, 999, -999);
+    	UserPreferencesDTO userPreferencesDtoChildrenNumberInvalid = new UserPreferencesDTO(999, 999, 999, 999, 999, 999, -999);
     	
         // WHEN
         Set<ConstraintViolation<UserPreferencesDTO>> constraintViolations =

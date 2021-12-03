@@ -56,14 +56,14 @@ public class RewardsMicroService implements IRewardsMicroService {
 			final UUID attractionId,
 			final UUID userId) {
 
-		logger.info("## getAttractionRewardPoints() called");
+//		logger.info("## getAttractionRewardPoints() called");
 
 
         int rewardPoints = rewardCentral
         		.getAttractionRewardPoints(attractionId, userId);
 
-		logger.info("## rewardPoints: {}"
-				+ " returned", rewardPoints);
+//		logger.info("## rewardPoints: {}"
+//				+ " returned", rewardPoints);
 
         return rewardPoints;
     }

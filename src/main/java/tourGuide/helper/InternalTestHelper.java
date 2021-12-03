@@ -11,63 +11,58 @@ import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
+import tourGuide.model.Location;
 import tourGuide.model.User;
+import tourGuide.model.VisitedLocation;
 
+
+/**
+ * The Class InternalTestHelper.
+ */
 @Component
 public class InternalTestHelper {
 
+	/** The logger. */
 	private Logger logger = LoggerFactory
 			.getLogger(InternalTestHelper.class);
 
+
+
+
+	// ##############################################################
+
+
+
+	/** ********  Methods Below: For Internal Testing  ********/
+
 	// Set this default up to 100,000 for testing
-	private static int internalUserNumber = 100;
+    @Value("${test.user.numbers}")
+    private int internalUserNumber;
+
+    /** The trip pricer api key. */
+    // Mandatory API Key to use TripPricer.
+    @Value("${trip.pricer.api.key}")
+    private String TRIP_PRICER_API_KEY;
 
 
-
-	// ##############################################################
-
-
-
-	public static void setInternalUserNumber(
-			int internalUserNumber) {
-
-		InternalTestHelper.internalUserNumber = internalUserNumber;
-
-	}
-
-
-
-	// ##############################################################
-
-
-
-	public static int getInternalUserNumber() {
-		return internalUserNumber;
-	}
-
-
-
-
-	// ##############################################################
-
-
-
-	/*****************************************************************
-	 * 
-	 * Methods Below: For Internal Testing
-	 * 
-	 ****************************************************************/
-
-
-	public final String tripPricerApiKey = "test-server-api-key";
-
+    /**
+     * Gets the trip pricer api key.
+     *
+     * @return the trip pricer api key
+     */
+    public String getTripPricerApiKey() {
+        return TRIP_PRICER_API_KEY;
+    }
+    
+    
 	// Database connection will be used for external users,
 	// but for testing purposes internal users are provided
 	// and stored in memory
+    
+    /** The internal user map. */
 	public final Map<String, User> internalUserMap = new HashMap<>();
 
 
@@ -76,11 +71,15 @@ public class InternalTestHelper {
 
 
 
+
+	/**
+	 * Initialize internal users.
+	 */
 	public void initializeInternalUsers() {
 
 		IntStream.range(
 				0,
-				InternalTestHelper.getInternalUserNumber())
+				internalUserNumber)
 		.forEach(i -> {
 
 			String userName = "internalUser" + i;
@@ -100,8 +99,7 @@ public class InternalTestHelper {
 		});
 
 		logger.debug("Created"
-				+ " " + InternalTestHelper
-				.getInternalUserNumber()
+				+ " " + internalUserNumber
 				+ " internal test users.");
 	}
 
@@ -111,6 +109,11 @@ public class InternalTestHelper {
 
 
 	
+	/**
+	 * Generate user location history.
+	 *
+	 * @param user the user
+	 */
 	private void generateUserLocationHistory(User user) {
 
 		IntStream.range(0, 3).forEach(i-> {
@@ -132,6 +135,11 @@ public class InternalTestHelper {
 
 
 
+	/**
+	 * Generate random longitude.
+	 *
+	 * @return the double
+	 */
 	private double generateRandomLongitude() {
 
 		double leftLimit = -180;
@@ -148,6 +156,11 @@ public class InternalTestHelper {
 
 
 
+	/**
+	 * Generate random latitude.
+	 *
+	 * @return the double
+	 */
 	private double generateRandomLatitude() {
 
 		double leftLimit = -85.05112878;
@@ -164,6 +177,11 @@ public class InternalTestHelper {
 
 
 
+	/**
+	 * Gets the random time.
+	 *
+	 * @return the random time
+	 */
 	private Date getRandomTime() {
 
 		LocalDateTime localDateTime = LocalDateTime.now()
@@ -178,6 +196,18 @@ public class InternalTestHelper {
 
 	// ##############################################################
 
+
+    /**
+	 * Gets the internal user map.
+	 *
+	 * @return the internal user map
+	 */
+	public Map<String, User> getInternalUserMap() {
+        return internalUserMap;
+    }
+
+
+	// ##############################################################
 
 
 }

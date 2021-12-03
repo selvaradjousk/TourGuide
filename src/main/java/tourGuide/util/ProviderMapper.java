@@ -15,9 +15,9 @@ public class ProviderMapper {
     public ProviderDTO toProviderDTO(final tripPricer.Provider provider) {
 
       return new ProviderDTO(
-    		  provider.tripId,
     		  provider.name,
-    		  provider.price );
+    		  provider.price,
+    		  provider.tripId);
   }
   
 
@@ -28,9 +28,9 @@ public class ProviderMapper {
   public Provider toProvider(final ProviderDTO providerDTO) {
 
       return new Provider(
-    		  providerDTO.getTripId(),
     		  providerDTO.getName(),
-    		  providerDTO.getPrice() );
+    		  providerDTO.getPrice(),
+    		  providerDTO.getTripId());
   } 
 
 
