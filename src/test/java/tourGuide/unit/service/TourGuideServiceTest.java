@@ -1,6 +1,7 @@
 package tourGuide.unit.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -9,16 +10,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import tourGuide.dto.LocationDTO;
 import tourGuide.dto.VisitedLocationDTO;
+import tourGuide.exception.DataAlreadyRegisteredException;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.Location;
 import tourGuide.model.User;
@@ -36,7 +39,7 @@ import tourGuide.util.UserRewardMapper;
 import tourGuide.util.VisitedLocationMapper;
 
 @DisplayName("Unit Test - Service - TourGuide")
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TourGuideServiceTest {
 
     @InjectMocks
@@ -98,7 +101,7 @@ public class TourGuideServiceTest {
 
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         user1ID = UUID.randomUUID();
         user2ID = UUID.randomUUID();
@@ -191,7 +194,9 @@ public class TourGuideServiceTest {
 
 
 
+
 	// ##############################################################
 
+ 
 
 }

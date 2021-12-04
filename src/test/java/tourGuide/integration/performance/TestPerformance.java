@@ -1,7 +1,8 @@
 package tourGuide.integration.performance;
 
-import static org.junit.Assert.assertTrue;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 import java.util.List;
@@ -10,13 +11,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import tourGuide.dto.AttractionDTO;
 import tourGuide.model.User;
@@ -25,7 +26,7 @@ import tourGuide.service.GpsUtilMicroService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 //@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestPropertySource("/performance-test.properties")

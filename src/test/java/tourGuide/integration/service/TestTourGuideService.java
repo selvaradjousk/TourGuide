@@ -3,19 +3,22 @@ package tourGuide.integration.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
-import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import gpsUtil.GpsUtil;
 import tourGuide.dto.LocationDTO;
+import tourGuide.exception.DataAlreadyRegisteredException;
 import tourGuide.model.Location;
 import tourGuide.model.User;
 import tourGuide.model.VisitedLocation;
@@ -23,7 +26,8 @@ import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 
 @DisplayName("IT - Service - TourGuide")
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest("/integration-test.properties")
 public class TestTourGuideService {
 
@@ -104,38 +108,42 @@ public class TestTourGuideService {
 
 
 	// ##############################################################
-//    
-//    @Ignore
-//	@Test
-//	public void testAddUser() {
-//
-//		Locale.setDefault(Locale.US);
-//
-//		gpsUtil = new GpsUtil();
-//		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-//		InternalTestHelper.setInternalUserNumber(0);
-//		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-//		
-//		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
-//		User user2 = new User(UUID.randomUUID(), "testUser2", "000", "testUser2@tourGuide.com");
-//
-//		tourGuideService.addUser(user);
-//		tourGuideService.addUser(user2);
-//		
-//		User retrivedUser = tourGuideService.getUser(user.getUserName());
-//		User retrivedUser2 = tourGuideService.getUser(user2.getUserName());
-//
-//		tourGuideService.tracker.stopTracking();
-//		
-//		assertEquals(user, retrivedUser);
-//		assertEquals(user2, retrivedUser2);
-//	}
-//
-//
-//
-//	// ##############################################################
-//
-//
+
+    @DisplayName("Check <AddUser>"
+    		+ " - Given an User with one visited location,"
+    		+ " WHEN Requested AddUser,"
+    		+ " then return User Added as expected")
+    @Test
+    public void testAddUser() {
+        UUID userID = UUID.fromString("1851b7bd-737a-4c9d-9c2b-3b5829e417fa");
+        User user = new User(userID, "testUser", "000", "testUser@email.com");
+        tourGuideService.addUser(user);
+
+        assertThat(tourGuideService.getAllUsers()).contains(user);
+    }
+
+
+	// ##############################################################
+
+    @DisplayName("Check <AddUser> - already exists <Exception>"
+		+ "GIVEN an Username is already used "
+		+ "WHEN Requested AddUser "
+		+ "THEN throws DataAlreadyRegisteredException")	
+    @Test
+    public void testAddUserAlreadyExistsForExceptionThrown() {
+        UUID userID = UUID.fromString("1851b7bd-737a-4c9d-9c2b-3b5829e417fa");
+        User user = new User(userID, "internalUser1", "000", "existingUser@email.com");
+        
+        assertThrows(DataAlreadyRegisteredException.class, ()
+        		-> tourGuideService.addUser(user));
+    }
+    
+
+
+
+	// ##############################################################
+
+
 //    @Ignore
 //	@Test
 //	public void testGetAllUsers() {
