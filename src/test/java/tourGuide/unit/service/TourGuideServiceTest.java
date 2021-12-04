@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -114,12 +115,12 @@ public class TourGuideServiceTest {
 
         visitedLocation = new VisitedLocation(
         		user1ID,
-        		new Location(-160.326003, -73.869629),
+        		new Location(33.817595, -117.922008),
         		new Date());
 
         visitedLocationDTO = new VisitedLocationDTO(
         		user1ID,
-        		new Location(-160.326003, -73.869629),
+        		new Location(33.817595, -117.922008),
         		new Date());
 
         internalUser = new HashMap<>();
@@ -195,7 +196,7 @@ public class TourGuideServiceTest {
 
         // THEN
         assertThat(result).isEqualToComparingFieldByField(expectedLocation);
-        assertThat(user1.getVisitedLocations().size()).isEqualTo(1);
+        assertEquals(1, user1.getVisitedLocations().size());
     }
 
 
@@ -203,6 +204,10 @@ public class TourGuideServiceTest {
 
 	// ##############################################################
 
+    
+    
+    
+    
     @DisplayName("Check <getAllUsers>"
     		+ " - Given a userlist,"
     		+ " WHEN Requested GET all users,"
@@ -306,7 +311,64 @@ public class TourGuideServiceTest {
 	// ##############################################################
 
     
+
     
+    
+    @DisplayName("Check <get All Users Locations>"
+    		+ " - Given a list of users,"
+    		+ " WHEN Requested GET all users locations,"
+    		+ " then return users locations as expected")
+	@Test
+	public void testGetAllUsersCurrentLocations() {
+
+		// GIVEN
+        user1.addToVisitedLocations(visitedLocation);
+        user2.addToVisitedLocations(new VisitedLocation(
+        		user2ID,
+        		new Location(35.985512, -92.757652),
+        		new Date()));
+
+        LocationDTO user1Location = new LocationDTO(
+        		33.817595, -117.922008);
+        LocationDTO user2Location = new LocationDTO(
+        		35.985512, -92.757652);
+        
+        when(internalTestHelper
+        		.getInternalUserMap())
+        .thenReturn(internalUser);
+        
+        when(internalTestHelper
+        		.getInternalUserMap())
+        .thenReturn(internalUser);
+        
+
+        lenient().when(locationMapper
+        		.toLocationDTO(user1.getLastVisitedLocation()
+        				.getLocation())).thenReturn(user1Location);
+
+        lenient().when(locationMapper
+        		.toLocationDTO(
+        				user2.getLastVisitedLocation().getLocation()))
+        .thenReturn(user2Location);
+
+        // WHEN
+        Map<String, LocationDTO> result = tourGuideService
+        		.getAllUserRecentLocation();
+
+        // THEN
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.values()).contains(user1Location, user2Location);
+
+	}
+
+
+
+	// ##############################################################
+	
+
+   
 
 
 }

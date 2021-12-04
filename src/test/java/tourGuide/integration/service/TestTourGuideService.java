@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
@@ -221,60 +222,36 @@ public class TestTourGuideService {
 
     
     
-    
-//	@Test
-//	public void testGetAllUsersCurrentLocations() {
-//
-//		gpsUtil = new GpsUtil();
-//
-//		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-//
-//		InternalTestHelper.setInternalUserNumber(100);
-//
-//		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-//
-//		LinkedHashMap<String, Location> allUsersLastLocation
-//						= new LinkedHashMap<>(tourGuideService.getAllUsersLastLocation());
-//
-//		String generatedJson = JsonStream.serialize(allUsersLastLocation);
-//
-//		System.out.println(generatedJson);
-//
-//		StringBuilder manualJson = new StringBuilder("{");
-//
-//		allUsersLastLocation.forEach((id, location) ->
-//				manualJson
-//					.append("\"")
-//					.append(id)
-//					.append("\":")
-//					.append("{\"longitude\":")
-//						.append(
-//								BigDecimal
-//								.valueOf(location.longitude)
-//								.setScale(6, RoundingMode.HALF_UP)
-//								.doubleValue())
-//					.append(",")
-//					.append("\"latitude\":")
-//						.append(
-//								BigDecimal
-//								.valueOf(location.latitude)
-//								.setScale(6, RoundingMode.HALF_UP)
-//								.doubleValue())
-//					.append("},")
-//		);
-//
-//		manualJson.deleteCharAt(manualJson.length() - 1).append("}");
-//
-//		System.out.println(manualJson.toString());
-//
-//		assertThat(manualJson.toString())
-//				.isEqualToIgnoringWhitespace(generatedJson);
-//	}
-//
-//
-//	// ##############################################################
-//	
-//    @Ignore
+    @DisplayName("Check <get All Users Locations>"
+    		+ " - Given a list of users,"
+    		+ " WHEN Requested GET all users locations,"
+    		+ " then return users locations as expected")
+	@Test
+	public void testGetAllUsersCurrentLocations() {
+
+		// GIVEN
+        List<User> users = tourGuideService.getAllUsers();
+
+        // WHEN
+        Map<String, LocationDTO> result = tourGuideService
+        		.getAllUserRecentLocation();
+
+        // THEN
+        assertNotNull(users);
+        assertNotNull(result);
+        result.values().forEach(r -> assertNotNull(r));
+        assertEquals(users.size(), result.size());
+        
+	}
+
+
+
+	// ##############################################################
+	
+
+	
+	
+	//    @Ignore
 //	@Test
 //	public void testTrackUser() {
 //
