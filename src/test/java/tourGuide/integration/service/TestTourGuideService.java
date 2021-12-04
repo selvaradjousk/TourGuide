@@ -21,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import gpsUtil.GpsUtil;
 import tourGuide.dto.LocationDTO;
+import tourGuide.dto.UserAttractionRecommendationDTO;
 import tourGuide.exception.DataAlreadyRegisteredException;
 import tourGuide.exception.UserNotFoundException;
 import tourGuide.model.Location;
@@ -277,64 +278,28 @@ public class TestTourGuideService {
 	// ##############################################################
 	
 
-	    
-	//    @Ignore
-//	@Test
-//	public void testTrackUser() {
-//
-//		Locale.setDefault(Locale.US);
-//
-//		gpsUtil = new GpsUtil();
-//		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-//		InternalTestHelper.setInternalUserNumber(0);
-//		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-//		
-//		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
-//
-//		List<User> users = new ArrayList<>();
-//		users.add(user);
-//
-//		int visitedLocationCount = user.getVisitedLocations().size();
-//
-//		tourGuideService.tracker.startTracking();
-//		tourGuideService.tracker.trackAndWait(users);
-//		tourGuideService.tracker.stopTracking();
-//
-//		assertEquals(visitedLocationCount + 1, user.getVisitedLocations().size());
-//	}
-//
-//
-//
-//	// ##############################################################
-//
-//
-//	
-//	@Ignore
-//	@Test
-//	public void testGetNearbyAttractions() {
-//
-//		Locale.setDefault(Locale.US);
-//
-//		gpsUtil = new GpsUtil();
-//		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-//		InternalTestHelper.setInternalUserNumber(0);
-//		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-//		
-//		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
-//		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
-//		
-//		List<Attraction> attractions = tourGuideService.getNearByAttractions(visitedLocation);
-//		
-//		tourGuideService.tracker.stopTracking();
-//		
-//		assertEquals(5, attractions.size());
-//	}
-//
-//
-//
-//	// ##############################################################
-//
-//
+    @DisplayName("Check <get User Attraction Recommendation>"
+    		+ " - Given an User,"
+    		+ " WHEN Requested getUserAttractionRecommendation,"
+    		+ " then return 5 nearby Attractions as expected")
+    @Test
+    public void testGetUserAttractionRecommendation() {
+
+    	// WHEN <== // GIVEN
+    	UserAttractionRecommendationDTO result = tourGuideService
+    			.getUserAttractionRecommendation("internalUser1");
+
+    	// THEN
+        assertThat(result.getNearbyAttractions()).isNotEmpty();
+        assertEquals(5, result.getNearbyAttractions().size());
+    }
+
+
+
+
+	// ##############################################################
+
+
 //    @Ignore
 //	@Test
 //	public void getTripDeals() {
