@@ -12,6 +12,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.money.Monetary;
+
+import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,11 +24,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import gpsUtil.GpsUtil;
 import tourGuide.dto.LocationDTO;
+import tourGuide.dto.ProviderDTO;
 import tourGuide.dto.UserAttractionRecommendationDTO;
 import tourGuide.exception.DataAlreadyRegisteredException;
 import tourGuide.exception.UserNotFoundException;
 import tourGuide.model.Location;
 import tourGuide.model.User;
+import tourGuide.model.UserPreferences;
 import tourGuide.model.VisitedLocation;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
@@ -300,31 +305,39 @@ public class TestTourGuideService {
 	// ##############################################################
 
 
-//    @Ignore
-//	@Test
-//	public void getTripDeals() {
-//
-//		Locale.setDefault(Locale.US);
-//
-//		gpsUtil = new GpsUtil();
-//		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-//		InternalTestHelper.setInternalUserNumber(0);
-//		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-//		
-//		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
-//
-//		List<Provider> providers = tourGuideService.getTripDeals(user);
-//		
-//		tourGuideService.tracker.stopTracking();
-//		
-//		assertEquals(5, providers.size());
-//	}
-//
-//
-//
-//	// ##############################################################
-//
-//
+    @DisplayName("Check <getTripDeals>"
+    		+ " - Given an Username,"
+    		+ " WHEN Requested getTripDeals,"
+    		+ " then return trip deals as expected")
+	@Test
+	public void getTripDeals() {
+
+    	// GIVEN
+    	User user = tourGuideService.getUser("internalUser1");
+        user.setUserPreferences(new UserPreferences(
+        		 10,
+        		 Money.of(500, Monetary.getCurrency("USD")),
+        		 Money.of(1000, Monetary.getCurrency("USD")),
+                 5,
+                 5,
+                 2,
+                 3));
+
+         // WHEN
+         List<ProviderDTO> result = tourGuideService
+        		 .getUserTripDeals("internalUser1");
+
+         // THEN
+         assertNotNull(result);
+         assertThat(result).isNotEmpty();
+         assertEquals(5, result.size());
+	}
+
+
+
+	// ##############################################################
+
+
 //    @Test
 //    public void testUpdateUserPreferences() {
 //        InternalTestHelper.setInternalUserNumber(0);
