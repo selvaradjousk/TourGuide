@@ -21,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import gpsUtil.GpsUtil;
 import tourGuide.dto.LocationDTO;
 import tourGuide.exception.DataAlreadyRegisteredException;
+import tourGuide.exception.UserNotFoundException;
 import tourGuide.model.Location;
 import tourGuide.model.User;
 import tourGuide.model.VisitedLocation;
@@ -174,10 +175,53 @@ public class TestTourGuideService {
         assertTrue(users.size() > 0);
     }
 
+    
 
-//	// ##############################################################
-//
-//    @Ignore
+	// ##############################################################
+
+
+    @DisplayName("Check <get User>"
+    		+ " - Given a User existing,"
+    		+ " WHEN Requested GET user,"
+    		+ " then return user as expected")
+    @Test
+    public void testGetUser() {
+
+    	// GIVEN // WHEN
+    	User user = tourGuideService
+    			.getUser("internalUser1");
+
+    	// THEN
+        assertNotNull(user);
+        assertEquals("internalUser1", user.getUserName());
+
+    }
+    
+
+	// ##############################################################
+
+
+    @Test
+    @DisplayName("Check <get User> - not exists <Exception>"
+		+ "GIVEN an Username not exists "
+		+ "WHEN Requested GET User "
+		+ "THEN throws UserNotFoundException")	
+    public void testGetUserNotExistingForUserNotFoundException() {
+        
+        // THEN  <== WHEN
+        assertThrows(UserNotFoundException.class, ()
+        		-> tourGuideService
+        		.getUser("testUserDoesNotExist"));
+        
+    }
+
+    
+
+	// ##############################################################
+
+    
+    
+    
 //	@Test
 //	public void testGetAllUsersCurrentLocations() {
 //

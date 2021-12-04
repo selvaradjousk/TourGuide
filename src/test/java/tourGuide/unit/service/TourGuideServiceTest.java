@@ -252,6 +252,61 @@ public class TourGuideServiceTest {
 
 
 	// ##############################################################
+    
+
+
+
+    @DisplayName("Check <get User>"
+    		+ " - Given a User existing,"
+    		+ " WHEN Requested GET user,"
+    		+ " then return user as expected")
+    @Test
+    public void testGetUser() {
+
+    	// GIVEN
+    	when(internalTestHelper
+    			.getInternalUserMap())
+    	.thenReturn(internalUser);
+    	
+    	// WHEN
+    	User user = tourGuideService
+    			.getUser("testUser1");
+
+    	// THEN
+        assertNotNull(user);
+        assertEquals("testUser1", user.getUserName());
+
+    }
+    
+
+	// ##############################################################
+
+
+    @Test
+    @DisplayName("Check <get User> - not exists <Exception>"
+		+ "GIVEN an Username not exists "
+		+ "WHEN Requested GET User "
+		+ "THEN throws UserNotFoundException")	
+    public void testGetUserNotExistingForUserNotFoundException() {
+        
+    	// GIVEN 
+    	when(internalTestHelper
+    			.getInternalUserMap())
+    	.thenReturn(new HashMap<>());
+    	
+        // THEN  <== WHEN
+        assertThrows(UserNotFoundException.class, ()
+        		-> tourGuideService
+        		.getUser("testUserDoesNotExist"));
+        
+    }
+
+    
+
+	// ##############################################################
+
+    
+    
 
 
 }
