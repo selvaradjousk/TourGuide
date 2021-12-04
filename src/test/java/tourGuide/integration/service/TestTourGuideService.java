@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -102,7 +104,7 @@ public class TestTourGuideService {
         		.getUserLocation("internalUser1");
 
         // THEN
-        assertThat(result).isNotNull();
+        assertNotNull(result);
         assertThat(result).isEqualToComparingFieldByField(location);
     }
 
@@ -115,10 +117,19 @@ public class TestTourGuideService {
     		+ " then return User Added as expected")
     @Test
     public void testAddUser() {
-        UUID userID = UUID.fromString("1851b7bd-737a-4c9d-9c2b-3b5829e417fa");
-        User user = new User(userID, "testUser", "000", "testUser@email.com");
-        tourGuideService.addUser(user);
 
+    	// GIVEN
+    	UUID userID = UUID.fromString("1851b7bd-737a-4c9d-9c2b-3b5829e417fa");
+     	User user = new User(
+     			userID,
+     			"testUser",
+     			"000",
+     			"testUser@email.com");
+
+    	// WHEN
+    	tourGuideService.addUser(user);
+
+    	// THEN
         assertThat(tourGuideService.getAllUsers()).contains(user);
     }
 
@@ -131,9 +142,12 @@ public class TestTourGuideService {
 		+ "THEN throws DataAlreadyRegisteredException")	
     @Test
     public void testAddUserAlreadyExistsForExceptionThrown() {
-        UUID userID = UUID.fromString("1851b7bd-737a-4c9d-9c2b-3b5829e417fa");
+
+    	// GIVEN
+    	UUID userID = UUID.fromString("1851b7bd-737a-4c9d-9c2b-3b5829e417fa");
         User user = new User(userID, "internalUser1", "000", "existingUser@email.com");
-        
+ 
+        // THEN  <== WHEN
         assertThrows(DataAlreadyRegisteredException.class, ()
         		-> tourGuideService.addUser(user));
     }
@@ -143,35 +157,24 @@ public class TestTourGuideService {
 
 	// ##############################################################
 
+    @DisplayName("Check <getAllUsers>"
+    		+ " - Given a userlist,"
+    		+ " WHEN Requested GET all users,"
+    		+ " then return All Users list")
+    @Test
+    public void testGetAllUsers() {
 
-//    @Ignore
-//	@Test
-//	public void testGetAllUsers() {
-//
-//		Locale.setDefault(Locale.US);
-//
-//		gpsUtil = new GpsUtil();
-//		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-//		InternalTestHelper.setInternalUserNumber(0);
-//		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-//		
-//		User user = new User(UUID.randomUUID(), "testUser", "000", "testUser@tourGuide.com");
-//		User user2 = new User(UUID.randomUUID(), "testUser2", "000", "testUser2@tourGuide.com");
-//
-//		tourGuideService.addUser(user);
-//		tourGuideService.addUser(user2);
-//		
-//		List<User> allUsers = tourGuideService.getAllUsers();
-//
-//		tourGuideService.tracker.stopTracking();
-//		
-//		assertTrue(allUsers.contains(user));
-//		assertTrue(allUsers.contains(user2));
-//		assertEquals(2, allUsers.size());
-//	}
-//
-//
-//
+    	// WHEN
+    	List<User> users = tourGuideService
+    			.getAllUsers();
+
+    	// THEN
+        assertThat(users).isNotEmpty();
+        assertNotNull(users);
+        assertTrue(users.size() > 0);
+    }
+
+
 //	// ##############################################################
 //
 //    @Ignore

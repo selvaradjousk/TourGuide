@@ -1,15 +1,18 @@
 package tourGuide.unit.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import tourGuide.dto.LocationDTO;
 import tourGuide.dto.VisitedLocationDTO;
-import tourGuide.exception.DataAlreadyRegisteredException;
+import tourGuide.exception.UserNotFoundException;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.Location;
 import tourGuide.model.User;
@@ -95,7 +98,7 @@ public class TourGuideServiceTest {
 
     private static VisitedLocationDTO visitedLocationDTO;
 
-
+    private static List<User> userList;
 
 	// ##############################################################
 
@@ -123,6 +126,7 @@ public class TourGuideServiceTest {
         internalUser.put("testUser1", user1);
         internalUser.put("testUser2", user2);
 
+        userList = Arrays.asList(user1, user2);
     }
 
 
@@ -140,7 +144,9 @@ public class TourGuideServiceTest {
     	// GIVEN
     	LocationDTO expectedLocation = new LocationDTO(-160.326003, -73.869629);
 
-    	when(internalTestHelper.getInternalUserMap()).thenReturn(internalUser);
+    	when(internalTestHelper
+    			.getInternalUserMap())
+    	.thenReturn(internalUser);
 
     	when(GpsUtilMicroService
     			.getUserLocation(any(UUID.class)))
@@ -197,6 +203,55 @@ public class TourGuideServiceTest {
 
 	// ##############################################################
 
- 
+    @DisplayName("Check <getAllUsers>"
+    		+ " - Given a userlist,"
+    		+ " WHEN Requested GET all users,"
+    		+ " then return All Users list")
+    @Test
+    public void testGetAllUsers() {
+
+
+    	// GIVEN
+    	when(internalTestHelper.getInternalUserMap())
+    	.thenReturn(internalUser);
+
+    	// WHEN
+        List<User> users = tourGuideService.getAllUsers();
+
+        // THEN
+        assertNotNull(users);
+        assertThat(users).isNotEmpty();
+        assertEquals(userList.size(), users.size());
+    }
+
+
+
+	// ##############################################################
+
+
+    @DisplayName("Check <getUserList> - emptylist <Exception>"
+		+ "GIVEN an Empty UserList "
+		+ "WHEN Requested getAllUsers "
+		+ "THEN throws UserNotFound Exception")	
+    @Test
+    public void testGetAllUsersEmptyListThrowsException() {
+
+    	// GIVEN
+    	internalUser.clear();
+
+        when(internalTestHelper
+        		.getInternalUserMap())
+        .thenReturn(internalUser);
+
+        // THEN <==  WHEN      
+        assertThrows(UserNotFoundException.class, ()
+        		-> tourGuideService.getAllUsers());
+    }
+
+
+
+
+	// ##############################################################
+
 
 }
