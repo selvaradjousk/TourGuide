@@ -26,6 +26,7 @@ import gpsUtil.GpsUtil;
 import tourGuide.dto.LocationDTO;
 import tourGuide.dto.ProviderDTO;
 import tourGuide.dto.UserAttractionRecommendationDTO;
+import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.exception.DataAlreadyRegisteredException;
 import tourGuide.exception.UserNotFoundException;
 import tourGuide.model.Location;
@@ -338,8 +339,34 @@ public class TestTourGuideService {
 	// ##############################################################
 
 
-//    @Test
-//    public void testUpdateUserPreferences() {
+    @DisplayName("Check <UpdateUserPreferences>"
+    		+ " - Given an User's preference,"
+    		+ " WHEN Requested UpdateUserPreferences,"
+    		+ " then updates user preferences as expected")
+    @Test
+    public void testUpdateUserPreferences() {
+    	
+
+    	// GIVEN
+        UserPreferencesDTO userPreferences = new UserPreferencesDTO(
+       		 10,
+       		 500,
+       		 1000,
+                5,
+                5,
+                2,
+                3);
+
+        // WHEN
+        UserPreferencesDTO result = tourGuideService
+        		.updateUserPreferences("internalUser1", userPreferences);
+
+        // THEN
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualToComparingFieldByField(userPreferences);
+        
+        
+        
 //        InternalTestHelper.setInternalUserNumber(0);
 //
 //        final User user = new User(
@@ -395,6 +422,10 @@ public class TestTourGuideService {
 //        assertEquals(testUserPreferencesDto.getAttractionProximity().intValue(),
 //        		user.getUserPreferences().getAttractionProximity());        
 //        
-//    }
+    }
+
+
+	// ##############################################################
+
 
 }
