@@ -368,6 +368,37 @@ public class TourGuideServiceTest {
 	// ##############################################################
 	
 
+	
+
+	
+    @DisplayName("Check <get track User>"
+    		+ " - Given an User,"
+    		+ " WHEN Requested track User Location,"
+    		+ " then return location and adds to history as expected")
+    @Test
+    public void testTrackUser() {
+
+    	// GIVEN
+        when(GpsUtilMicroService
+        		.getUserLocation(any(UUID.class)))
+        .thenReturn(visitedLocationDTO);
+        
+        when(visitedLocationMapper
+        		.toVisitedLocation(any(VisitedLocationDTO.class)))
+        .thenReturn(visitedLocation);
+
+        // WHEN
+        tourGuideService.trackUserLocation(user1).join();
+
+        // THEN
+        assertEquals((visitedLocation), user1.getVisitedLocations().get(0));
+    }
+    
+
+
+	// ##############################################################
+	
+
    
 
 

@@ -250,7 +250,34 @@ public class TestTourGuideService {
 	
 
 	
+    @DisplayName("Check <get track User>"
+    		+ " - Given an User,"
+    		+ " WHEN Requested track User Location,"
+    		+ " then return location and adds to history as expected")
+    @Test
+    public void testTrackUser() {
+
+    	// GIVEN
+    	UUID userID = UUID.randomUUID();
+        User user = new User(
+        		userID,
+        		"internalUser1",
+        		"000",
+        		"testUser@email.com");
+
+        // WHEN
+        tourGuideService.trackUserLocation(user).join();
+
+        // THEN
+        assertEquals(1, user.getVisitedLocations().size());
+    }
+    
+
+
+	// ##############################################################
 	
+
+	    
 	//    @Ignore
 //	@Test
 //	public void testTrackUser() {
