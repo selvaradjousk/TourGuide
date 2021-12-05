@@ -6,7 +6,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import gps.controller.GpsController;
+import gps.dto.AttractionDTO;
 import gps.dto.VisitedLocationDTO;
 import gps.model.Location;
 import gps.service.IGpsService;
@@ -76,7 +79,7 @@ class GpsControllerTest {
 
     	VisitedLocationDTO visitedLocationDTO = new VisitedLocationDTO(
     			userId,
-    			new Location( 111.021844, -54.18879),
+    			new Location(111.021844, -54.18879),
     			new Date());
 
     	when(gpsService
@@ -189,6 +192,54 @@ class GpsControllerTest {
 
 	//###############################################################
 
+    @Test
+    @DisplayName("Check (getAttractions)"
+    		+ " - Given an attraction list,"
+    		+ " when GET getAttractions URL,"
+    		+ " then return - Status: 200 OK")
+    public void testGetAttractionsRequest() throws Exception {
 
-	
+    	AttractionDTO attraction1 = new AttractionDTO(
+    			UUID.randomUUID(),
+    			"testName1",
+                "testCity1" , "testState1", new Location(
+                		111.021844, -54.18879));
+
+    	AttractionDTO attraction2 = new AttractionDTO(
+    			UUID.randomUUID(),
+    			"testName2",
+                "testCity2" ,
+                "testState2", new Location(
+                		211.021844, -54.18879));
+    	
+        List<AttractionDTO> attractions = Arrays.asList(
+        		attraction1,
+        		attraction2);
+        
+        when(gpsService
+        		.getAttractions())
+        .thenReturn(attractions);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get(ATTRACTIONS_URL)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse()
+        		.getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("testName1");
+        assertThat(content).contains("testName2");
+        verify(gpsService).getAttractions();
+    }
+    
+
+
+	//###############################################################
+
+
+
+		
 }
