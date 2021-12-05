@@ -1,7 +1,7 @@
 package gps.unit.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,6 +29,7 @@ import gps.dto.VisitedLocationDTO;
 import gps.model.Location;
 import gps.service.IGpsService;
 
+@DisplayName("UNIT TESTS - Controller - GPS - Microservice")
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(GpsController.class)
 class GpsControllerTest {
@@ -65,7 +66,7 @@ class GpsControllerTest {
 	
 
     @Test
-    @DisplayName("Check (testIndexPageUrl) "
+    @DisplayName("Check (getUserLocation) "
     		+ " - Given an userId,"
     		+ " when GET getUserLocation URL,"
     		+ " then return - Status: 200 OK")
@@ -89,11 +90,48 @@ class GpsControllerTest {
         		.andExpect(status().isOk())
         		.andReturn();
 
-        String content = result.getResponse().getContentAsString();
+        String content = result
+        		.getResponse().getContentAsString();
 
+        assertNotNull(content);
         assertThat(content).contains(userId.toString());
         verify(gpsService).getUserLocation(userId);
     }
 
 
+
+	//###############################################################
+
+
+	
+
+    @Test
+    @DisplayName("Check (getUserLocation) with empty input"
+    		+ " - Given an userId,"
+    		+ " when GET getUserLocation URL,"
+    		+ " then return - Status: BAD_REQUEST")
+     public void testGetUserLocationRequestWithEmptyInput() throws Exception {
+
+        MvcResult result = mockMvc
+        		.perform(MockMvcRequestBuilders
+        				.get(USER_LOCATION_URL + "")
+        				.contentType(MediaType.APPLICATION_JSON))
+        		.andExpect(status().isBadRequest())
+        		.andReturn();
+
+        String content = result
+        		.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("userId parameter is missing");
+    }
+
+
+
+
+
+	//###############################################################
+
+
+	
 }
