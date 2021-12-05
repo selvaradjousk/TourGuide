@@ -40,9 +40,10 @@ TourGuide application is composed of 4 microservices:
 
 ## Application Run configuration
 
-Gradle (gradle bootRun)
+Gradle 
 ```
-
+gradle bootRun
+```
 ## Docker deploiement
 
 - **Dockerfile** 
