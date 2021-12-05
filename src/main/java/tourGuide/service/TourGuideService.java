@@ -695,7 +695,7 @@ public class TourGuideService implements ITourGuideService {
 
 		final AtomicInteger indexHolder = new AtomicInteger();
 		final AtomicInteger totalPoints = new AtomicInteger();
-        cumulativeNRewardPointsForUserBasedOnNearbyAtrractions(
+        cumulativeRewardPointsForUserBasedOnNearbyAtrractions(
         		user,
         		closestAttractionsMap,
         		nearByAttractions,
@@ -770,7 +770,7 @@ public class TourGuideService implements ITourGuideService {
 			final AtomicInteger indexHolder = new AtomicInteger();
 			final AtomicInteger totalPoints = new AtomicInteger();
 
-			cumulativeNRewardPointsForUserBasedOnNearbyAtrractions(
+			cumulativeRewardPointsForUserBasedOnNearbyAtrractions(
 	        		user,
 	        		closestAttractionsMap,
 	        		nearByAttractions,
@@ -797,7 +797,7 @@ public class TourGuideService implements ITourGuideService {
 		 * @param indexHolder the index holder
 		 * @param totalPoints the total points
 		 */
-		private void cumulativeNRewardPointsForUserBasedOnNearbyAtrractions(
+		private void cumulativeRewardPointsForUserBasedOnNearbyAtrractions(
 				User user,
 				Map<AttractionDTO, Double> closestAttractionsMap,
 				List<NearByAttractionDTO> nearByAttractions,

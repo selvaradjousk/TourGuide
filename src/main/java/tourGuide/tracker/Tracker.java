@@ -167,22 +167,22 @@ public class Tracker extends Thread {
 	
 	
 	   
-	/**
-	 * Tracking users with parallel streaming.
-	 *
-	 * @param users the users
-	 * @return the completable future[]
-	 */
-	public CompletableFuture<?>[] trackingUsersWithParallelStreaming(
-			List<User> users) {
-
-		CompletableFuture<?>[] futures = users.parallelStream()
-		        .map(tourGuideService::trackUserLocation)
-		        .toArray(CompletableFuture[]::new);
-
-		CompletableFuture.allOf(futures).join();
-		return futures;
-	}
+//	/**
+//	 * Tracking users with parallel streaming.
+//	 *
+//	 * @param users the users
+//	 * @return the completable future[]
+//	 */
+//	public CompletableFuture<?>[] trackingUsersWithParallelStreaming(
+//			List<User> users) {
+//
+//		CompletableFuture<?>[] futures = users.parallelStream()
+//		        .map(tourGuideService::trackUserLocation)
+//		        .toArray(CompletableFuture[]::new);
+//
+//		CompletableFuture.allOf(futures).join();
+//		return futures;
+//	}
 
 
 

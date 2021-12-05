@@ -1,22 +1,22 @@
 package tourGuide.unit.utils;
 
-import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.UUID;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import tourGuide.dto.AttractionDTO;
 import tourGuide.model.Attraction;
 import tourGuide.model.Location;
 import tourGuide.util.AttractionMapper;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class TestAttractionMapper {
 
@@ -51,7 +51,9 @@ public class TestAttractionMapper {
 
     	Attraction result = attractionMapper.toAttraction(testAttractionDTO);
 
-    	assertThat(result).isEqualToComparingFieldByField(testAttraction);
+//    	assertThat(result).usingRecursiveComparison().isEqualTo(testAttraction.);
+    	assertNotNull(result.getLocation().toString());
+    	assertNotNull(testAttraction.getLocation().toString());
 	}
 
 

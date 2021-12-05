@@ -1,6 +1,5 @@
 package tourGuide.unit.utils;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Set;
@@ -12,17 +11,16 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.javamoney.moneta.Money;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.model.UserPreferences;
 import tourGuide.util.UserPreferencesMapper;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 //@ActiveProfiles("test")
 public class TestUserPreferenceMapper {
