@@ -9,7 +9,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -82,6 +84,40 @@ class TourGuideControllerTest {
 
 	// ##############################################################
 
+    @Test
+    @DisplayName("Check (testGetAllCurrentLocations)"
+    		+ " - Given a request,"
+    		+ " when GET testGetAllCurrentLocations,"
+    		+ " then return - Status: 200 OK")
+    public void testGetAllCurrentLocations() throws Exception {
+
+    	Map<String, LocationDTO> usersLocation = new HashMap<>();
+
+    	usersLocation.put(
+    			UUID.randomUUID().toString()
+    			, userLocationDTO);
+    	
+        when(tourGuideService
+        		.getAllUserRecentLocation())
+        .thenReturn(usersLocation);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/getAllCurrentLocations")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        
+        assertNotNull(content);
+        assertThat(content).contains("33.817595");
+        assertThat(content).contains("-117.922008");
+        verify(tourGuideService).getAllUserRecentLocation();
+    }  
+    
+
+
+ 	// ##############################################################
 
     @Test
     @DisplayName("Check (GetTripDeals)"

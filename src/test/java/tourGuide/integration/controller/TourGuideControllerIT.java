@@ -544,11 +544,11 @@ public class TourGuideControllerIT {
 
 	// ##############################################################
 
-	// THIIS TEST RUNS SUCCESSFULLY WHEN RUN INDIVIDUALLY BUT WITH ALL OTHER IT FAILS
-	// GIVES INTERNAL SERVER ERROR MESSAGE
-	// SHIFTED TO THE SEPLERATE TEST CLASS FILE : TourGuideControllerIT_TestAllUsersCurrentLocations.java
-//	@Ignore
-	@Test
+    @Test
+    @DisplayName("Check (testGetAllCurrentLocations)"
+    		+ " - Given a request,"
+    		+ " when GET testGetAllCurrentLocations,"
+    		+ " then return - Status: 200 OK")
 	public void testGetAllCurrentLocations() {
 	
         ResponseEntity<String> response = restTemplate.getForEntity(
@@ -557,14 +557,6 @@ public class TourGuideControllerIT {
         		+ USER_CURRENT_LOCATION_URL, String.class);
 	
 	    assertNotNull(response);
-	    
-//	    assertEquals("request status",
-//	    		HttpStatus.OK.value(),
-//	    		response.getStatusCodeValue());
-
-//      assertEquals("request body",
-//		 "Greetings from TourGuide!",
-//		 response.getBody());
 
 
       assertTrue(response.getBody().contains("longitude"));
