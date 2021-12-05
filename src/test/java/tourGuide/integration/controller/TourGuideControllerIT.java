@@ -577,7 +577,6 @@ public class TourGuideControllerIT {
 	//##############################################################
 	//##############################################################
 	
-//	@Ignore
 	@Test
 	public void testGetTripDealsUrlValid() {
 	
@@ -598,10 +597,7 @@ public class TourGuideControllerIT {
 	    assertTrue(response.getBody().contains("name"));
 	    assertTrue(response.getBody().contains("tripId"));
 	    assertTrue(response.getBody().contains("price"));
-//	    assertTrue(response.getBody().contains("mostSigBits"));
-//	    assertTrue(response.getBody().contains("leastSigBits"));
-//	    assertTrue(response.getBody().contains("leastSignificantBits"));
-//	    assertTrue(response.getBody().contains("mostSignificantBits"));
+
 	                     
 	
 	    }
@@ -628,7 +624,6 @@ public class TourGuideControllerIT {
 	    		HttpStatus.BAD_REQUEST.value(),
 	    		response.getStatusCodeValue());
                 
-//	    assertTrue(response.getBody().contains("USERNAME required"));
 	
 	    }
 

@@ -1,10 +1,16 @@
 package tourGuide.unit.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tourGuide.dto.LocationDTO;
+import tourGuide.dto.ProviderDTO;
 import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.model.Location;
 import tourGuide.service.TourGuideService;
@@ -75,6 +82,91 @@ class TourGuideControllerTest {
 
 	// ##############################################################
 
+
+    @Test
+    @DisplayName("Check (GetTripDeals)"
+    		+ " - Given an username,"
+    		+ " when GET tripDeals,"
+    		+ " then return - Status: 200 OK")
+    public void testGetTripDeals() throws Exception {
+
+    	List<ProviderDTO> providers = Arrays.asList(
+    			new ProviderDTO("testProviderName",
+    					500, UUID.randomUUID()));
+
+        when(tourGuideService
+        		.getUserTripDeals("testUser"))
+        .thenReturn(providers);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/getTripDeals")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userName", "testUser"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = result
+        		.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("testProviderName");
+        assertThat(content).contains("500");
+        verify(tourGuideService).getUserTripDeals("testUser");
+    }
+
+
+	// ##############################################################
+
+
+    @Test
+    @DisplayName("Check (GetTripDeals) empty username"
+    		+ " - Given an empty username,"
+    		+ " when GET tripDeals,"
+    		+ " then return - Status: BAD_REQUEST")
+	public void testGetTripDealsUrlWithEmptyUserName() throws Exception {
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/getTripDeals")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userName", ""))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String content = result
+        		.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("username is required");
+    }
+
+
+
+	// ##############################################################
+
+
+    @Test
+    @DisplayName("Check (GetTripDeals) null value"
+    		+ " - Given an null value for username,"
+    		+ " when GET tripDeals,"
+    		+ " then return - Status: BAD_REQUEST")
+	public void testGetTripDealsUrlWithNullUserName() throws Exception {
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/getTripDeals")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String content = result
+        		.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("userName parameter is missing");
+    }
+
+
+
+	// ##############################################################
 
 
     @Test
