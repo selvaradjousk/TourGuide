@@ -225,7 +225,10 @@ public class TourGuideControllerIT {
 
 	// ##############################################################
 	
-//	@Ignore
+    @DisplayName("Check (GetNearbyAttractions)"
+    		+ " - Given a request,"
+    		+ " when GET GetNearbyAttractions,"
+    		+ " then return - Status: 200 OK")
 	@Test
 	public void testGetNearbyAttractionsValidInput() {
 	
@@ -258,8 +261,10 @@ public class TourGuideControllerIT {
 	//##############################################################
 
 
-//	@Ignore
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+    @DisplayName("Check (GetNearbyAttractions) EmptyUserName"
+    		+ " - Given a request,"
+    		+ " when GET GetNearbyAttractions,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetNearbyAttractionsUrlWithEmptyUserName() {
 	
@@ -284,7 +289,7 @@ public class TourGuideControllerIT {
 
 
 
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+
 	@Test
 	public void testGetNearbyAttractionsUrlWithNullValueUserName() {
 	
@@ -308,7 +313,10 @@ public class TourGuideControllerIT {
 	// ##############################################################
 
 
-
+    @DisplayName("Check (GetNearbyAttractions) Missing Param "
+    		+ " - Given a request,"
+    		+ " when GET GetNearbyAttractions,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetNearbyAttractionsUrlWithMissingParameter() {
 	
@@ -331,8 +339,10 @@ public class TourGuideControllerIT {
 
 	// ##############################################################
 
-//	@Ignore
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+    @DisplayName("Check (GetNearbyAttractions) invalid"
+    		+ " - Given a request,"
+    		+ " when GET GetNearbyAttractions,"
+    		+ " then return - Status: NOT_FOUND")
 	@Test
 	public void testGetNearbyAttractionsnUrlWithInvalidUserName() {
 	
@@ -383,9 +393,11 @@ public class TourGuideControllerIT {
 	// ##############################################################
 	// ##############################################################
 	
-//	@Ignore
-	// TODO have to fix getRewards for output is empty
-	@Test
+    @Test
+    @DisplayName("Check (GetRewards) ValidInput "
+    		+ " - Given a request,"
+    		+ " when GET GetRewards,"
+    		+ " then return - Status: 200 OK")
 	public void testGetRewardsValidInput() {
 	
 		ResponseEntity<String> response = restTemplate
@@ -401,18 +413,7 @@ public class TourGuideControllerIT {
 	    		HttpStatus.OK.value(),
 	    		response.getStatusCodeValue());
 
-
-//	      assertEquals("request body",
-//			 "[]",
-//			 response.getBody());
-//
-//      assertTrue(response.getBody().contains("longitude"));
-//      assertTrue(response.getBody().contains("latitude"));
-//      assertTrue(response.getBody().contains("userPosition"));
-//      assertTrue(response.getBody().contains("nearbyAttractions"));
-//      assertTrue(response.getBody().contains("rewardPoints"));
-//      assertTrue(response.getBody().contains("distance"));
-	                     
+                    
 	
 	    }
 
@@ -420,8 +421,10 @@ public class TourGuideControllerIT {
 	//##############################################################
 
 
-
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+    @DisplayName("Check (GetRewards) emp^ty username "
+    		+ " - Given a request,"
+    		+ " when GET GetRewards,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetRewardsUrlWithEmptyUserName() {
 	
@@ -445,8 +448,10 @@ public class TourGuideControllerIT {
 	// ##############################################################
 
 
-
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+    @DisplayName("Check (GetRewards) null value input "
+    		+ " - Given a request,"
+    		+ " when GET GetRewards,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetRewardsUrlWithNullValueUserName() {
 	
@@ -470,7 +475,10 @@ public class TourGuideControllerIT {
 	// ##############################################################
 
 
-
+    @DisplayName("Check (GetRewards) missing param "
+    		+ " - Given a request,"
+    		+ " when GET GetRewards,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetRewardsUrlWithMissingParameter() {
 	
@@ -493,8 +501,10 @@ public class TourGuideControllerIT {
 
 	// ##############################################################
 
-//	@Ignore
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+    @DisplayName("Check (GetRewards) invalid username "
+    		+ " - Given a request,"
+    		+ " when GET GetRewards,"
+    		+ " then return - Status: NOT_FOUND")
 	@Test
 	public void testGetRewardsnUrlWithInvalidUserName() {
 	
@@ -512,13 +522,17 @@ public class TourGuideControllerIT {
 	    		response.getStatusCodeValue());
 
 	    
-//	    assertTrue(response.getBody().contains("USERNAME required"));
+
 	
 	    }
 
 	// ##############################################################
 
-//	@Ignore
+
+    @DisplayName("Check (GetRewards) for username without visited location history"
+    		+ " - Given a request,"
+    		+ " when GET GetRewards,"
+    		+ " then return - Status: 200 OK")
 	@Test
 	public void testGetRewardsUrlWithUserWithoutVisitedLocationHistory() {
 

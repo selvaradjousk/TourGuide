@@ -33,7 +33,9 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tourGuide.dto.LocationDTO;
+import tourGuide.dto.NearByAttractionDTO;
 import tourGuide.dto.ProviderDTO;
+import tourGuide.dto.UserAttractionRecommendationDTO;
 import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.model.Location;
 import tourGuide.service.TourGuideService;
@@ -79,11 +81,130 @@ class TourGuideControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
     
-    
 
 
 	// ##############################################################
 
+    
+    @DisplayName("Check (GetNearbyAttractions)"
+    		+ " - Given a request,"
+    		+ " when GET GetNearbyAttractions,"
+    		+ " then return - Status: 200 OK")
+    @Test
+    public void testGetNearbyAttractionsValidInput() throws Exception {
+    
+    	UserAttractionRecommendationDTO recommendedAttractionDTO 
+    			= new UserAttractionRecommendationDTO(userLocation,
+
+    			Arrays.asList(new NearByAttractionDTO(
+                		"Disneyland",
+                		attractionLocation,
+                        200.00, 500)));
+        when(tourGuideService
+        		.getUserAttractionRecommendation("testUser"))
+        .thenReturn(recommendedAttractionDTO);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/getNearbyAttractions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userName", "testUser"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = result
+        		.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("Disneyland");
+        assertThat(content).contains("500");
+        verify(tourGuideService).getUserAttractionRecommendation("testUser");
+    }
+
+	// ##############################################################
+    
+    @DisplayName("Check (GetNearbyAttractions) EmptyUserName"
+    		+ " - Given a request,"
+    		+ " when GET GetNearbyAttractions,"
+    		+ " then return - Status: BAD_REQUEST")
+    @Test
+	public void testGetNearbyAttractionsUrlWithEmptyUserName() throws Exception {
+    
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/getNearbyAttractions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userName", ""))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String content = result
+        		.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("username is required");
+    }
+
+	// ##############################################################
+
+
+        @DisplayName("Check (GetNearbyAttractions) Null Parameter"
+        		+ " - Given a request,"
+        		+ " when GET GetNearbyAttractions,"
+        		+ " then return - Status: BAD_REQUEST")
+        @Test
+    	public void testGetNearbyAttractionsUrlWithNullParam() throws Exception {
+        
+
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+            		.get("/getNearbyAttractions")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            String content = result
+            		.getResponse().getContentAsString();
+
+            assertNotNull(content);
+            assertThat(content).contains("userName parameter is missing");
+        }
+
+
+	// ##############################################################
+
+        
+        @DisplayName("Check (GetNearbyAttractions) invalid"
+        		+ " - Given a request,"
+        		+ " when GET GetNearbyAttractions,"
+        		+ " then return - Status: 200 OK")
+        @Test
+        public void testGetNearbyAttractionsInValidInput() throws Exception {
+        
+        	UserAttractionRecommendationDTO recommendedAttractionDTO 
+        			= new UserAttractionRecommendationDTO(userLocation,
+
+        			Arrays.asList(new NearByAttractionDTO(
+                    		"Disneyland",
+                    		attractionLocation,
+                            200.00, 500)));
+            when(tourGuideService
+            		.getUserAttractionRecommendation("testUser"))
+            .thenReturn(recommendedAttractionDTO);
+
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+            		.get("/getNearbyAttractions")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .param("userName", "invalidUser"))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            String content = result
+            		.getResponse().getContentAsString();
+
+            assertNotNull(content);
+       }
+
+    	// ##############################################################
+        
     @Test
     @DisplayName("Check (testGetAllCurrentLocations)"
     		+ " - Given a request,"
