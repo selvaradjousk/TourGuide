@@ -219,7 +219,7 @@ public class RewardsService implements IRewardService {
 	 * @param attractionLocation the attraction location
 	 * @return true, if is within attraction proximity
 	 */
-	private boolean isWithinAttractionProximity(
+	public boolean isWithinAttractionProximity(
     		final VisitedLocation visitedLocation,
     		final Location attractionLocation) {
 

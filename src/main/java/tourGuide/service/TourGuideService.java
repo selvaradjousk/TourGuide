@@ -391,23 +391,13 @@ public class TourGuideService implements ITourGuideService {
 				+ " user {} : {}", user.getUserName(), cumulativeRewardPoints);
 
 
-		List<ProviderDTO> providers = tripDealsMicroService
-				.getProviders(
-						internalTestHelper.getTripPricerApiKey(),
-						user.getUserId(),
-						user.getUserPreferences().getNumberOfAdults(),
-						user.getUserPreferences().getNumberOfChildren(),
-						user.getUserPreferences().getTripDuration(),
-						cumulativeRewardPoints);
-
-		logger.info("## Providers for"
-				+ " user {} : {}", user.getUserName(), providers);
+		List<ProviderDTO> providers = getProvidersDTOListForUser(
+				user,
+				cumulativeRewardPoints);
 
 
-        List<Provider> providerList = new ArrayList<>();
-        providers.forEach(provider -> {
-            providerList.add(providerMapper.toProvider(provider));
-        });
+        List<Provider> providerList = mapProvidersDTOListToProvidersListDO(
+        		providers);
         
         
 		user.setTripDeals(providerList);
@@ -420,7 +410,67 @@ public class TourGuideService implements ITourGuideService {
 
 
 
+
 	// ##############################################################
+
+
+
+
+	/**
+	 * Gets the providers DTO list for user.
+	 *
+	 * @param user the user
+	 * @param cumulativeRewardPoints the cumulative reward points
+	 * @return the providers DTO list for user
+	 */
+	private List<ProviderDTO> getProvidersDTOListForUser(
+			User user,
+			int cumulativeRewardPoints) {
+
+		List<ProviderDTO> providers = tripDealsMicroService
+				.getProviders(
+						internalTestHelper.getTripPricerApiKey(),
+						user.getUserId(),
+						user.getUserPreferences().getNumberOfAdults(),
+						user.getUserPreferences().getNumberOfChildren(),
+						user.getUserPreferences().getTripDuration(),
+						cumulativeRewardPoints);
+
+		logger.info("## Providers for"
+				+ " user {} : {}", user.getUserName(), providers);
+
+		return providers;
+	}
+
+
+
+	// ##############################################################
+
+
+
+	/**
+	 * Map providers DTO list to providers list DO.
+	 *
+	 * @param providers the providers
+	 * @return the list
+	 */
+	private List<Provider> mapProvidersDTOListToProvidersListDO(
+			List<ProviderDTO> providers) {
+
+		List<Provider> providerList = new ArrayList<>();
+
+		providers.forEach(provider -> {
+            providerList.add(providerMapper.toProvider(provider));
+
+		});
+		return providerList;
+	}
+
+
+
+	// ##############################################################
+
+
 
  
 	/**

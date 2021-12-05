@@ -2,6 +2,7 @@ package tourGuide.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
@@ -282,6 +283,49 @@ public class RewardsServiceTest {
 	// ##############################################################
 
 
+
+
+
+
+
+    @DisplayName("Check <isWithinAttractionProximity> "
+    		+ " - Given a User with specifically one visited locaiton,"
+    		+ " when Calculate request isWithinAttractionProximity,"
+    		+ " then return result as expected")		
+	@Test
+	public void isWithinAttractionProximity() {
+
+    	// GIVEN
+
+        attraction = new Attraction(
+        		UUID.randomUUID(),
+        		"attraction name",
+                "attraction city",
+                "attraction state",
+                attractionLocation);
+
+
+		VisitedLocation visitedLocation = new VisitedLocation(
+				user.getUserId(),
+				attraction.getLocation(),
+				new Date());
+	
+
+		// WHEN
+		Boolean result = rewardsService
+				.isWithinAttractionProximity(
+						visitedLocation,
+						attraction.getLocation());
+		
+		
+		// THEN <== // WHEN
+		assertNotNull(result);
+		assertTrue(result);
+	}
+
+
+
+	// ##############################################################
 
 
 }

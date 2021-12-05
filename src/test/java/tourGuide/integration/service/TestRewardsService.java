@@ -2,6 +2,8 @@ package tourGuide.integration.service;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 import java.util.UUID;
@@ -21,7 +23,6 @@ import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
 import tourGuide.service.GpsUtilMicroService;
 import tourGuide.service.RewardsService;
-import tourGuide.service.TourGuideService;
 import tourGuide.util.AttractionMapper;
 
 @ExtendWith(SpringExtension.class)
@@ -33,8 +34,6 @@ public class TestRewardsService {
     @Autowired
     private RewardsService rewardsService;
 
-    @Autowired
-    private TourGuideService tourGuideService;
 
     @Autowired
     private GpsUtilMicroService gpsUtilMicroService;
@@ -215,23 +214,47 @@ public class TestRewardsService {
 
 
 
-			
-////	@Test
-////	public void isWithinAttractionProximity() {
-////
-////		Locale.setDefault(Locale.US);
-////
-//////		GpsUtil gpsUtil = new GpsUtil();
-//////		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-////		AttractionDTO attraction = gpsUtilMicroService.getAttractions().get(0);
-////		assertTrue(rewardsService.isNearAttraction(attraction, attraction));
-////	}
-//
-//
-//
-//	// ##############################################################
-//
-//		
+    @DisplayName("Check <isWithinAttractionProximity> "
+    		+ " - Given a User with specifically one visited locaiton,"
+    		+ " when Calculate request isWithinAttractionProximity,"
+    		+ " then return result as expected")		
+	@Test
+	public void isWithinAttractionProximity() {
+
+		
+    	// GIVEN
+		User user = new User(
+				UUID.randomUUID(),
+				"jon",
+				"000",
+				"jon@tourGuide.com");
+
+		AttractionDTO attraction = gpsUtilMicroService
+				.getAttractions().get(0);
+		
+		VisitedLocation visitedLocation = new VisitedLocation(
+				user.getUserId(),
+				attraction.getLocation(),
+				new Date());
+		
+
+		// WHEN
+		Boolean result = rewardsService
+				.isWithinAttractionProximity(
+						visitedLocation,
+						visitedLocation.getLocation());
+		
+		
+		// THEN <== // WHEN
+		assertNotNull(result);
+		assertTrue(result);
+	}
+
+
+
+	// ##############################################################
+
+		
 ////	@Ignore // Needs fixed - can throw ConcurrentModificationException
 //	@Test
 //	public void nearAllAttractions() {
