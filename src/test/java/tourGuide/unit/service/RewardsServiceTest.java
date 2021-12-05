@@ -453,6 +453,50 @@ public class RewardsServiceTest {
 
 	// ##############################################################
 
+
+    @DisplayName("Check <CheckIfUserIsOfferedRewardToThisAttractionSpot> "
+    		+ " - Given an User with specific attraction spot,"
+    		+ " when Calculate request if user has rewards for the spot,"
+    		+ " then return result as expected")	
+    @Test
+    public void testCheckIfUserIsOfferedRewardToThisAttractionSpot() {
+
+
+       	// GIVEN
+    	
+        VisitedLocation visitedLocation = new VisitedLocation(
+        		UUID.randomUUID(),
+        		location,
+        		new Date());
+        
+        user.addToVisitedLocations(visitedLocation);
+
+        AttractionDTO attractionDTO = new AttractionDTO(
+        		UUID.randomUUID(),
+        		"attraction name",
+                "attraction city",
+                "attraction state",
+                attractionLocation);
+        
+
+        // WHEN
+        Boolean result = rewardsService
+        		.checkIfUserIsOfferedRewardToThisAttractionSpot(
+        				user,
+        				attractionDTO);
+
+        // THEN
+        assertNotNull(result);
+        assertTrue(result);
+
+    }     
+
+
+
+	// ##############################################################
+
     
+    
+      
 
 }

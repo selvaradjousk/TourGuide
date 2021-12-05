@@ -149,7 +149,7 @@ public class RewardsService implements IRewardService {
 	 * @param attraction the attraction
 	 * @return true, if successful
 	 */
-	private boolean checkIfUserIsOfferedRewardToThisAttractionSpot(
+	public boolean checkIfUserIsOfferedRewardToThisAttractionSpot(
 			final User user,
 			AttractionDTO attraction) {
 

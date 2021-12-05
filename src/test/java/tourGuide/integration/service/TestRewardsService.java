@@ -302,7 +302,7 @@ public class TestRewardsService {
     		+ " when Calculate request getRewardPoints,"
     		+ " then return rewardPoints as expected")	
     @Test
-    public void testgetRewarPoints() {
+    public void testGetRewarPoints() {
 
 		
     	// GIVEN
@@ -339,6 +339,54 @@ public class TestRewardsService {
 
 	// ##############################################################
 
+
+    
+
+
+    @DisplayName("Check <CheckIfUserIsOfferedRewardToThisAttractionSpot> "
+    		+ " - Given an User with specific attraction spot,"
+    		+ " when Calculate request if user has rewards for the spot,"
+    		+ " then return result as expected")	
+    @Test
+    public void testCheckIfUserIsOfferedRewardToThisAttractionSpot() {
+
+		
+    	// GIVEN
+		User user = new User(
+				UUID.randomUUID(),
+				"jon",
+				"000",
+				"jon@tourGuide.com");
+		
+		
+		
+        AttractionDTO attraction = gpsUtilMicroService
+        		.getAttractions().get(0);
+        
+        user.addToVisitedLocations(
+        		new VisitedLocation(
+        				user.getUserId(),
+        				attraction.getLocation(),
+        				new Date()));
+
+        // WHEN
+        Boolean result = rewardsService
+        		.checkIfUserIsOfferedRewardToThisAttractionSpot(
+        				user,
+        				attraction);
+
+        // THEN
+        assertNotNull(result);
+        assertTrue(result);
+
+    }     
+
+
+
+	// ##############################################################
+
+    
+    
     
     
         
