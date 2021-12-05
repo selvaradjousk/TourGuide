@@ -577,6 +577,10 @@ public class TourGuideControllerIT {
 	//##############################################################
 	//##############################################################
 	
+    @DisplayName("Check (GetTripDeals)"
+    		+ " - Given an username,"
+    		+ " when GET tripDeals,"
+    		+ " then return - Status: 200 OK")
 	@Test
 	public void testGetTripDealsUrlValid() {
 	
@@ -607,8 +611,11 @@ public class TourGuideControllerIT {
 
 
 
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
-	@Test
+    @DisplayName("Check (GetTripDeals) empty username"
+    		+ " - Given an empty username,"
+    		+ " when GET tripDeals,"
+    		+ " then return - Status: BAD_REQUEST")
+    @Test
 	public void testGetTripDealsUrlWithEmptyUserName() {
 	
 		ResponseEntity<String> response = restTemplate
@@ -631,7 +638,10 @@ public class TourGuideControllerIT {
 
 
 
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+    @DisplayName("Check (GetTripDeals) null value username"
+    		+ " - Given an username is null,"
+    		+ " when GET tripDeals,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetTripDealsUrlWithNullValueUserName() {
 	
@@ -655,7 +665,10 @@ public class TourGuideControllerIT {
 	// ##############################################################
 
 
-
+    @DisplayName("Check (GetTripDeals) username WithMissingParameter"
+    		+ " - Given an username WithMissingParameter,"
+    		+ " when GET tripDeals,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetTripDealsUrlWithMissingParameter() {
 	
@@ -679,7 +692,11 @@ public class TourGuideControllerIT {
 	// ##############################################################
 
 
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+
+    @DisplayName("Check (GetTripDeals) invalid username"
+    		+ " - Given an username invalid,"
+    		+ " when GET tripDeals,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetTripDealsUrlWithInvalidUserName() {
 	
