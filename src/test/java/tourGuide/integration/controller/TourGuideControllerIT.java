@@ -846,6 +846,31 @@ public class TourGuideControllerIT {
 	// ##############################################################
 
 
+    @DisplayName("Check (GetUser) "
+    		+ " - Given a request,"
+    		+ " when GET GetUser,"
+    		+ " then return - Status: 200 OK")
+	@Test
+	public void testGetUser() {
+	
+		ResponseEntity<String> response = restTemplate
+				.getForEntity(
+						"http://localhost:"
+						+ port
+						+ "/getUser"
+						+ "?userName=internalUser6", String.class);
+	
+	    assertNotNull(response);
+	    
+	    assertEquals(
+	    		HttpStatus.OK.value(),
+	    		response.getStatusCodeValue());
+	
+	    }
+
+
+	//##############################################################
+
 									
 }	
 

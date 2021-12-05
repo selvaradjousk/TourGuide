@@ -76,9 +76,9 @@ public class TestPerformance {
 	
 //	@Ignore
     @DisplayName("HighVolumeTrackLocation"
-    		+ " - GIVEN a high volume users,"
+    		+ " - GIVEN a high volume users (100 000 users),"
     		+ " WHEN trackAllUserLocation,"
-    		+ " THEN elapsed time should be <= to expected time")
+    		+ " THEN elapsed time should be <= to expected time (15 minutes")
     @Test
 	public void highVolumeTrackLocation() {
 		
@@ -156,7 +156,10 @@ public class TestPerformance {
 	// ##############################################################
 
 	
-//	@Ignore
+    @DisplayName("HighVolumeGetRewards"
+    		+ " - GIVEN a high volume users, (100 000 users)"
+    		+ " WHEN calculateRewardAsync,"
+    		+ " THEN elapsed time should be <= to expected time (20 minutes)")
 	@Test
 	public void highVolumeGetRewards() throws InterruptedException {
 

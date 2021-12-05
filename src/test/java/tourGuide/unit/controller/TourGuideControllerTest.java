@@ -508,5 +508,31 @@ class TourGuideControllerTest {
 
 	// ##############################################################
 
-    
+
+    @DisplayName("Check (GetUser) "
+    		+ " - Given a request,"
+    		+ " when GET GetUser,"
+    		+ " then return - Status: 200 OK")
+	@Test
+	public void testGetUser() throws Exception {
+	
+
+       MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/getUser")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userName", "testUser"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = result
+        		.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        
+
+    }
+
+	// ##############################################################
+
+        
     }
