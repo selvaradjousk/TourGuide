@@ -85,7 +85,92 @@ class TourGuideControllerTest {
 
 	// ##############################################################
 
+    @Test
+    @DisplayName("Check (GetLocation) Valid "
+    		+ " - Given a request,"
+    		+ " when GET GetLocation,"
+    		+ " then return - Status: 200 OK")
+    public void givenAnUsername_whenGetUserLocationRequest_thenReturnOKStatus() throws Exception {
+
+    	when(tourGuideService
+    			.getUserLocation("testUser"))
+    	.thenReturn(userLocationDTO);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/getLocation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userName", "testUser"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("33.817595");
+        assertThat(content).contains("-117.922008");
+        verify(tourGuideService).getUserLocation(anyString());
+    }
+
+	// ##############################################################
+
     
+    @Test
+    @DisplayName("Check (GetLocation) EmptyUserName "
+    		+ " - Given a request,"
+    		+ " when GET GetLocation,"
+    		+ " then return - Status: BAD_REQUEST")
+	public void testGetLocationUrlWithEmptyUserName() throws Exception {
+
+    	when(tourGuideService
+    			.getUserLocation("testUser"))
+    	.thenReturn(userLocationDTO);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/getLocation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userName", ""))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("username is required");
+    }
+
+	// ##############################################################
+
+
+	// ##############################################################
+
+    
+    @Test
+    @DisplayName("Check (GetLocation) missing parameter "
+    		+ " - Given a request,"
+    		+ " when GET GetLocation,"
+    		+ " then return - Status: BAD_REQUEST")
+	public void testGetLocationUrlWithMissingParameter() throws Exception {
+
+    	when(tourGuideService
+    			.getUserLocation("testUser"))
+    	.thenReturn(userLocationDTO);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/getLocation")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("userName parameter is missing");
+    }
+
+	// ##############################################################
+
+
+      
     @DisplayName("Check (GetNearbyAttractions)"
     		+ " - Given a request,"
     		+ " when GET GetNearbyAttractions,"
@@ -100,7 +185,8 @@ class TourGuideControllerTest {
                 		"Disneyland",
                 		attractionLocation,
                         200.00, 500)));
-        when(tourGuideService
+
+    	when(tourGuideService
         		.getUserAttractionRecommendation("testUser"))
         .thenReturn(recommendedAttractionDTO);
 

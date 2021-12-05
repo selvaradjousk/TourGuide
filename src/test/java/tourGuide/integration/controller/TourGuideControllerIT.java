@@ -75,7 +75,10 @@ public class TourGuideControllerIT {
 
 	// ##############################################################
 	
-//	@Ignore
+    @DisplayName("Check (GetLocation) Valid "
+    		+ " - Given a request,"
+    		+ " when GET GetLocation,"
+    		+ " then return - Status: 200 OK")
 	@Test
 	public void testGetLocationUrlValid() {
 	
@@ -103,7 +106,10 @@ public class TourGuideControllerIT {
 
 
 
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+    @DisplayName("Check (GetLocation) EmptyUserName "
+    		+ " - Given a request,"
+    		+ " when GET GetLocation,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetLocationUrlWithEmptyUserName() {
 	
@@ -128,7 +134,10 @@ public class TourGuideControllerIT {
 
 
 
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+    @DisplayName("Check (GetLocation) NullValueUserName "
+    		+ " - Given a request,"
+    		+ " when GET GetLocation,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetLocationUrlWithNullValueUserName() {
 	
@@ -152,7 +161,10 @@ public class TourGuideControllerIT {
 	// ##############################################################
 
 
-
+    @DisplayName("Check (GetLocation) missing parameter "
+    		+ " - Given a request,"
+    		+ " when GET GetLocation,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetLocationUrlWithMissingParameter() {
 	
@@ -175,8 +187,10 @@ public class TourGuideControllerIT {
 
 	// ##############################################################
 
-//	@Ignore
-	// EXCEPTION HANDLING TO BE DONE BY INTRODUCING DTO
+    @DisplayName("Check (GetLocation) invalid username "
+    		+ " - Given a request,"
+    		+ " when GET GetLocation,"
+    		+ " then return - Status: NOT_FOUND")
 	@Test
 	public void testGetLocationUrlWithInvalidUserName() {
 	
@@ -289,7 +303,10 @@ public class TourGuideControllerIT {
 
 
 
-
+    @DisplayName("Check (GetNearbyAttractions) Null Parameter"
+    		+ " - Given a request,"
+    		+ " when GET GetNearbyAttractions,"
+    		+ " then return - Status: BAD_REQUEST")
 	@Test
 	public void testGetNearbyAttractionsUrlWithNullValueUserName() {
 	
