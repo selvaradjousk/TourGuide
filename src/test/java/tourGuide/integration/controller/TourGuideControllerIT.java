@@ -51,6 +51,13 @@ public class TourGuideControllerIT {
     
 	// ##############################################################
 
+    
+    
+    
+    @DisplayName("Check (testIndexPageUrl) "
+    		+ " - Given a request,"
+    		+ " when GET index page URL,"
+    		+ " then return - Status: 200 OK")
 	@Test
 	public void testIndexPageUrl() {
 
@@ -408,7 +415,6 @@ public class TourGuideControllerIT {
 
 
 	// ##############################################################
-	// ##############################################################
 	
     @Test
     @DisplayName("Check (GetRewards) ValidInput "
@@ -512,7 +518,8 @@ public class TourGuideControllerIT {
 	    		response.getStatusCodeValue());
 
        
-	    assertTrue(response.getBody().contains("Required String parameter 'userName' is not present"));
+	    assertTrue(response.getBody().contains(
+	    		"Required String parameter 'userName' is not present"));
 	
 	    }
 
@@ -708,7 +715,8 @@ public class TourGuideControllerIT {
 	    		response.getStatusCodeValue());
 
        
-	    assertTrue(response.getBody().contains("Required String parameter 'userName' is not present"));
+	    assertTrue(response.getBody().contains(
+	    		"Required String parameter 'userName' is not present"));
 	
 	    }
 

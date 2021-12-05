@@ -82,7 +82,31 @@ class TourGuideControllerTest {
     }
     
 
+	// ##############################################################
 
+    
+    @Test
+    @DisplayName("Check (testIndexPageUrl) "
+    		+ " - Given a request,"
+    		+ " when GET index page URL,"
+    		+ " then return - Status: 200 OK")
+	public void testIndexPageUrl() throws Exception {
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+        		.get("/")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = result
+        		.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("Greetings from TourGuide!");
+    }
+    
+    
+    
 	// ##############################################################
 
     @Test
@@ -90,7 +114,7 @@ class TourGuideControllerTest {
     		+ " - Given a request,"
     		+ " when GET GetLocation,"
     		+ " then return - Status: 200 OK")
-    public void givenAnUsername_whenGetUserLocationRequest_thenReturnOKStatus() throws Exception {
+	public void testGetLocationUrlValid() throws Exception {
 
     	when(tourGuideService
     			.getUserLocation("testUser"))
@@ -103,7 +127,8 @@ class TourGuideControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        String content = result.getResponse().getContentAsString();
+        String content = result
+        		.getResponse().getContentAsString();
 
         assertNotNull(content);
         assertThat(content).contains("33.817595");
@@ -137,8 +162,6 @@ class TourGuideControllerTest {
         assertNotNull(content);
         assertThat(content).contains("username is required");
     }
-
-	// ##############################################################
 
 
 	// ##############################################################
