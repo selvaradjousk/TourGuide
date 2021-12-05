@@ -66,8 +66,11 @@ dependencies {
     implementation(name:'RewardCentral', ext:'jar')
     implementation(name:'TripPricer', ext:'jar')
     
+    implementation 'org.modelmapper:modelmapper:2.3.3'
+    
     // Junit
     // testImplementation("junit:junit")
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.2.2.RELEASE')  {
         exclude group: 'junit'
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
