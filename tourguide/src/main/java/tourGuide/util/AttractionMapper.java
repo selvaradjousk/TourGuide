@@ -19,8 +19,8 @@ public class AttractionMapper {
         		attraction.city,
                 attraction.state,
                 new Location(
-                		attraction.longitude,
-                		attraction.latitude));
+                		attraction.latitude,
+                		attraction.longitude));
     }
 
 	// ##############################################################

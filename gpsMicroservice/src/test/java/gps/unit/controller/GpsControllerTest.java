@@ -107,7 +107,7 @@ class GpsControllerTest {
 
     @Test
     @DisplayName("Check (getUserLocation) with empty input"
-    		+ " - Given an userId,"
+    		+ " - Given an userId empty,"
     		+ " when GET getUserLocation URL,"
     		+ " then return - Status: BAD_REQUEST")
      public void testGetUserLocationRequestWithEmptyInput() throws Exception {
@@ -116,6 +116,34 @@ class GpsControllerTest {
         		.perform(MockMvcRequestBuilders
         				.get(USER_LOCATION_URL + "")
         				.contentType(MediaType.APPLICATION_JSON))
+        		.andExpect(status().isNotFound())
+        		.andReturn();
+
+        String content = result
+        		.getResponse().getContentAsString();
+
+        assertNotNull(content);
+    }
+
+
+
+
+
+	//###############################################################
+
+	
+
+    @Test
+    @DisplayName("Check (getUserLocation) with Null input"
+    		+ " - Given an userId null,"
+    		+ " when GET getUserLocation URL,"
+    		+ " then return - Status: BAD_REQUEST")
+     public void testGetUserLocationRequestWithNullInput() throws Exception {
+
+        MvcResult result = mockMvc
+        		.perform(MockMvcRequestBuilders
+        				.get(USER_LOCATION_URL + null)
+        				.contentType(MediaType.APPLICATION_JSON))
         		.andExpect(status().isBadRequest())
         		.andReturn();
 
@@ -123,7 +151,36 @@ class GpsControllerTest {
         		.getResponse().getContentAsString();
 
         assertNotNull(content);
-        assertThat(content).contains("userId parameter is missing");
+        assertThat(content).contains("Invalid UUID string");
+    }
+
+
+
+
+
+	//###############################################################
+
+
+
+    @Test
+    @DisplayName("Check (getUserLocation) with invalid input"
+    		+ " - Given an userId invalid,"
+    		+ " when GET getUserLocation URL,"
+    		+ " then return - Status: BAD_REQUEST")
+     public void testGetUserLocationRequestWithinvalideInput() throws Exception {
+
+        MvcResult result = mockMvc
+        		.perform(MockMvcRequestBuilders
+        				.get(USER_LOCATION_URL + "dsfsqdf")
+        				.contentType(MediaType.APPLICATION_JSON))
+        		.andExpect(status().isBadRequest())
+        		.andReturn();
+
+        String content = result
+        		.getResponse().getContentAsString();
+
+        assertNotNull(content);
+        assertThat(content).contains("Invalid UUID string");
     }
 
 

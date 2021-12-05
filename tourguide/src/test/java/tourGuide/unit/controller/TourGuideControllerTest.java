@@ -40,7 +40,7 @@ import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.model.Location;
 import tourGuide.service.TourGuideService;
 
-@DisplayName("UNIT TESTS - Controller - TourGuide) ")
+@DisplayName("UNIT TESTS - Controller - TourGuide")
 //@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)

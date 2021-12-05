@@ -6,17 +6,27 @@ import java.util.UUID;
 import gps.dto.AttractionDTO;
 import gps.dto.VisitedLocationDTO;
 
-public class IGpsService {
 
-	public VisitedLocationDTO getUserLocation(UUID userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+/**
+ * The Interface IGpsService.
+ */
+public interface IGpsService {
 
-	public List<AttractionDTO> getAttractions() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	/**
+	 * Gets the user location.
+	 *
+	 * @param userId the user id
+	 * @return the user location
+	 */
+	VisitedLocationDTO getUserLocation(UUID userId);
+
+
+	/**
+	 * Gets the attractions.
+	 *
+	 * @return the attractions
+	 */
+	List<AttractionDTO> getAttractions();
 
 	
 }

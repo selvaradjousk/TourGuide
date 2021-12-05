@@ -24,8 +24,8 @@ public class VisitedLocationMapper {
         return new VisitedLocationDTO(
         		visitedLocation.userId,
         		new Location(
-        				visitedLocation.location.longitude,
-        				visitedLocation.location.latitude),
+        				visitedLocation.location.latitude,
+        				visitedLocation.location.longitude),
         		visitedLocation.timeVisited);
     }
     
