@@ -605,4 +605,174 @@ public class TourGuideServiceTest {
 
 
 
+    @DisplayName("Check <testGetUserRewards>"
+    		+ " - Given an User with reward,"
+    		+ " WHEN Requested testGetUserRewards,"
+    		+ " then return user rewards as expected")
+    @Test
+    public void testGetUserRewards() {
+
+    	// GIVEN
+        user1.addUserReward(userReward);
+
+        when(internalTestHelper
+        		.getInternalUserMap())
+        .thenReturn(internalUser);
+        
+        when(userRewardMapper
+        		.toUserRewardDTO(any(UserReward.class)))
+        .thenReturn(userRewardDTO);
+
+
+        // WHEN
+        List<UserRewardDTO> result = tourGuideService
+        		.getUserRewards("testUser1");
+
+        // THEN
+        assertNotNull(result);
+        assertThat(result).contains(userRewardDTO);
+        assertThat(result.get(0).getRewardPoints() > 1);
+
+    }
+
+
+
+	// ##############################################################
+
+
+
+    @DisplayName("Check <testGetUserRewards> no rewards"
+    		+ " - Given an User with no reward,"
+    		+ " WHEN Requested testGetUserRewards,"
+    		+ " then return user rewards (empty) as expected")
+    @Test
+    public void testGetUserRewardsWhenNoRewards() {
+
+    	// GIVEN
+        user1.addUserReward(userReward);
+
+        when(internalTestHelper
+        		.getInternalUserMap())
+        .thenReturn(internalUser);
+
+        // WHEN
+        List<UserRewardDTO> result = tourGuideService
+        		.getUserRewards("testUser1");
+
+        // THEN
+        assertNotNull(result);
+
+    }
+
+
+
+	// ##############################################################
+
+    
+
+
+    @DisplayName("Check <getTotalRewardPointsForUser>"
+    		+ " - Given an Username,"
+    		+ " WHEN Requested getTotalRewardPointsForUser,"
+    		+ " then return user reward points as expected")
+    @Test
+    public void getTotalRewardPointsForUser() {
+
+
+    	// GIVEN
+    	user1.addToVisitedLocations(visitedLocation);
+
+    	Location userLocation = user1.getLastVisitedLocation().getLocation();
+        LocationDTO userLocationDTO = new LocationDTO(-160.326003, -73.869629);
+
+        UUID userID = user1.getUserId();
+
+        AttractionDTO attraction1 = new AttractionDTO(
+        		UUID.randomUUID(), "Disneyland", "Anaheim", "CA", new Location(33.817595D, -117.922008D));
+        AttractionDTO attraction2 = new AttractionDTO(
+        		UUID.randomUUID(), "Jackson Hole", "Jackson Hole", "WY", new Location(43.582767D, -110.821999D));
+        AttractionDTO attraction3 = new AttractionDTO(
+        		UUID.randomUUID(), "Mojave","Kelso", "CA", new Location(35.141689D, -115.510399D));
+        AttractionDTO attraction4 = new AttractionDTO(
+        		UUID.randomUUID(), "Kartchner Caverns", "Benson", "AZ", new Location(31.837551D, -110.347382D));
+        AttractionDTO attraction5 = new AttractionDTO(
+        		UUID.randomUUID(),"Joshua Tree", "Joshua Tree", "CA", new Location(33.881866D, -115.90065D));
+        AttractionDTO attraction6 = new AttractionDTO(
+        		UUID.randomUUID(),"Buffalo", "St Joe", "AR", new Location(35.985512D, -92.757652D));
+        AttractionDTO attraction7 = new AttractionDTO(
+        		UUID.randomUUID(),"Hot Springs", "Hot Springs", "AR", new Location(34.52153D, -93.042267D));
+        AttractionDTO attraction8 = new AttractionDTO(
+        		UUID.randomUUID(),"Kartchner Caverns State Park", "Benson", "AZ", new Location(31.837551D, -110.347382D));
+        AttractionDTO attraction9 = new AttractionDTO(
+        		UUID.randomUUID(),"Legend Valley", "Thornville", "OH", new Location(39.937778D, -82.40667D));
+        AttractionDTO attraction10 = new AttractionDTO(
+        		UUID.randomUUID(),"Flowers Bakery of London", "Flowers Bakery of London", "KY", new Location(37.131527D, -84.07486D));
+
+        List<AttractionDTO> attractions = Arrays.asList(
+        		attraction1,
+        		attraction2,
+        		attraction3,
+        		attraction4,
+        		attraction5,
+        		attraction6,
+        		attraction7,
+        		attraction8,
+        		attraction9,
+        		attraction10 );
+
+        when(internalTestHelper
+        		.getInternalUserMap())
+        .thenReturn(internalUser);
+        
+        lenient().when(locationMapper
+        		.toLocationDTO(any(Location.class)))
+        .thenReturn(userLocationDTO);
+        
+        lenient().when(locationMapper
+        		.toLocation(any(LocationDTO.class)))
+        .thenReturn(userLocation);
+        
+        lenient().when(GpsUtilMicroService
+        		.getAttractions())
+        .thenReturn(attractions);
+        
+        lenient().when(distanceCalculator.getDistanceInMiles(attraction1.getLocation(), userLocation)).thenReturn(100.00);
+        lenient().when(distanceCalculator.getDistanceInMiles(attraction2.getLocation(), userLocation)).thenReturn(200.00);
+        lenient().when(distanceCalculator.getDistanceInMiles(attraction3.getLocation(), userLocation)).thenReturn(300.00);
+        lenient().when(distanceCalculator.getDistanceInMiles(attraction4.getLocation(), userLocation)).thenReturn(400.00);
+        lenient().when(distanceCalculator.getDistanceInMiles(attraction5.getLocation(), userLocation)).thenReturn(500.00);
+        lenient().when(distanceCalculator.getDistanceInMiles(attraction6.getLocation(), userLocation)).thenReturn(600.00);
+        lenient().when(distanceCalculator.getDistanceInMiles(attraction7.getLocation(), userLocation)).thenReturn(700.00);
+        lenient().when(distanceCalculator.getDistanceInMiles(attraction7.getLocation(), userLocation)).thenReturn(800.00);
+        lenient().when(distanceCalculator.getDistanceInMiles(attraction7.getLocation(), userLocation)).thenReturn(900.00);
+        lenient().when(distanceCalculator.getDistanceInMiles(attraction7.getLocation(), userLocation)).thenReturn(900.00);
+
+        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction1.getAttractionId(), userID)).thenReturn(100);
+        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction2.getAttractionId(), userID)).thenReturn(200);
+        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction3.getAttractionId(), userID)).thenReturn(300);
+        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction4.getAttractionId(), userID)).thenReturn(400);
+        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction5.getAttractionId(), userID)).thenReturn(500);
+    	
+    	// WHEN 
+//    	UserAttractionRecommendationDTO result = tourGuideService
+//    			.getUserAttractionRecommendation(user1.getUserName());
+
+    	
+        
+        // WHEN
+        int result = tourGuideService
+        		.getTotalRewardPointsForUser(user1.getUserName());
+
+        // THEN
+        assertNotNull(result);
+        assertThat(result > 500);
+        assertEquals(300, result);
+    }
+
+
+
+	// ##############################################################
+
+
+
 }

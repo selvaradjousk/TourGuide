@@ -27,11 +27,14 @@ import tourGuide.dto.LocationDTO;
 import tourGuide.dto.ProviderDTO;
 import tourGuide.dto.UserAttractionRecommendationDTO;
 import tourGuide.dto.UserPreferencesDTO;
+import tourGuide.dto.UserRewardDTO;
 import tourGuide.exception.DataAlreadyRegisteredException;
 import tourGuide.exception.UserNotFoundException;
+import tourGuide.model.Attraction;
 import tourGuide.model.Location;
 import tourGuide.model.User;
 import tourGuide.model.UserPreferences;
+import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
@@ -97,7 +100,7 @@ public class TestTourGuideService {
     	// GIVEN
     	User user = tourGuideService.getUser("internalUser1");
 
-    	Location location = new Location(-160.326003, -73.869629);
+    	Location location = new Location(33.881866, -115.90065);
 
     	user.getVisitedLocations().clear();
 
@@ -365,64 +368,103 @@ public class TestTourGuideService {
         assertThat(result).isNotNull();
         assertThat(result).isEqualToComparingFieldByField(userPreferences);
         
-        
-        
-//        InternalTestHelper.setInternalUserNumber(0);
-//
-//        final User user = new User(
-//        		UUID.randomUUID(),
-//        		"testUser1",
-//        		"000",
-//        		"testUser@tourGuide.com");
-//
-//
-//        UserPreferencesDTO testUserPreferencesDto = new UserPreferencesDTO(
-//        		"testUser",
-//        		999,
-//        		999,
-//        		999,
-//        		999,
-//        		999,
-//        		999,
-//        		999);
-//
-//        tourGuideService.addUser(user);
-//
-//        UserPreferencesDTO userPreferencesDto = new UserPreferencesDTO();
-//        userPreferencesDto.setTripDuration(999);
-//        userPreferencesDto.setTicketQuantity(999);
-//        userPreferencesDto.setNumberOfAdults(999);
-//        userPreferencesDto.setNumberOfChildren(999);
-//        userPreferencesDto.setCurrency("EUR");
-//        userPreferencesDto.setHighPricePoint(999);
-//        userPreferencesDto.setLowerPricePoint(999);
-//        userPreferencesDto.setAttractionProximity(999);
-//
-//        // WHEN
-//        boolean result = tourGuideService
-//        		.updateUserPreferences(
-//        				"testUser1",
-//        				userPreferencesDto);
-//
-//        // THEN
-//        assertNotNull(result);
-////        assertEquals(true, result);
-//        assertEquals(testUserPreferencesDto.getTripDuration().intValue(),
-//        		user.getUserPreferences().getTripDuration());
-//        assertEquals(testUserPreferencesDto.getTicketQuantity().intValue(),
-//        		user.getUserPreferences().getTicketQuantity());
-//        assertEquals(testUserPreferencesDto.getNumberOfAdults().intValue(),
-//        		user.getUserPreferences().getNumberOfAdults());
-//        assertEquals(testUserPreferencesDto.getNumberOfChildren().intValue(),
-//        		user.getUserPreferences().getNumberOfChildren());
-//        assertEquals("EUR "+ testUserPreferencesDto.getHighPricePoint().intValue(),
-//        		user.getUserPreferences().getHighPricePoint().toString());
-//        assertEquals("EUR "+ testUserPreferencesDto.getLowerPricePoint().intValue(),
-//        		user.getUserPreferences().getLowerPricePoint().toString());
-//        assertEquals(testUserPreferencesDto.getAttractionProximity().intValue(),
-//        		user.getUserPreferences().getAttractionProximity());        
-//        
+ 
     }
+
+
+	// ##############################################################
+
+
+
+    @DisplayName("Check <testGetUserRewards>"
+    		+ " - Given an User with reward,"
+    		+ " WHEN Requested testGetUserRewards,"
+    		+ " then return user rewards as expected")
+    @Test
+    public void testGetUserRewards() {
+
+    	// GIVEN
+    	User user = tourGuideService.getUser("internalUser1");
+        user.getUserRewards().clear();
+        VisitedLocation visitedLocation = new VisitedLocation(
+        		user.getUserId(),
+        		new Location(30.881866, -115.90065),
+        		new Date());
+        
+        Attraction attraction = new Attraction(
+        		UUID.randomUUID(),
+        		"Disneyland" ,
+        		"Anaheim" ,
+                "CA",
+                new Location(33.881866, -115.90065));
+        
+        UserReward userReward = new UserReward(
+        		visitedLocation,
+        		attraction,
+        		1000);
+        
+        user.addUserReward(userReward);
+
+        // WHEN
+        List<UserRewardDTO> result = tourGuideService
+        		.getUserRewards("internalUser1");
+
+        // THEN
+        assertNotNull(result);
+        assertEquals(1000, result.get(0).getRewardPoints());
+
+    }
+
+
+
+	// ##############################################################
+
+
+
+    @DisplayName("Check <testGetUserRewards> no rewards"
+    		+ " - Given an User with no reward,"
+    		+ " WHEN Requested testGetUserRewards,"
+    		+ " then return user rewards (empty) as expected")
+    @Test
+    public void testGetUserRewardsWhenNoRewards() {
+
+    	// GIVEN
+    	User user = tourGuideService.getUser("internalUser2");
+        user.getUserRewards().clear();
+        
+        // WHEN
+        List<UserRewardDTO> result = tourGuideService
+        		.getUserRewards("internalUser2");
+
+        // THEN
+        assertNotNull(result);
+        assertThat(result).isEmpty();
+    }
+
+
+
+	// ##############################################################
+
+    
+
+
+    @DisplayName("Check <getTotalRewardPointsForUser>"
+    		+ " - Given an Username,"
+    		+ " WHEN Requested getTotalRewardPointsForUser,"
+    		+ " then return user reward points as expected")
+    @Test
+    public void getTotalRewardPointsForUser() {
+
+        
+    	// WHEN <== // GIVEN
+        int result = tourGuideService
+        		.getTotalRewardPointsForUser("internalUser1");
+
+        // THEN
+        assertNotNull(result);
+        assertThat(result > 500);
+    }
+
 
 
 	// ##############################################################
