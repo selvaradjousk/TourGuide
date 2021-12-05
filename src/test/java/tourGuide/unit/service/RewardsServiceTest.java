@@ -1,7 +1,5 @@
 package tourGuide.unit.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -384,6 +382,77 @@ public class RewardsServiceTest {
 
         assertEquals(1, user.getUserRewards().size());
     }    
+    
+
+	// ##############################################################
+
+    
+
+
+    @DisplayName("Check <getRewardPoints> "
+    		+ " - Given an User ,"
+    		+ " when Calculate request getRewardPoints,"
+    		+ " then return rewardPoints as expected")	
+    @Test
+    public void testgetRewarPoints() {
+
+		
+    	// GIVEN
+	
+        VisitedLocation visitedLocation = new VisitedLocation(
+        		UUID.randomUUID(),
+        		location,
+        		new Date());
+        
+        user.addToVisitedLocations(visitedLocation);
+
+        AttractionDTO attractionDTO = new AttractionDTO(
+        		UUID.randomUUID(),
+        		"attraction name",
+                "attraction city",
+                "attraction state",
+                attractionLocation);
+        
+        Attraction attraction = new Attraction(
+        		UUID.randomUUID(),
+        		"attraction name",
+                "attraction city",
+                "attraction state",
+                attractionLocation);
+		
+
+        user.addToVisitedLocations(
+        		new VisitedLocation(
+        				user.getUserId(),
+        				attraction.getLocation(),
+        				new Date()));
+
+
+        
+        when(rewardsMicroService
+        		.getAttractionRewardPoints(any(UUID.class), any(UUID.class)))
+        .thenReturn(1000);
+        
+        when(attractionMapper
+        		.toAttraction(attractionDTO))
+        .thenReturn(attraction);
+        
+        // WHEN
+        UserReward result = rewardsService
+        		.getRewardPoints(user, user.getLastVisitedLocation(), attractionDTO);
+
+        // THEN
+        assertNotNull(result);
+        assertNotNull(result.getVisitedLocation());
+        assertNotNull(result.getRewardPoints());
+        assertNotNull(result.getAttraction());
+        
+        assertTrue(result.getRewardPoints() > 1);
+        assertEquals(1000, result.getRewardPoints());
+    }     
+
+	// ##############################################################
+
     
 
 }

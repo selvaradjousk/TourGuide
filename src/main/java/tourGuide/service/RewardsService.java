@@ -170,7 +170,7 @@ public class RewardsService implements IRewardService {
 	 * @param attraction the attraction
 	 * @return the reward points
 	 */
-	private UserReward getRewardPoints(
+	public UserReward getRewardPoints(
 			final User user,
 			VisitedLocation visitedLocation,
 			AttractionDTO attraction) {

@@ -25,6 +25,7 @@ import tourGuide.service.GpsUtilMicroService;
 import tourGuide.service.RewardsService;
 import tourGuide.util.AttractionMapper;
 
+@DisplayName("IT Test - Service - Rewards")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestPropertySource("/integration-test.properties")
@@ -292,7 +293,56 @@ public class TestRewardsService {
 
 
 	// ##############################################################
+
+    
+
+
+    @DisplayName("Check <getRewardPoints> "
+    		+ " - Given an User ,"
+    		+ " when Calculate request getRewardPoints,"
+    		+ " then return rewardPoints as expected")	
+    @Test
+    public void testgetRewarPoints() {
+
 		
+    	// GIVEN
+		User user = new User(
+				UUID.randomUUID(),
+				"jon",
+				"000",
+				"jon@tourGuide.com");
+		
+		
+		
+        AttractionDTO attraction = gpsUtilMicroService
+        		.getAttractions().get(0);
+        
+        user.addToVisitedLocations(
+        		new VisitedLocation(
+        				user.getUserId(),
+        				attraction.getLocation(),
+        				new Date()));
+
+        // WHEN
+        UserReward result = rewardsService.getRewardPoints(user, user.getLastVisitedLocation(), attraction);
+
+        // THEN
+        assertNotNull(result);
+        assertNotNull(result.getVisitedLocation());
+        assertNotNull(result.getRewardPoints());
+        assertNotNull(result.getAttraction());
+        
+        assertTrue(result.getRewardPoints() > 1);
+    }     
+
+
+
+	// ##############################################################
+
+    
+    
+        
+    
 ////	@Ignore // Needs fixed - can throw ConcurrentModificationException
 //	@Test
 //	public void nearAllAttractions() {
