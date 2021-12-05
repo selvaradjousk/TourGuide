@@ -30,7 +30,7 @@ apply plugin: "jacoco"
 
 
 bootJar {
-    baseName = 'tourGuide'
+    baseName = 'rewardsMicroservice'
     version =  '1.0.0'
 }
 
@@ -65,9 +65,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    implementation(name:'gpsUtil', ext:'jar')
     implementation(name:'RewardCentral', ext:'jar')
-    implementation(name:'TripPricer', ext:'jar')
     
     implementation 'org.modelmapper:modelmapper:2.3.3'
     
