@@ -67,7 +67,7 @@ public class TourGuideServiceTest {
     private RewardsService rewardsService;
 
     @Mock
-    private GpsUtilMicroService GpsUtilMicroService;
+    private GpsUtilMicroService gpsUtilMicroService;
 
     @Mock
     private TripDealsMicroService tripDealsMicroservice;
@@ -203,7 +203,7 @@ public class TourGuideServiceTest {
     			.getInternalUserMap())
     	.thenReturn(internalUser);
 
-    	when(GpsUtilMicroService
+    	when(gpsUtilMicroService
     			.getUserLocation(any(UUID.class)))
     	.thenReturn(visitedLocationDTO);
 
@@ -433,7 +433,7 @@ public class TourGuideServiceTest {
     public void testTrackUser() {
 
     	// GIVEN
-        when(GpsUtilMicroService
+        when(gpsUtilMicroService
         		.getUserLocation(any(UUID.class)))
         .thenReturn(visitedLocationDTO);
         
@@ -515,7 +515,7 @@ public class TourGuideServiceTest {
         		.toLocation(any(LocationDTO.class)))
         .thenReturn(userLocation);
         
-        lenient().when(GpsUtilMicroService
+        lenient().when(gpsUtilMicroService
         		.getAttractions())
         .thenReturn(attractions);
         
@@ -732,7 +732,7 @@ public class TourGuideServiceTest {
         		.toLocation(any(LocationDTO.class)))
         .thenReturn(userLocation);
         
-        lenient().when(GpsUtilMicroService
+        lenient().when(gpsUtilMicroService
         		.getAttractions())
         .thenReturn(attractions);
         
