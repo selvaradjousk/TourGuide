@@ -1,8 +1,11 @@
 package tourGuide.unit.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
@@ -327,5 +330,60 @@ public class RewardsServiceTest {
 
 	// ##############################################################
 
+  
+
+
+    @DisplayName("Check <calculateRewardAsync> "
+    		+ " - Given an User ,"
+    		+ " when Calculate request calculateRewardAsync,"
+    		+ " then return one result as expected")	
+    @Test
+    public void testCalculateRewardAsyncForOneVisitedLocation() {
+    
+    	// GIVEN
+        VisitedLocation visitedLocation = new VisitedLocation(
+        		UUID.randomUUID(),
+        		location,
+        		new Date());
+        
+        user.addToVisitedLocations(visitedLocation);
+
+        AttractionDTO attractionDTO = new AttractionDTO(
+        		UUID.randomUUID(),
+        		"attraction name",
+                "attraction city",
+                "attraction state",
+                attractionLocation);
+        
+        Attraction attraction = new Attraction(
+        		UUID.randomUUID(),
+        		"attraction name",
+                "attraction city",
+                "attraction state",
+                attractionLocation);
+
+        List<AttractionDTO> attractions = Arrays.asList(attractionDTO);
+
+        when(gpsUtilMicroService
+        		.getAttractions())
+        .thenReturn(attractions);
+        
+        when(distanceCalculator
+        		.getDistanceInMiles(any(Location.class), any(Location.class)))
+        .thenReturn(10.00);
+        
+        when(rewardsMicroService
+        		.getAttractionRewardPoints(any(UUID.class), any(UUID.class)))
+        .thenReturn(1000);
+        
+        when(attractionMapper
+        		.toAttraction(attractionDTO))
+        .thenReturn(attraction);
+
+        rewardsService.calculateRewardAsync(user).join();
+
+        assertEquals(1, user.getUserRewards().size());
+    }    
+    
 
 }

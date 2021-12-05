@@ -38,6 +38,7 @@ public class TestRewardsService {
     @Autowired
     private GpsUtilMicroService gpsUtilMicroService;
 
+    
     @Autowired
     private AttractionMapper attractionMapper;
 
@@ -254,6 +255,43 @@ public class TestRewardsService {
 
 	// ##############################################################
 
+
+
+
+    @DisplayName("Check <calculateRewardAsync> "
+    		+ " - Given an User ,"
+    		+ " when Calculate request calculateRewardAsync,"
+    		+ " then return one result as expected")	
+    @Test
+    public void testCalculateRewardAsyncForOneVisitedLocation() {
+
+		
+    	// GIVEN
+		User user = new User(
+				UUID.randomUUID(),
+				"jon",
+				"000",
+				"jon@tourGuide.com");
+		
+        AttractionDTO attraction1 = gpsUtilMicroService
+        		.getAttractions().get(0);
+        
+        user.addToVisitedLocations(
+        		new VisitedLocation(
+        				user.getUserId(),
+        				attraction1.getLocation(),
+        				new Date()));
+
+        // WHEN
+        rewardsService.calculateRewardAsync(user).join();
+
+        // THEN
+        assertEquals(1, user.getUserRewards().size());
+    }     
+
+
+
+	// ##############################################################
 		
 ////	@Ignore // Needs fixed - can throw ConcurrentModificationException
 //	@Test
