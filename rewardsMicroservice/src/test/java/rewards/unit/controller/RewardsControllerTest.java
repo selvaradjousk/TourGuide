@@ -30,6 +30,7 @@ import rewards.service.IRewardsService;
 @DisplayName("UNIT TESTS - Controller - Rewards - Microservice")
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(RewardsController.class)
+//@ContextConfiguration(classes = { GlobalExceptionHandler.class })
 class RewardsControllerTest {
 
     @MockBean
@@ -41,7 +42,7 @@ class RewardsControllerTest {
     @Autowired
     private WebApplicationContext context;
 
-    private UUID userId, emptyUserId;
+    private UUID userId;
 
     private UUID attractionId;
 
