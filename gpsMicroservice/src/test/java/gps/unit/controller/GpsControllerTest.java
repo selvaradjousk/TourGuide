@@ -126,6 +126,8 @@ class GpsControllerTest {
         		.getResponse().getContentAsString();
 
         assertNotNull(content);
+        
+        
     }
 
 

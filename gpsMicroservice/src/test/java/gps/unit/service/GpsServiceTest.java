@@ -2,6 +2,7 @@ package gps.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
@@ -24,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import gps.dto.AttractionDTO;
 import gps.dto.VisitedLocationDTO;
+import gps.exception.UserNotFoundException;
 import gps.model.Location;
 import gps.service.GpsService;
 import gps.util.GpsMapper;
@@ -116,6 +118,22 @@ class GpsServiceTest {
         InOrder inOrder = inOrder(gpsUtil, gpsMapper);
         inOrder.verify(gpsUtil).getUserLocation(any(UUID.class));
         inOrder.verify(gpsMapper).toVisitedLocationDTO(any(VisitedLocation.class));
+    }
+
+
+
+	// ##############################################################
+
+    @DisplayName("Check <GetUserLocation> user Null"
+    		+ " - Given a UseID, null"
+    		+ " when GET USER location,"
+    		+ " then return Exception thrown")
+    @Test
+	public void testGetUserLocationUserIdNullValue() {
+
+
+       assertThrows(UserNotFoundException.class, ()
+        		-> gpsService.getUserLocation(null));
     }
 
 
