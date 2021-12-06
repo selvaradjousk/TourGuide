@@ -14,9 +14,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Location {
 
-    /** The latitude. */
-    private double latitude;
 
     /** The longitude. */
     private double longitude;
+
+
+    /** The latitude. */
+    private double latitude;
 }

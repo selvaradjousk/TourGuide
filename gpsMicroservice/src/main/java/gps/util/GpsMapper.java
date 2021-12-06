@@ -39,7 +39,7 @@ public class GpsMapper {
         		attraction.attractionName,
         		attraction.city,
                 attraction.state,
-                new Location(attraction.latitude, attraction.longitude));
+                new Location(attraction.longitude, attraction.latitude));
     }
 
 
@@ -59,9 +59,9 @@ public class GpsMapper {
         return new VisitedLocationDTO(
         		visitedLocation.userId,
         		new Location(
-        				visitedLocation.location.latitude,
-        				visitedLocation.location.longitude),
-        		visitedLocation.timeVisited);
+        				visitedLocation.location.longitude,
+        				visitedLocation.location.latitude),
+        				visitedLocation.timeVisited);
     }
 
 

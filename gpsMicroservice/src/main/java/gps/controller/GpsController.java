@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gps.dto.AttractionDTO;
 import gps.dto.VisitedLocationDTO;
+import gps.exception.UserNotFoundException;
 import gps.service.IGpsService;
 
 /**
@@ -48,7 +49,13 @@ public class GpsController {
 
 	        logger.info("## gps - Microservice getUserLocation URL called");
 
-	        return gpsService.getUserLocation(userId);
+	        VisitedLocationDTO userLocation = gpsService.getUserLocation(userId);
+
+	        if (userLocation == null) {
+	            throw new UserNotFoundException("Failed to get user location");
+	        }
+
+	        return userLocation;
 	    }
 
 
@@ -60,7 +67,9 @@ public class GpsController {
 
 	        logger.info("## gps - Microservice getAttractions URL called");
 
-	        return gpsService.getAttractions();
+	        List<AttractionDTO> attractions = gpsService.getAttractions();
+
+	        return attractions;
 	    }
 
 
