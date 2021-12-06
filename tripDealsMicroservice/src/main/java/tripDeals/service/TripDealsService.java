@@ -17,11 +17,11 @@ import tripPricer.TripPricer;
  * The Class TripDealsMicroService.
  */
 @Service
-public class TripDealsMicroService implements ITripDealsMicroService {
+public class TripDealsService implements ITripDealsService {
 
 	/** The logger. */
 	private Logger logger = LoggerFactory
-			.getLogger(TripDealsMicroService.class);
+			.getLogger(TripDealsService.class);
 
     /** The trip pricer. */
     private final TripPricer tripPricer;
@@ -38,7 +38,7 @@ public class TripDealsMicroService implements ITripDealsMicroService {
 	 * @param providerMapper the provider mapper
 	 */
 	@Autowired
-    public TripDealsMicroService(
+    public TripDealsService(
     		final TripPricer tripPricer,
 
     		final ProviderMapper providerMapper) {

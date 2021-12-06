@@ -8,7 +8,7 @@ import tripDeals.dto.ProviderDTO;
 /**
  * The Interface ITripDealsMicroService.
  */
-public interface ITripDealsMicroService {
+public interface ITripDealsService {
 
     /**
      * Gets the providers.
