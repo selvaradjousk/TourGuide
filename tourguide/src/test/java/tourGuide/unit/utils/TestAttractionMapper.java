@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.UUID;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +25,10 @@ public class TestAttractionMapper {
 
    
 
-    
+    @DisplayName("Check <testToAttraction>"
+    		+ " - Given DTO,"
+    		+ " when ToVisitedLocation,"
+    		+ " then return DO expected")
 	@Test
 	public void testToAttraction() {
 
@@ -60,7 +64,10 @@ public class TestAttractionMapper {
 
 	// ##############################################################
 
-	  
+    @DisplayName("Check <testToAttraction>"
+    		+ " - Given DO,"
+    		+ " when ToVisitedLocationDTO,"
+    		+ " then return DTO expected")
 		@Test
 		public void testToAttractionDTO() {
 			

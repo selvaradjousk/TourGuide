@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.javamoney.moneta.Money;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +31,10 @@ public class TestUserPreferenceMapper {
 	ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 	Validator validator = factory.getValidator();
     
+    @DisplayName("Check <testToUserPreferences>"
+    		+ " - Given DTO,"
+    		+ " when toUserPreferences,"
+    		+ " then return DO expected")
 	@Test
 	public void testToUserPreferences() {
 
@@ -68,6 +73,7 @@ public class TestUserPreferenceMapper {
 
 	// ##############################################################
 
+    
 	@Test
 	    public void testForAllInputsValid() {
 	 

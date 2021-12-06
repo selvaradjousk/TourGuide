@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.Date;
 import java.util.UUID;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import tourGuide.model.Location;
 import tourGuide.model.VisitedLocation;
 import tourGuide.util.VisitedLocationMapper;
 
+@DisplayName("Unit Test - Mapper - VisitedLocation")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class TestVisitedLocationMapper {
@@ -23,7 +25,10 @@ public class TestVisitedLocationMapper {
 
    
 
-    
+    @DisplayName("Check <testToVisitedLocation>"
+    		+ " - Given DTO,"
+    		+ " when ToVisitedLocation,"
+    		+ " then return DO expected")
 	@Test
 	public void testToVisitedLocation() {
 
@@ -53,7 +58,10 @@ public class TestVisitedLocationMapper {
 
 	// ##############################################################
 
-	  
+    @DisplayName("Check <testToVisitedLocationDTO>"
+    		+ " - Given TO,"
+    		+ " when ToVisitedLocationDTO,"
+    		+ " then return DTO expected")
 		@Test
 		public void testToVisitedLocationDTO() {
 			

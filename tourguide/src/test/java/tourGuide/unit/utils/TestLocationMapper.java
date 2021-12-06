@@ -2,6 +2,7 @@ package tourGuide.unit.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +20,10 @@ public class TestLocationMapper {
 
    
 
-    
+    @DisplayName("Check <testToLocation>"
+    		+ " - Given DTO,"
+    		+ " when ToVisitedLocation,"
+    		+ " then return DO expected")
 	@Test
 	public void testToLocation() {
 
@@ -46,7 +50,10 @@ public class TestLocationMapper {
 
 	// ##############################################################
 
-	  
+    @DisplayName("Check <testToLocationDTO>"
+    		+ " - Given DO,"
+    		+ " when ToVisitedLocation,"
+    		+ " then return DTO expected")
 		@Test
 		public void testToLocationDTO() {
 
