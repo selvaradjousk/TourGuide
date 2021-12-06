@@ -19,7 +19,7 @@ import gps.dto.VisitedLocationDTO;
 
 @DisplayName("IT - Controller - GPS - Microservice")
 @ExtendWith(SpringExtension.class)
-class GpsControllerTest {
+class GpsControllerIT {
 
 
     @Autowired
