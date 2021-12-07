@@ -31,8 +31,8 @@ import tourGuide.model.Location;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
+import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.proxy.MicroserviceRewardsProxy;
-import tourGuide.service.GpsUtilMicroService;
 import tourGuide.service.RewardsService;
 import tourGuide.util.AttractionMapper;
 import tourGuide.util.DistanceCalculator;
@@ -46,7 +46,7 @@ public class RewardsServiceTest {
     private RewardsService rewardsService;
 
     @Mock
-    private GpsUtilMicroService gpsUtilMicroService;
+    private MicroserviceGpsProxy gpsUtilMicroService;
 
 
     @Mock

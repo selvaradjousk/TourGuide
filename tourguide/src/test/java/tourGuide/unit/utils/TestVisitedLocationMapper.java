@@ -58,37 +58,37 @@ public class TestVisitedLocationMapper {
 
 	// ##############################################################
 
-    @DisplayName("Check <testToVisitedLocationDTO>"
-    		+ " - Given TO,"
-    		+ " when ToVisitedLocationDTO,"
-    		+ " then return DTO expected")
-		@Test
-		public void testToVisitedLocationDTO() {
-			
-			UUID userID = UUID.randomUUID();
-			gpsUtil.location.Location location = new gpsUtil.location.Location (-100.149048, 39.817595);
-			Date date = new Date();
-			
-			gpsUtil.location.VisitedLocation testVisitedLocation = new gpsUtil.location.VisitedLocation(
-					userID,
-	        		location,
-	        		date);
-
-//	        VisitedLocationDTO testVisitedLocationDTO = new VisitedLocationDTO(
-//	        		UUID.randomUUID(),
-//	        		new Location(-100.149048,
-//	        		39.817595),
-//	        		new Date());
+//    @DisplayName("Check <testToVisitedLocationDTO>"
+//    		+ " - Given TO,"
+//    		+ " when ToVisitedLocationDTO,"
+//    		+ " then return DTO expected")
+//		@Test
+//		public void testToVisitedLocationDTO() {
+//			
+//			UUID userID = UUID.randomUUID();
+//			gpsUtil.location.Location location = new gpsUtil.location.Location (-100.149048, 39.817595);
+//			Date date = new Date();
+//			
+//			gpsUtil.location.VisitedLocation testVisitedLocation = new gpsUtil.location.VisitedLocation(
+//					userID,
+//	        		location,
+//	        		date);
+//
+////	        VisitedLocationDTO testVisitedLocationDTO = new VisitedLocationDTO(
+////	        		UUID.randomUUID(),
+////	        		new Location(-100.149048,
+////	        		39.817595),
+////	        		new Date());
+////	        
+////  	
+//
+//	        VisitedLocationDTO result = visitedLocationMapper.toVisitedLocationDTO(testVisitedLocation);
 //	        
-//  	
-
-	        VisitedLocationDTO result = visitedLocationMapper.toVisitedLocationDTO(testVisitedLocation);
-	        
-//	    	assertThat(result).usingRecursiveComparison().isEqualTo(testVisitedLocation);
-	        assertNotNull(result.getLocation());
-	        assertNotNull(testVisitedLocation.location.latitude);
-
-		}
+////	    	assertThat(result).usingRecursiveComparison().isEqualTo(testVisitedLocation);
+//	        assertNotNull(result.getLocation());
+//	        assertNotNull(testVisitedLocation.location.latitude);
+//
+//		}
 
 
 

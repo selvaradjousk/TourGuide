@@ -21,7 +21,7 @@ import tourGuide.model.Location;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
-import tourGuide.service.GpsUtilMicroService;
+import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.service.RewardsService;
 import tourGuide.util.AttractionMapper;
 
@@ -37,7 +37,7 @@ public class TestRewardsService {
 
 
     @Autowired
-    private GpsUtilMicroService gpsUtilMicroService;
+    private MicroserviceGpsProxy gpsUtilMicroService;
 
     
     @Autowired

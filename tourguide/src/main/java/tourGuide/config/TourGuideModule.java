@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import feign.Retryer;
-import gpsUtil.GpsUtil;
 import tourGuide.exception.FeignErrorDecoder;
 
 /**
@@ -41,29 +40,29 @@ public class TourGuideModule {
 	// ##############################################################
 
 
-	/**
-	 * Gets the gps util.
-	 *
-	 * @return the gps util
-	 */
-	@Bean
-	public GpsUtil getGpsUtil() {
-
-        logger.info("## getGpsUtil() BEAN invoked");
-
-		return new GpsUtil();
-	}
+//	/**
+//	 * Gets the gps util.
+//	 *
+//	 * @return the gps util
+//	 */
+//	@Bean
+//	public GpsUtil getGpsUtil() {
+//
+//        logger.info("## getGpsUtil() BEAN invoked");
+//
+//		return new GpsUtil();
+//	}
 
 
 
 	// ##############################################################
 
 	
-	/**
-	 * Gets the rewards service.
-	 *
-	 * @return the rewards service
-	 */
+//	/**
+//	 * Gets the rewards service.
+//	 *
+//	 * @return the rewards service
+//	 */
 //	@Bean
 //	public RewardsMicroService getRewardsService() {
 //

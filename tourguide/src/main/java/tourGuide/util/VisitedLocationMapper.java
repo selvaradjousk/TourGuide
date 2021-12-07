@@ -2,9 +2,7 @@ package tourGuide.util;
 
 import org.springframework.stereotype.Component;
 
-import gpsUtil.location.VisitedLocation;
 import tourGuide.dto.VisitedLocationDTO;
-import tourGuide.model.Location;
 
 /**
  * The Class VisitedLocationMapper.
@@ -12,23 +10,23 @@ import tourGuide.model.Location;
 @Component
 public class VisitedLocationMapper {
 
-    /**
-     * To visited location DTO.
-     *
-     * @param visitedLocation the visited location
-     * @return the visited location DTO
-     */
-    public VisitedLocationDTO toVisitedLocationDTO(
-    		final VisitedLocation visitedLocation) {
-
-        return new VisitedLocationDTO(
-        		visitedLocation.userId,
-        		new Location(
-        				visitedLocation.location.latitude,
-        				visitedLocation.location.longitude),
-        		visitedLocation.timeVisited);
-    }
-    
+//    /**
+//     * To visited location DTO.
+//     *
+//     * @param visitedLocation the visited location
+//     * @return the visited location DTO
+//     */
+//    public VisitedLocationDTO toVisitedLocationDTO(
+//    		final VisitedLocation visitedLocation) {
+//
+//        return new VisitedLocationDTO(
+//        		visitedLocation.userId,
+//        		new Location(
+//        				visitedLocation.location.latitude,
+//        				visitedLocation.location.longitude),
+//        		visitedLocation.timeVisited);
+//    }
+//    
 
 
 

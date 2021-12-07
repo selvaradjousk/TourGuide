@@ -15,6 +15,7 @@ import tourGuide.model.Location;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
+import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.util.AttractionMapper;
 import tourGuide.util.DistanceCalculator;
@@ -35,7 +36,7 @@ public class RewardsService implements IRewardService {
 	public static final int DEFAULT_PROXIMITY_BUFFER = 10;
 
     /** The gps util micro service. */
-    private final IGpsUtilMicroService gpsUtilMicroService;
+    private final MicroserviceGpsProxy gpsUtilMicroService;
 	
     /** The rewards micro service. */
     private MicroserviceRewardsProxy rewardsMicroService;
@@ -73,7 +74,7 @@ public class RewardsService implements IRewardService {
  */
 @Autowired
     public RewardsService(
-    		final IGpsUtilMicroService gpsUtilMicroService,
+    		final MicroserviceGpsProxy gpsUtilMicroService,
     		final MicroserviceRewardsProxy rewardsMicroService,
             final AttractionMapper attractionMapper,
             final DistanceCalculator distanceCalculator) {

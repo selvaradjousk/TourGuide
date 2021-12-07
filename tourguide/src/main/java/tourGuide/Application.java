@@ -13,6 +13,14 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 public class Application {
 
+
+
+
+	// ##############################################################
+
+
+
+
     /**
      * The main method.
      *
@@ -22,5 +30,13 @@ public class Application {
     	Locale.setDefault(Locale.US);
         SpringApplication.run(Application.class, args);
     }
+
+
+
+
+	// ##############################################################
+
+
+
 
 }

@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tourGuide.dto.AttractionDTO;
 import tourGuide.model.User;
 import tourGuide.model.VisitedLocation;
-import tourGuide.service.GpsUtilMicroService;
+import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 
@@ -36,7 +36,7 @@ public class TestPerformance {
 
 
     @Autowired
-    private GpsUtilMicroService gpsUtilMicroService;
+    private MicroserviceGpsProxy gpsUtilMicroService;
 
     @Autowired
     private RewardsService rewardsService;

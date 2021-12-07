@@ -37,6 +37,7 @@ import tourGuide.model.Provider;
 import tourGuide.model.User;
 import tourGuide.model.UserPreferences;
 import tourGuide.proxy.MicroServiceTripDealsProxy;
+import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.tracker.Tracker;
 import tourGuide.util.DistanceCalculator;
@@ -64,7 +65,7 @@ public class TourGuideService implements ITourGuideService {
     		.newFixedThreadPool(1000);
 
     /** The gps util micro service. */
-    private final IGpsUtilMicroService gpsUtilMicroService;
+    private final MicroserviceGpsProxy gpsUtilMicroService;
 
     /** The rewards micro service. */
     private MicroserviceRewardsProxy rewardsMicroService;
@@ -132,7 +133,7 @@ public class TourGuideService implements ITourGuideService {
 	 */
 	@Autowired
     public TourGuideService(
-    		final IGpsUtilMicroService gpsUtilMicroService,
+    		final MicroserviceGpsProxy gpsUtilMicroService,
     		final MicroserviceRewardsProxy rewardsMicroService,
     		final MicroServiceTripDealsProxy tripDealsMicroService,
     		final IRewardService rewardsService,

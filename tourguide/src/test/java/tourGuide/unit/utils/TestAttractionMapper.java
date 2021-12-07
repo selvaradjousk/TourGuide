@@ -64,35 +64,35 @@ public class TestAttractionMapper {
 
 	// ##############################################################
 
-    @DisplayName("Check <testToAttraction>"
-    		+ " - Given DO,"
-    		+ " when ToVisitedLocationDTO,"
-    		+ " then return DTO expected")
-		@Test
-		public void testToAttractionDTO() {
-			
-			Location location = new Location();
-			location.setLatitude(-117.149048);
-			location.setLongitude(33.817595);
-			
-
-			gpsUtil.location.Attraction testAttraction = new gpsUtil.location.Attraction(
-	        		"San Diego Zoo",
-	        		"San Diego",
-	                "CA",
-	                -117.149048,
-	                33.817595);
-			
-
-	    	AttractionDTO result = attractionMapper.toAttractionDTO(testAttraction);
-
-	        assertNotNull(result);
-	        assertEquals(testAttraction.attractionId, result.getAttractionId());
-	        assertEquals(testAttraction.attractionName, result.getAttractionName());
-	        assertEquals(testAttraction.city, result.getCity());
-	        assertEquals(testAttraction.state, result.getState());
-
-		}
+//    @DisplayName("Check <testToAttraction>"
+//    		+ " - Given DO,"
+//    		+ " when ToVisitedLocationDTO,"
+//    		+ " then return DTO expected")
+//		@Test
+//		public void testToAttractionDTO() {
+//			
+//			Location location = new Location();
+//			location.setLatitude(-117.149048);
+//			location.setLongitude(33.817595);
+//			
+//
+//			gpsUtil.location.Attraction testAttraction = new gpsUtil.location.Attraction(
+//	        		"San Diego Zoo",
+//	        		"San Diego",
+//	                "CA",
+//	                -117.149048,
+//	                33.817595);
+//			
+//
+//	    	AttractionDTO result = attractionMapper.toAttractionDTO(testAttraction);
+//
+//	        assertNotNull(result);
+//	        assertEquals(testAttraction.attractionId, result.getAttractionId());
+//	        assertEquals(testAttraction.attractionName, result.getAttractionName());
+//	        assertEquals(testAttraction.city, result.getCity());
+//	        assertEquals(testAttraction.state, result.getState());
+//
+//		}
 
 
 

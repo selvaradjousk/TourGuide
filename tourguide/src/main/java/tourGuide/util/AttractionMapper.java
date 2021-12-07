@@ -1,27 +1,26 @@
 package tourGuide.util;
 
 import org.springframework.stereotype.Component;
-import gpsUtil.location.Attraction;
+
 import tourGuide.dto.AttractionDTO;
-import tourGuide.model.Location;
 
 @Component
 public class AttractionMapper {
 
 	// ##############################################################
 
-    public AttractionDTO toAttractionDTO(
-    		final Attraction attraction) {
-
-        return new AttractionDTO(
-        		attraction.attractionId,
-        		attraction.attractionName,
-        		attraction.city,
-                attraction.state,
-                new Location(
-                		attraction.latitude,
-                		attraction.longitude));
-    }
+//    public AttractionDTO toAttractionDTO(
+//    		final Attraction attraction) {
+//
+//        return new AttractionDTO(
+//        		attraction.attractionId,
+//        		attraction.attractionName,
+//        		attraction.city,
+//                attraction.state,
+//                new Location(
+//                		attraction.latitude,
+//                		attraction.longitude));
+//    }
 
 	// ##############################################################
 
