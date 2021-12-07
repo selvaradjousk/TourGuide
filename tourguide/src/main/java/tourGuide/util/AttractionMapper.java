@@ -7,20 +7,6 @@ import tourGuide.dto.AttractionDTO;
 @Component
 public class AttractionMapper {
 
-	// ##############################################################
-
-//    public AttractionDTO toAttractionDTO(
-//    		final Attraction attraction) {
-//
-//        return new AttractionDTO(
-//        		attraction.attractionId,
-//        		attraction.attractionName,
-//        		attraction.city,
-//                attraction.state,
-//                new Location(
-//                		attraction.latitude,
-//                		attraction.longitude));
-//    }
 
 	// ##############################################################
 

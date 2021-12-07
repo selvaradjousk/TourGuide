@@ -9,18 +9,6 @@ public class ProviderMapper {
 
 
 
-	// ##############################################################
-
-//
-//    public ProviderDTO toProviderDTO(final tripPricer.Provider provider) {
-//
-//      return new ProviderDTO(
-//    		  provider.name,
-//    		  provider.price,
-//    		  provider.tripId);
-//  }
-//  
-
 
 	// ##############################################################
 

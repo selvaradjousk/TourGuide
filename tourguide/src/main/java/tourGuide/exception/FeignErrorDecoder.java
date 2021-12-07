@@ -16,12 +16,12 @@ public class FeignErrorDecoder implements ErrorDecoder {
 			.getLogger(FeignErrorDecoder.class);
 
 
+    private final ErrorDecoder defaultErrorDecoder = new Default();
+
+
 
 	// ##############################################################
 
-
-
-    private final ErrorDecoder defaultErrorDecoder = new Default();
 
 
     @Override
@@ -36,4 +36,10 @@ public class FeignErrorDecoder implements ErrorDecoder {
 
         return defaultErrorDecoder.decode(methodKey, response);
     }
+
+
+	// ##############################################################
+
+
+
 }

@@ -6,10 +6,8 @@ package tourGuide.constant;
 public class Constraints {
 
 
-//	public static final int USERNAME_MIN_LENGTH = 1;
-
 	/** The Constant PROXIMITY_LOWER_LIMIT. */
-public static final int PROXIMITY_LOWER_LIMIT = 0;
+	public static final int PROXIMITY_LOWER_LIMIT = 0;
 
 	/** The Constant LOWERPRICEPOINT_VALUE. */
 	public static final int LOWERPRICEPOINT_VALUE = 0;

@@ -195,7 +195,6 @@ public class TourGuideService implements ITourGuideService {
 
 
 	// ##############################################################
-	// ######################## OK ##################################
 
 
 
@@ -224,7 +223,6 @@ public class TourGuideService implements ITourGuideService {
 
         return userRewards;
 		
-//		return user.getUserRewards();
 	}
 
 
@@ -792,7 +790,7 @@ public class TourGuideService implements ITourGuideService {
 
 
 		/**
-		 * Cumulative N reward points for user based on nearby atrractions.
+		 * Cumulative reward points for user based on nearby atrractions.
 		 *
 		 * @param user the user
 		 * @param closestAttractionsMap the closest attractions map

@@ -27,8 +27,4 @@ public class UserAttractionRecommendationDTO {
 	private List<NearByAttractionDTO> nearbyAttractions;
 
 
-
-	// ##############################################################
-
-
 }

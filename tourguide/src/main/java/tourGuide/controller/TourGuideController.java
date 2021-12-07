@@ -60,8 +60,8 @@ public class TourGuideController {
 	//###############################################################
 
 
-	
-	
+
+
 
 	/**
 	 * Index.
@@ -82,8 +82,8 @@ public class TourGuideController {
 	//###############################################################
 
 
-	
-	
+
+
     /**
 	 * Gets the location.
 	 *

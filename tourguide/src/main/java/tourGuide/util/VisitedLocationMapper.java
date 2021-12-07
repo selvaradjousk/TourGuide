@@ -10,23 +10,7 @@ import tourGuide.dto.VisitedLocationDTO;
 @Component
 public class VisitedLocationMapper {
 
-//    /**
-//     * To visited location DTO.
-//     *
-//     * @param visitedLocation the visited location
-//     * @return the visited location DTO
-//     */
-//    public VisitedLocationDTO toVisitedLocationDTO(
-//    		final VisitedLocation visitedLocation) {
-//
-//        return new VisitedLocationDTO(
-//        		visitedLocation.userId,
-//        		new Location(
-//        				visitedLocation.location.latitude,
-//        				visitedLocation.location.longitude),
-//        		visitedLocation.timeVisited);
-//    }
-//    
+ 
 
 
 

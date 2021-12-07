@@ -110,13 +110,7 @@ public class User {
 	 * @param userReward the user reward
 	 */
 	public void addUserReward(final UserReward userReward) {
-//		if(userRewards.stream()
-//				.filter(
-//						r -> !r.attraction.attractionName
-//						.equals(userReward.attraction)).count() == 0) {
-//
-//			userRewards.add(userReward);
-//		}
+
 		this.userRewards.add(userReward);
 	}
 

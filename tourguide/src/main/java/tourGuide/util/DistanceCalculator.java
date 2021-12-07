@@ -11,6 +11,18 @@ public class DistanceCalculator {
 
     public static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
+
+
+    // ##############################################################
+
+
+    /**
+     * Gets the distance in miles.
+     *
+     * @param loc1 the loc 1
+     * @param loc2 the loc 2
+     * @return the distance in miles
+     */
     public double getDistanceInMiles(
     		final Location loc1,
     		final Location loc2) {
@@ -28,8 +40,14 @@ public class DistanceCalculator {
 
         double nauticalMiles = 60 * Math.toDegrees(angle);
 
+
         double statuteMiles = STATUTE_MILES_PER_NAUTICAL_MILE * nauticalMiles;
 
         return statuteMiles;
     }
+
+
+	// ##############################################################
+
+
 }
