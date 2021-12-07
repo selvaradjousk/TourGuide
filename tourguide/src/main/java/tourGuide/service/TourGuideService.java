@@ -37,6 +37,7 @@ import tourGuide.model.Provider;
 import tourGuide.model.User;
 import tourGuide.model.UserPreferences;
 import tourGuide.proxy.MicroServiceTripDealsProxy;
+import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.tracker.Tracker;
 import tourGuide.util.DistanceCalculator;
 import tourGuide.util.LocationMapper;
@@ -66,7 +67,7 @@ public class TourGuideService implements ITourGuideService {
     private final IGpsUtilMicroService gpsUtilMicroService;
 
     /** The rewards micro service. */
-    private RewardsMicroService rewardsMicroService;
+    private MicroserviceRewardsProxy rewardsMicroService;
 
     /** The trip deals micro service. */
     private final MicroServiceTripDealsProxy tripDealsMicroService;
@@ -132,7 +133,7 @@ public class TourGuideService implements ITourGuideService {
 	@Autowired
     public TourGuideService(
     		final IGpsUtilMicroService gpsUtilMicroService,
-    		final RewardsMicroService rewardsMicroService,
+    		final MicroserviceRewardsProxy rewardsMicroService,
     		final MicroServiceTripDealsProxy tripDealsMicroService,
     		final IRewardService rewardsService,
     		final InternalTestHelper internalTestHelper,
@@ -726,7 +727,7 @@ public class TourGuideService implements ITourGuideService {
 			Entry<AttractionDTO,
 			Double> a) {
 		return rewardsMicroService
-				.getAttractionRewardPoints(
+				.getRewardPoints(
 					a.getKey().getAttractionId(),
 					user.getUserId());
 	}

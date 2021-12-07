@@ -31,8 +31,8 @@ import tourGuide.model.Location;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
+import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.service.GpsUtilMicroService;
-import tourGuide.service.RewardsMicroService;
 import tourGuide.service.RewardsService;
 import tourGuide.util.AttractionMapper;
 import tourGuide.util.DistanceCalculator;
@@ -50,7 +50,7 @@ public class RewardsServiceTest {
 
 
     @Mock
-    private RewardsMicroService rewardsMicroService;
+    private MicroserviceRewardsProxy rewardsMicroService;
 
 	@Mock
     private AttractionMapper attractionMapper;
@@ -371,7 +371,7 @@ public class RewardsServiceTest {
         .thenReturn(10.00);
         
         when(rewardsMicroService
-        		.getAttractionRewardPoints(any(UUID.class), any(UUID.class)))
+        		.getRewardPoints(any(UUID.class), any(UUID.class)))
         .thenReturn(1000);
         
         when(attractionMapper
@@ -430,7 +430,7 @@ public class RewardsServiceTest {
 
         
         when(rewardsMicroService
-        		.getAttractionRewardPoints(any(UUID.class), any(UUID.class)))
+        		.getRewardPoints(any(UUID.class), any(UUID.class)))
         .thenReturn(1000);
         
         when(attractionMapper

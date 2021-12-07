@@ -11,9 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 import feign.Retryer;
 import gpsUtil.GpsUtil;
-import rewardCentral.RewardCentral;
 import tourGuide.exception.FeignErrorDecoder;
-import tourGuide.service.RewardsMicroService;
 
 /**
  * The Class TourGuideModule.
@@ -66,31 +64,31 @@ public class TourGuideModule {
 	 *
 	 * @return the rewards service
 	 */
-	@Bean
-	public RewardsMicroService getRewardsService() {
-
-        logger.info("## RewardsMicroService() BEAN invoked");
-
-		return new RewardsMicroService(getGpsUtil(), getRewardCentral());
-	}
+//	@Bean
+//	public RewardsMicroService getRewardsService() {
+//
+//        logger.info("## RewardsMicroService() BEAN invoked");
+//
+//		return new RewardsMicroService(getGpsUtil(), getRewardCentral());
+//	}
 
 
 
 	// ##############################################################
 
 
-	/**
-	 * Gets the reward central.
-	 *
-	 * @return the reward central
-	 */
-	@Bean
-	public RewardCentral getRewardCentral() {
-
-        logger.info("## getRewardCentral() BEAN invoked");
-
-		return new RewardCentral();
-	}
+//	/**
+//	 * Gets the reward central.
+//	 *
+//	 * @return the reward central
+//	 */
+//	@Bean
+//	public RewardCentral getRewardCentral() {
+//
+//        logger.info("## getRewardCentral() BEAN invoked");
+//
+//		return new RewardCentral();
+//	}
 
 
 
@@ -130,11 +128,11 @@ public class TourGuideModule {
     }
 
 	// ##############################################################
-//
-//    @Bean
-//    public Retryer retryer() {
-//        return new Retryer.Default();
-//    }
+
+    @Bean
+    public Retryer retryer() {
+        return new Retryer.Default();
+    }
 
 	// ##############################################################
 

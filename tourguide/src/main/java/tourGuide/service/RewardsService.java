@@ -15,6 +15,7 @@ import tourGuide.model.Location;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
+import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.util.AttractionMapper;
 import tourGuide.util.DistanceCalculator;
 /**
@@ -37,7 +38,7 @@ public class RewardsService implements IRewardService {
     private final IGpsUtilMicroService gpsUtilMicroService;
 	
     /** The rewards micro service. */
-    private RewardsMicroService rewardsMicroService;
+    private MicroserviceRewardsProxy rewardsMicroService;
 
     /** The attraction mapper. */
     private final AttractionMapper attractionMapper;
@@ -73,7 +74,7 @@ public class RewardsService implements IRewardService {
 @Autowired
     public RewardsService(
     		final IGpsUtilMicroService gpsUtilMicroService,
-    		final RewardsMicroService rewardsMicroService,
+    		final MicroserviceRewardsProxy rewardsMicroService,
             final AttractionMapper attractionMapper,
             final DistanceCalculator distanceCalculator) {
         this.gpsUtilMicroService = gpsUtilMicroService;
@@ -179,7 +180,7 @@ public class RewardsService implements IRewardService {
 				visitedLocation,
 				attractionMapper.toAttraction(attraction),
 				
-				rewardsMicroService.getAttractionRewardPoints(
+				rewardsMicroService.getRewardPoints(
 						attraction.getAttractionId(),
 						user.getUserId()));
 	}

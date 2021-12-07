@@ -46,8 +46,8 @@ import tourGuide.model.UserPreferences;
 import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
 import tourGuide.proxy.MicroServiceTripDealsProxy;
+import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.service.GpsUtilMicroService;
-import tourGuide.service.RewardsMicroService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.util.DistanceCalculator;
@@ -74,7 +74,7 @@ public class TourGuideServiceTest {
     private MicroServiceTripDealsProxy tripDealsMicroservice;
 
     @Mock
-    private RewardsMicroService rewardsMicroService;
+    private MicroserviceRewardsProxy rewardsMicroService;
 
 	@Mock
 	private UserPreferencesMapper userPreferencesMapper;
@@ -125,8 +125,8 @@ public class TourGuideServiceTest {
 
 
     private static UserRewardDTO userRewardDTO;
-    
-    
+
+
 
 	// ##############################################################
 
@@ -529,11 +529,11 @@ public class TourGuideServiceTest {
         lenient().when(distanceCalculator.getDistanceInMiles(attraction7.getLocation(), userLocation)).thenReturn(900.00);
         lenient().when(distanceCalculator.getDistanceInMiles(attraction7.getLocation(), userLocation)).thenReturn(900.00);
 
-        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction1.getAttractionId(), userID)).thenReturn(100);
-        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction2.getAttractionId(), userID)).thenReturn(200);
-        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction3.getAttractionId(), userID)).thenReturn(300);
-        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction4.getAttractionId(), userID)).thenReturn(400);
-        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction5.getAttractionId(), userID)).thenReturn(500);
+        lenient().when(rewardsMicroService.getRewardPoints(attraction1.getAttractionId(), userID)).thenReturn(100);
+        lenient().when(rewardsMicroService.getRewardPoints(attraction2.getAttractionId(), userID)).thenReturn(200);
+        lenient().when(rewardsMicroService.getRewardPoints(attraction3.getAttractionId(), userID)).thenReturn(300);
+        lenient().when(rewardsMicroService.getRewardPoints(attraction4.getAttractionId(), userID)).thenReturn(400);
+        lenient().when(rewardsMicroService.getRewardPoints(attraction5.getAttractionId(), userID)).thenReturn(500);
     	
     	// WHEN 
     	UserAttractionRecommendationDTO result = tourGuideService
@@ -748,11 +748,11 @@ public class TourGuideServiceTest {
         lenient().when(distanceCalculator.getDistanceInMiles(attraction7.getLocation(), userLocation)).thenReturn(900.00);
         lenient().when(distanceCalculator.getDistanceInMiles(attraction7.getLocation(), userLocation)).thenReturn(900.00);
 
-        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction1.getAttractionId(), userID)).thenReturn(100);
-        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction2.getAttractionId(), userID)).thenReturn(200);
-        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction3.getAttractionId(), userID)).thenReturn(300);
-        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction4.getAttractionId(), userID)).thenReturn(400);
-        lenient().when(rewardsMicroService.getAttractionRewardPoints(attraction5.getAttractionId(), userID)).thenReturn(500);
+        lenient().when(rewardsMicroService.getRewardPoints(attraction1.getAttractionId(), userID)).thenReturn(100);
+        lenient().when(rewardsMicroService.getRewardPoints(attraction2.getAttractionId(), userID)).thenReturn(200);
+        lenient().when(rewardsMicroService.getRewardPoints(attraction3.getAttractionId(), userID)).thenReturn(300);
+        lenient().when(rewardsMicroService.getRewardPoints(attraction4.getAttractionId(), userID)).thenReturn(400);
+        lenient().when(rewardsMicroService.getRewardPoints(attraction5.getAttractionId(), userID)).thenReturn(500);
     	
     	// WHEN 
 //    	UserAttractionRecommendationDTO result = tourGuideService
