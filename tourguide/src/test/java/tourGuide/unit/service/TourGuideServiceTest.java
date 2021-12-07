@@ -45,11 +45,11 @@ import tourGuide.model.User;
 import tourGuide.model.UserPreferences;
 import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
+import tourGuide.proxy.MicroServiceTripDealsProxy;
 import tourGuide.service.GpsUtilMicroService;
 import tourGuide.service.RewardsMicroService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
-import tourGuide.service.TripDealsMicroService;
 import tourGuide.util.DistanceCalculator;
 import tourGuide.util.LocationMapper;
 import tourGuide.util.ProviderMapper;
@@ -71,7 +71,7 @@ public class TourGuideServiceTest {
     private GpsUtilMicroService gpsUtilMicroService;
 
     @Mock
-    private TripDealsMicroService tripDealsMicroservice;
+    private MicroServiceTripDealsProxy tripDealsMicroservice;
 
     @Mock
     private RewardsMicroService rewardsMicroService;

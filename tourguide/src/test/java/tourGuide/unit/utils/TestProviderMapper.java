@@ -51,27 +51,27 @@ public class TestProviderMapper {
 
 	// ##############################################################
 
-    @DisplayName("Check <testToProvider>"
-    		+ " - Given DO,"
-    		+ " when ToProviderDTO,"
-    		+ " then return DO expected")
-		@Test
-		public void testToProviderDTO() {
-
-			UUID tripID = UUID.randomUUID();
-
-
-			tripPricer.Provider testProvider = new tripPricer.Provider(
-	        		tripID,
-	        		"testProvider",
-	        		100);
-	    	
-
-	    	ProviderDTO result = attractionMapper.toProviderDTO(testProvider);
-
-	    	assertThat(result).isEqualToComparingFieldByField(testProvider);
-
-		}
+//    @DisplayName("Check <testToProvider>"
+//    		+ " - Given DO,"
+//    		+ " when ToProviderDTO,"
+//    		+ " then return DO expected")
+//		@Test
+//		public void testToProviderDTO() {
+//
+//			UUID tripID = UUID.randomUUID();
+//
+//
+//			tripPricer.Provider testProvider = new tripPricer.Provider(
+//	        		tripID,
+//	        		"testProvider",
+//	        		100);
+//	    	
+//
+//	    	ProviderDTO result = attractionMapper.toProviderDTO(testProvider);
+//
+//	    	assertThat(result).isEqualToComparingFieldByField(testProvider);
+//
+//		}
 
 
 

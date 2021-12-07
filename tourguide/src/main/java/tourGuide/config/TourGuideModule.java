@@ -9,10 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import feign.Retryer;
 import gpsUtil.GpsUtil;
 import rewardCentral.RewardCentral;
+import tourGuide.exception.FeignErrorDecoder;
 import tourGuide.service.RewardsMicroService;
-import tripPricer.TripPricer;
 
 /**
  * The Class TourGuideModule.
@@ -110,15 +111,30 @@ public class TourGuideModule {
 
 	// ##############################################################
 
-    /**
-	 * Gets the trip pricer.
-	 *
-	 * @return the trip pricer
-	 */
-	@Bean
-    public TripPricer getTripPricer() {
-        return new TripPricer();
-    }  
+//    /**
+//	 * Gets the trip pricer.
+//	 *
+//	 * @return the trip pricer
+//	 */
+//	@Bean
+//    public TripPricer getTripPricer() {
+//        return new TripPricer();
+//    }  
+
+	// ##############################################################
+
+
+    @Bean
+    public FeignErrorDecoder myErrorDecoder() {
+        return new FeignErrorDecoder();
+    }
+
+	// ##############################################################
+//
+//    @Bean
+//    public Retryer retryer() {
+//        return new Retryer.Default();
+//    }
 
 	// ##############################################################
 

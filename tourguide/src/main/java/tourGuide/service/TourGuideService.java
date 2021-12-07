@@ -36,6 +36,7 @@ import tourGuide.model.Location;
 import tourGuide.model.Provider;
 import tourGuide.model.User;
 import tourGuide.model.UserPreferences;
+import tourGuide.proxy.MicroServiceTripDealsProxy;
 import tourGuide.tracker.Tracker;
 import tourGuide.util.DistanceCalculator;
 import tourGuide.util.LocationMapper;
@@ -68,7 +69,7 @@ public class TourGuideService implements ITourGuideService {
     private RewardsMicroService rewardsMicroService;
 
     /** The trip deals micro service. */
-    private final TripDealsMicroService tripDealsMicroService;
+    private final MicroServiceTripDealsProxy tripDealsMicroService;
 
     /** The rewards service. */
     private final IRewardService rewardsService;
@@ -132,7 +133,7 @@ public class TourGuideService implements ITourGuideService {
     public TourGuideService(
     		final IGpsUtilMicroService gpsUtilMicroService,
     		final RewardsMicroService rewardsMicroService,
-    		final TripDealsMicroService tripDealsMicroService,
+    		final MicroServiceTripDealsProxy tripDealsMicroService,
     		final IRewardService rewardsService,
     		final InternalTestHelper internalTestHelper,
     		final UserPreferencesMapper userPreferencesMapper,
