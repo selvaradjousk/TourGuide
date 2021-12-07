@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import gps.dto.AttractionDTO;
@@ -24,8 +22,8 @@ import gpsUtil.location.VisitedLocation;
 public class GpsService implements IGpsService {
 
 	/** The logger. */
-	private Logger logger = LoggerFactory
-			.getLogger(GpsService.class);
+//	private Logger logger = LoggerFactory
+//			.getLogger(GpsService.class);
 
     /**
      * GpsUtil instance.
@@ -63,7 +61,7 @@ public class GpsService implements IGpsService {
 	 */
 	public VisitedLocationDTO getUserLocation(final UUID userId) {
 
-    	logger.debug("MicroService:GpsService.getUserLocation called");
+//    	logger.debug("MicroService:GpsService.getUserLocation called");
 
     	if (userId == null) {
             throw new UserNotFoundException("Username not found");
@@ -85,7 +83,7 @@ public class GpsService implements IGpsService {
 	 */
 	public List<AttractionDTO> getAttractions() {
 
-    	logger.debug("MicroService:GpsService.getAttractions called");
+//    	logger.debug("MicroService:GpsService.getAttractions called");
 
         List<AttractionDTO> attractionList = new ArrayList<>();
         List<Attraction> attractions = gpsUtil.getAttractions();

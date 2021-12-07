@@ -86,9 +86,6 @@ public class TestPerformance {
 		// ----------------------------------------------------------------------------
 		// Users should be incremented up to 100,000, > 15 minutes and test finishes within 15 minutes
 		// ----------------------------------------------------------------------------
-//		InternalTestHelper.setInternalUserNumber(6667);
-//		InternalTestHelper.setInternalUserNumber(100000);
-//		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
 		List<User> allUsers = tourGuideService.getAllUsers();
 		allUsers.forEach(u -> u.clearVisitedLocations());
@@ -112,20 +109,14 @@ public class TestPerformance {
 		
         StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-//		for(User user : allUsers) {
-//			tourGuideService.trackUserLocation(user);
-//		}
 		
         CompletableFuture<?>[] futures = allUsers.parallelStream()
                 .map(tourGuideService::trackUserLocation)
                 .toArray(CompletableFuture[]::new);
         CompletableFuture.allOf(futures).join();
 		
-//		tourGuideService.tracker.trackAndWait(tourGuideService.getAllUsers());
-//		tourGuideService.tracker.trackingUsersWithParallelStreaming(tourGuideService.getAllUsers());
 		
 		stopWatch.stop();
-//		tourGuideService.tracker.stopTracking();
 
 		//----------
 		// Step 2 - VisitedLocation count is saved for each user
@@ -167,26 +158,13 @@ public class TestPerformance {
 		// Users should be incremented up to 100,000, < 20 minutes (5000 < 1 minutes) and test finishes within 20 minutes
 		// ----------------------------------------------------------------------------
 		
-		// InternalTestHelper.setInternalUserNumber(100);
-//		InternalTestHelper.setInternalUserNumber(5000);
 
 		StopWatch stopWatch = new StopWatch();
 
-//		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
         AttractionDTO attraction = gpsUtilMicroService.getAttractions().get(0);
 		List<User> allUsers = tourGuideService.getAllUsers();
 		
-//	    Attraction attraction = gpsUtil.getAttractions().get(0);
-//		List<User> allUsers = new ArrayList<>();
-
-//		allUsers.forEach(u -> u
-//				.addToVisitedLocations(
-//						new VisitedLocation(
-//								u.getUserId(),
-//								gpsUtil.getAttractions().get(0),
-//								new Date()))
-//				);
 		
         allUsers.forEach(u -> {
             u.clearVisitedLocations();
@@ -209,9 +187,9 @@ public class TestPerformance {
         CompletableFuture.allOf(futures).join();
 
 		stopWatch.stop();
-//		tourGuideService.tracker.stopTracking();
 
-		System.out.println("highVolumeGetRewards check if (5000 rewards < 1 minute) : Actual Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
+
+//		System.out.println("highVolumeGetRewards check if (5000 rewards < 1 minute) : Actual Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 
 		for(User user : allUsers) {

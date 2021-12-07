@@ -3,8 +3,6 @@ package gps.controller;
 import java.util.List;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +22,8 @@ import gps.service.IGpsService;
 public class GpsController {
 
 	/** The logger. */
-	private Logger logger = LoggerFactory
-			.getLogger(GpsController.class);
+//	private Logger logger = LoggerFactory
+//			.getLogger(GpsController.class);
 
 	   private IGpsService gpsService;
 
@@ -47,7 +45,7 @@ public class GpsController {
 	    public VisitedLocationDTO getUserLocation(
 	    		@PathVariable("userId") final UUID userId) {
 
-	        logger.info("## gps - Microservice getUserLocation URL called");
+//	        logger.info("## gps - Microservice getUserLocation URL called");
 
 	        VisitedLocationDTO userLocation = gpsService.getUserLocation(userId);
 
@@ -65,7 +63,7 @@ public class GpsController {
 	    @GetMapping("/attractions")
 	    public List<AttractionDTO> getAttractions() {
 
-	        logger.info("## gps - Microservice getAttractions URL called");
+//	        logger.info("## gps - Microservice getAttractions URL called");
 
 	        List<AttractionDTO> attractions = gpsService.getAttractions();
 

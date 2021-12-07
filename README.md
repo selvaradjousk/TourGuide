@@ -36,6 +36,14 @@ TourGuide application is composed of 4 microservices:
 -  **gps-ms (microservice)**
 - **rewards-ms (microservice)**
 - **tripDeals-ms (microservice)**
+
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/mvc_tourguide1.png" alt="TOURGUIDE IMAGE"></a><br>
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/mcd_tourguide.png" alt="TOURGUIDE IMAGE"></a><br>
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/mcd_microservice_gps.PNG" alt="TOURGUIDE IMAGE"></a><br>
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/mvc_tourguide2.png" alt="TOURGUIDE IMAGE"></a><br>
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/mcd_microservice_rewards.png" alt="TOURGUIDE IMAGE"></a><br>
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/mcd_microservice_tripdeals.png" alt="TOURGUIDE IMAGE"></a><br>
+
  // TODO - documentation under progress
 
 ## Application Run configuration
@@ -56,15 +64,30 @@ gradle bootRun
 
 ## Testing
 
-Gradle, Junit (Unit & Integration Tests). <br/>
+Gradle, Junit (Unit & Integration Tests) - FinishLine. <br/>
+ 
+ <a href="#"><img width="98%" src="tourguide/asserts/reporting/gradle_build_report_20211205_01.PNG" alt="TOURGUIDE IMAGE"></a><br>
+ <a href="#"><img width="98%" src="tourguide/asserts/reporting/jacoco_20211205_01.PNG" alt="TOURGUIDE IMAGE"></a><br>
+ <a href="#"><img width="98%" src="tourguide/asserts/reporting/Junit_test_20211205.PNG" alt="TOURGUIDE IMAGE"></a><br>
+ 
+ Gradle, Junit (Unit & Integration Tests) - StartLine. <br/>
+ <a href="#"><img width="98%" src="tourguide/asserts/reporting/gradle_build_report_20211113_01.PNG" alt="TOURGUIDE IMAGE"></a><br>
  // TODO - documentation under progress
+ 
 
 ## Reporting
 
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/touguide_image.png" alt="TOURGUIDE IMAGE"></a><br>
  // TODO - documentation under progress
 
 ## Metrics
 TestPerformanceon highVolume User Tracking & User Rewards Computations are performed & available.
+
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/Performance_Location_graph_20211207.png" alt="Performance report on User Location"></a><br>
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/Performance_rewards_graph_20211207.png" alt="Performance report on User Location"></a><br>
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/Performance_synopsis_20211207-100000_users.png" alt="Performance report on User Location"></a><br>
+<a href="#"><img width="98%" src="tourguide/asserts/reporting/Performance_unit_tests_20211207_100000_users.png" alt="Performance report on User Location"></a><br>
+
  // TODO - documentation under progress
 
 ## Author
