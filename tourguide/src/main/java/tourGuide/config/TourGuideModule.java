@@ -75,7 +75,8 @@ public class TourGuideModule {
 
     @Bean
     public Retryer retryer() {
-        return new Retryer.Default();
+//        return new Retryer.Default();
+        return Retryer.NEVER_RETRY;
     }
 
 	// ##############################################################
