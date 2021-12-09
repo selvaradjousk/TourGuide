@@ -2,7 +2,6 @@ package tourGuide.unit.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,13 +28,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import tourGuide.dto.LocationDTO;
 import tourGuide.dto.NearByAttractionDTO;
-import tourGuide.dto.ProviderDTO;
 import tourGuide.dto.UserAttractionRecommendationDTO;
-import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.model.Location;
 import tourGuide.service.TourGuideService;
 
@@ -45,10 +39,8 @@ import tourGuide.service.TourGuideService;
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TourGuideControllerTest {
+class LocationControllerTest {
 
-//	@InjectMocks
-//	private TourGuideController tourGuideController;
 	
     @MockBean
     private TourGuideService tourGuideService;
@@ -65,13 +57,10 @@ class TourGuideControllerTest {
 
     private Location attractionLocation;
 
-    private ObjectMapper objectMapper;
 	
 	
     @BeforeEach
     public void setUp() {
-
-        objectMapper = new ObjectMapper();
 
         userLocationDTO = new LocationDTO(33.817595, -117.922008);
 
@@ -83,31 +72,6 @@ class TourGuideControllerTest {
     }
     
 
-	// ##############################################################
-
-    
-    @Test
-    @DisplayName("Check (testIndexPageUrl) "
-    		+ " - Given a request,"
-    		+ " when GET index page URL,"
-    		+ " then return - Status: 200 OK")
-	public void testIndexPageUrl() throws Exception {
-
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-        		.get("/")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String content = result
-        		.getResponse().getContentAsString();
-
-        assertNotNull(content);
-        assertThat(content).contains("Greetings from TourGuide!");
-    }
-    
-    
-    
 	// ##############################################################
 
     @Test
@@ -349,191 +313,6 @@ class TourGuideControllerTest {
 
 
  	// ##############################################################
-
-    @Test
-    @DisplayName("Check (GetTripDeals)"
-    		+ " - Given an username,"
-    		+ " when GET tripDeals,"
-    		+ " then return - Status: 200 OK")
-    public void testGetTripDeals() throws Exception {
-
-    	List<ProviderDTO> providers = Arrays.asList(
-    			new ProviderDTO("testProviderName",
-    					500, UUID.randomUUID()));
-
-        when(tourGuideService
-        		.getUserTripDeals("testUser"))
-        .thenReturn(providers);
-
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-        		.get("/getTripDeals")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("userName", "testUser"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String content = result
-        		.getResponse().getContentAsString();
-
-        assertNotNull(content);
-        assertThat(content).contains("testProviderName");
-        assertThat(content).contains("500");
-        verify(tourGuideService).getUserTripDeals("testUser");
-    }
-
-
-	// ##############################################################
-
-
-    @Test
-    @DisplayName("Check (GetTripDeals) empty username"
-    		+ " - Given an empty username,"
-    		+ " when GET tripDeals,"
-    		+ " then return - Status: BAD_REQUEST")
-	public void testGetTripDealsUrlWithEmptyUserName() throws Exception {
-
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-        		.get("/getTripDeals")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("userName", ""))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-        String content = result
-        		.getResponse().getContentAsString();
-
-        assertNotNull(content);
-        assertThat(content).contains("username is required");
-    }
-
-
-
-	// ##############################################################
-
-
-    @Test
-    @DisplayName("Check (GetTripDeals) null value"
-    		+ " - Given an null value for username,"
-    		+ " when GET tripDeals,"
-    		+ " then return - Status: BAD_REQUEST")
-	public void testGetTripDealsUrlWithNullUserName() throws Exception {
-
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-        		.get("/getTripDeals")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-        String content = result
-        		.getResponse().getContentAsString();
-
-        assertNotNull(content);
-        assertThat(content).contains("userName parameter is missing");
-    }
-
-
-
-	// ##############################################################
-
-
-    @Test
-    @DisplayName("Check (updateUserPreferences)"
-    		+ " - Given an user preference to update,"
-    		+ " when PUT updateUserPreferences,"
-    		+ " then return - Status: 201 OK update done")
-    public void testUpdateUserPreferences() throws Exception {
-
-    	UserPreferencesDTO userPreferencesDTO = new UserPreferencesDTO(999,
-                999, 999, 999, 999, 999, 999);
-
-        when(tourGuideService
-        		.updateUserPreferences(anyString(), any(UserPreferencesDTO.class)))
-        .thenReturn(userPreferencesDTO);
-
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-        		.put("/updateUserPreferences")
-                .contentType(MediaType.APPLICATION_JSON)
-	                .content(objectMapper.writeValueAsString(userPreferencesDTO))
-	                .param("userName", "testUser"))
-			        .andExpect(status().is2xxSuccessful())
-			        .andReturn();
-		
-		String content = result.getResponse().getContentAsString();
-		
-		assertThat(content).contains("999");
-    }
-
-
-
-	// ##############################################################
-
-
-
-    @Test
-    @DisplayName("Check (updateUserPreferences) empty username - "
-    		+ " - Given an user preference to update without username,"
-    		+ " when PUT updateUserPreferences,"
-    		+ " then return - Status: BAD_REQUEST")
-    public void testUpdateUserPreferencesEmptyUserName() throws Exception {
-
-    	UserPreferencesDTO userPreferencesDTO = new UserPreferencesDTO(999,
-                999, 999, 999, 999, 999, 999);
-
-        mockMvc.perform(MockMvcRequestBuilders
-        		.put("/updateUserPreferences")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userPreferencesDTO))
-                .param("userName", ""))
-                .andExpect(status().isBadRequest());
-    }
-
-
-	// ##############################################################
-
-    @Test
-    @DisplayName("Check (updateUserPreferences) empty body"
-    		+ " - Given an user preference to update with no body,"
-    		+ " when PUT updateUserPreferences,"
-    		+ " then return - Status: BAD_REQUEST")
-    public void testUpdateUserPreferencesEmptyBody() throws Exception {
-    
-    	mockMvc.perform(MockMvcRequestBuilders
-        		.put("/updateUserPreferences")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(""))
-                .param("userName", "testUser"))
-                .andExpect(status().isBadRequest());
-    }
-
-
-
-	// ##############################################################
-
-
-    @DisplayName("Check (GetUser) "
-    		+ " - Given a request,"
-    		+ " when GET GetUser,"
-    		+ " then return - Status: 200 OK")
-	@Test
-	public void testGetUser() throws Exception {
-	
-
-       MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-        		.get("/getUser")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("userName", "testUser"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String content = result
-        		.getResponse().getContentAsString();
-
-        assertNotNull(content);
-        
-
-    }
-
-	// ##############################################################
 
         
     }
