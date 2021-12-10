@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import tourGuide.dto.ProviderDTO;
-import tourGuide.service.GpsLocationService;
+import tourGuide.service.TripDealsService;
 
 @DisplayName("UNIT TESTS - Controller - TourGuide")
 @AutoConfigureMockMvc
@@ -37,7 +37,7 @@ class TripDealsControllerTest {
 
 	
     @MockBean
-    private GpsLocationService tourGuideService;
+    private TripDealsService tripDealsService;
 
 //    @Autowired
     private MockMvc mockMvc;
@@ -68,7 +68,7 @@ class TripDealsControllerTest {
     			new ProviderDTO("testProviderName",
     					500, UUID.randomUUID()));
 
-        when(tourGuideService
+        when(tripDealsService
         		.getUserTripDeals("testUser"))
         .thenReturn(providers);
 
@@ -85,7 +85,7 @@ class TripDealsControllerTest {
         assertNotNull(content);
         assertThat(content).contains("testProviderName");
         assertThat(content).contains("500");
-        verify(tourGuideService).getUserTripDeals("testUser");
+        verify(tripDealsService).getUserTripDeals("testUser");
     }
 
 
