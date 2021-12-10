@@ -1,5 +1,6 @@
 package tourGuide.unit.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,6 +14,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import tourGuide.dto.AttractionDTO;
+import tourGuide.dto.UserRewardDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.Attraction;
 import tourGuide.model.Location;
@@ -36,6 +39,7 @@ import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.service.RewardsService;
 import tourGuide.util.AttractionMapper;
 import tourGuide.util.DistanceCalculator;
+import tourGuide.util.UserRewardMapper;
 
 @DisplayName("Unit Test - Service - Rewards")
 @ExtendWith(MockitoExtension.class)
@@ -61,14 +65,24 @@ public class RewardsServiceTest {
     @Mock
     private InternalTestHelper internalTestHelper;
 
+	@Mock
+	private UserRewardMapper userRewardMapper;
+    
+    private static User user1;
 
+    private static Map<String, User> internalUser;
+   
+    private static UserReward userReward;
+
+    private static UserRewardDTO userRewardDTO;
+    
     private static VisitedLocation visitedLocation;
     
     private static Location location, attractionLocation, attractionLocationUserWithNoVisitedAttraction;
 
-    private static Attraction attraction;
 
     private static AttractionDTO attractionDTO;
+    private static UUID user1ID;
 
     User user = new User();
     User userWithNoVisitedAttraction = new User();
@@ -76,14 +90,20 @@ public class RewardsServiceTest {
     
     private static List<AttractionDTO> attractions;
     
+    
+    private static Attraction attraction;
+    
 	// ##############################################################
 
 
 
     @BeforeEach
     public void setUp() {
-    	
+        user1ID = UUID.randomUUID();
 
+        user1 = new User(user1ID, "testUser1", "000", "testUser1@email.com");
+
+        userRewardDTO = new UserRewardDTO(visitedLocation, attraction, 300);
     	user = new User();
     	userWithNoVisitedAttraction = new User();
     	userWithNoVisitedLocation = new User();
@@ -105,7 +125,7 @@ public class RewardsServiceTest {
 
         attractionLocationUserWithNoVisitedAttraction = new Location(
         		-34.817595, -117.922008);
-
+        attraction = new Attraction(UUID.randomUUID(), "Disneyland", "Anaheim", "CA", new Location(33.817595D, -117.922008D));
     }
 
 	// ##############################################################
@@ -496,7 +516,73 @@ public class RewardsServiceTest {
 	// ##############################################################
 
     
-    
+
+
+
+    @DisplayName("Check <testGetUserRewards>"
+    		+ " - Given an User with reward,"
+    		+ " WHEN Requested testGetUserRewards,"
+    		+ " then return user rewards as expected")
+    @Test
+    public void testGetUserRewards() {
+
+    	// GIVEN
+        user1.addUserReward(userReward);
+
+        when(internalTestHelper
+        		.getInternalUserMap())
+        .thenReturn(internalUser);
+        
+        when(userRewardMapper
+        		.toUserRewardDTO(any(UserReward.class)))
+        .thenReturn(userRewardDTO);
+
+
+        // WHEN
+        List<UserRewardDTO> result = rewardsService
+        		.getUserRewards("testUser1");
+
+        // THEN
+        assertNotNull(result);
+        assertThat(result).contains(userRewardDTO);
+        assertThat(result.get(0).getRewardPoints() > 1);
+
+    }
+
+
+
+	// ##############################################################
+
+
+
+    @DisplayName("Check <testGetUserRewards> no rewards"
+    		+ " - Given an User with no reward,"
+    		+ " WHEN Requested testGetUserRewards,"
+    		+ " then return user rewards (empty) as expected")
+    @Test
+    public void testGetUserRewardsWhenNoRewards() {
+
+    	// GIVEN
+        user1.addUserReward(userReward);
+
+        when(internalTestHelper
+        		.getInternalUserMap())
+        .thenReturn(internalUser);
+
+        // WHEN
+        List<UserRewardDTO> result = rewardsService
+        		.getUserRewards("testUser1");
+
+        // THEN
+        assertNotNull(result);
+
+    }
+
+
+
+	// ##############################################################
+
+      
       
 
 }

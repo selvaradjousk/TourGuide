@@ -3,11 +3,7 @@ package tourGuide.unit.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -18,9 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.money.Monetary;
-
-import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,25 +24,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import tourGuide.dto.AttractionDTO;
 import tourGuide.dto.LocationDTO;
-import tourGuide.dto.ProviderDTO;
 import tourGuide.dto.UserAttractionRecommendationDTO;
-import tourGuide.dto.UserPreferencesDTO;
-import tourGuide.dto.UserRewardDTO;
 import tourGuide.dto.VisitedLocationDTO;
-import tourGuide.exception.UserNotFoundException;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.model.Attraction;
 import tourGuide.model.Location;
-import tourGuide.model.Provider;
 import tourGuide.model.User;
-import tourGuide.model.UserPreferences;
-import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
 import tourGuide.proxy.MicroServiceTripDealsProxy;
 import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.proxy.MicroserviceRewardsProxy;
-import tourGuide.service.RewardsService;
 import tourGuide.service.GpsLocationService;
+import tourGuide.service.RewardsService;
 import tourGuide.util.DistanceCalculator;
 import tourGuide.util.LocationMapper;
 import tourGuide.util.ProviderMapper;
@@ -57,12 +42,12 @@ import tourGuide.util.UserPreferencesMapper;
 import tourGuide.util.UserRewardMapper;
 import tourGuide.util.VisitedLocationMapper;
 
-@DisplayName("Unit Test - Service - TourGuide")
+@DisplayName("Unit Test - Service - GpsLocation")
 @ExtendWith(MockitoExtension.class)
-public class TourGuideServiceTest {
+public class GpsLocationServiceTest {
 
     @InjectMocks
-    private GpsLocationService tourGuideService;
+    private GpsLocationService gpsLocationService;
 
     @Mock
     private RewardsService rewardsService;
@@ -113,18 +98,7 @@ public class TourGuideServiceTest {
 
     private static VisitedLocationDTO visitedLocationDTO;
 
-    private static List<User> userList;
-    
-    private static UserReward userReward;
-    
-    private static UserPreferences userPreferences;
-    
-    private static UserPreferencesDTO userPreferencesDTO;
-    
-    private static Attraction attraction;
 
-
-    private static UserRewardDTO userRewardDTO;
 
 
 
@@ -154,31 +128,6 @@ public class TourGuideServiceTest {
         internalUser.put("testUser1", user1);
         internalUser.put("testUser2", user2);
 
-        userList = Arrays.asList(user1, user2);
-        
-        userReward = new UserReward(visitedLocation, attraction, 300);
-        userRewardDTO = new UserRewardDTO(visitedLocation, attraction, 300);
-        
-        
-        attraction = new Attraction(UUID.randomUUID(), "Disneyland", "Anaheim", "CA", new Location(33.817595D, -117.922008D));
-       
-        userPreferences = new UserPreferences(
-          		 10,
-          		 Money.of(500, Monetary.getCurrency("USD")),
-          		 Money.of(1000, Monetary.getCurrency("USD")),
-                   5,
-                   5,
-                   2,
-                   3);
-           
-           userPreferencesDTO = new UserPreferencesDTO(
-          		 10,
-          		 500,
-          		1000,
-                   5,
-                   5,
-                   2,
-                   3);
 
 
     }
@@ -211,7 +160,7 @@ public class TourGuideServiceTest {
     	.thenReturn(expectedLocation);
 
         // WHEN
-        LocationDTO result = tourGuideService
+        LocationDTO result = gpsLocationService
         		.getUserLocation(user1.getUserName());
 
         // THEN
@@ -244,7 +193,7 @@ public class TourGuideServiceTest {
         .thenReturn(expectedLocation);
 
         // WHEN
-        LocationDTO result = tourGuideService
+        LocationDTO result = gpsLocationService
         		.getUserLocation(user1.getUserName());
 
         // THEN
@@ -256,12 +205,6 @@ public class TourGuideServiceTest {
 
 
 	// ##############################################################
-
-    
-
-	// ##############################################################
-
-    
 
     
     
@@ -303,7 +246,7 @@ public class TourGuideServiceTest {
         .thenReturn(user2Location);
 
         // WHEN
-        Map<String, LocationDTO> result = tourGuideService
+        Map<String, LocationDTO> result = gpsLocationService
         		.getAllUserRecentLocation();
 
         // THEN
@@ -339,7 +282,7 @@ public class TourGuideServiceTest {
         .thenReturn(visitedLocation);
 
         // WHEN
-        tourGuideService.trackUserLocation(user1).join();
+        gpsLocationService.trackUserLocation(user1).join();
 
         // THEN
         assertEquals((visitedLocation), user1.getVisitedLocations().get(0));
@@ -434,7 +377,7 @@ public class TourGuideServiceTest {
         lenient().when(rewardsMicroService.getRewardPoints(attraction5.getAttractionId(), userID)).thenReturn(500);
     	
     	// WHEN 
-    	UserAttractionRecommendationDTO result = tourGuideService
+    	UserAttractionRecommendationDTO result = gpsLocationService
     			.getUserAttractionRecommendation(user1.getUserName());
 
     	// THEN
@@ -453,121 +396,7 @@ public class TourGuideServiceTest {
 
 	// ##############################################################
 
-   
-
-
-    @DisplayName("Check <getTripDeals>"
-    		+ " - Given an Username,"
-    		+ " WHEN Requested getTripDeals,"
-    		+ " then return trip deals as expected")
-	@Test
-	public void getTripDeals() {
-
-    	// GIVEN
-        user1.addUserReward(userReward);
-        user1.setUserPreferences(userPreferences);
-        ProviderDTO providerDTO = new ProviderDTO("name", 100, UUID.randomUUID());
-        Provider provider = new Provider("name", 100, UUID.randomUUID());
-
-        when(internalTestHelper
-        		.getInternalUserMap())
-        .thenReturn(internalUser);
-        
-        lenient().when(internalTestHelper
-        		.getTripPricerApiKey())
-        .thenReturn("test-server-api-key");
-        
-        lenient().when(tripDealsMicroservice
-        		.getProviders(anyString(), any(UUID.class), anyInt(), anyInt(), anyInt(), anyInt()))
-        .thenReturn(Arrays.asList(providerDTO));
-        
-        lenient().when(providerMapper
-        		.toProvider(providerDTO))
-        .thenReturn(provider);
-
-         // WHEN
-         List<ProviderDTO> result = tourGuideService
-        		 .getUserTripDeals(user1.getUserName());
-
-         // THEN
-         assertNotNull(result);
-         assertThat(result).isNotEmpty();
-//         assertEquals(4, (result.toArray().toString().length())/7);
-         assertTrue(result.toArray().toString().length() > 1);
-         
-	}
-
-
-
-	// ##############################################################
-
-
-
-
-    @DisplayName("Check <testGetUserRewards>"
-    		+ " - Given an User with reward,"
-    		+ " WHEN Requested testGetUserRewards,"
-    		+ " then return user rewards as expected")
-    @Test
-    public void testGetUserRewards() {
-
-    	// GIVEN
-        user1.addUserReward(userReward);
-
-        when(internalTestHelper
-        		.getInternalUserMap())
-        .thenReturn(internalUser);
-        
-        when(userRewardMapper
-        		.toUserRewardDTO(any(UserReward.class)))
-        .thenReturn(userRewardDTO);
-
-
-        // WHEN
-        List<UserRewardDTO> result = tourGuideService
-        		.getUserRewards("testUser1");
-
-        // THEN
-        assertNotNull(result);
-        assertThat(result).contains(userRewardDTO);
-        assertThat(result.get(0).getRewardPoints() > 1);
-
-    }
-
-
-
-	// ##############################################################
-
-
-
-    @DisplayName("Check <testGetUserRewards> no rewards"
-    		+ " - Given an User with no reward,"
-    		+ " WHEN Requested testGetUserRewards,"
-    		+ " then return user rewards (empty) as expected")
-    @Test
-    public void testGetUserRewardsWhenNoRewards() {
-
-    	// GIVEN
-        user1.addUserReward(userReward);
-
-        when(internalTestHelper
-        		.getInternalUserMap())
-        .thenReturn(internalUser);
-
-        // WHEN
-        List<UserRewardDTO> result = tourGuideService
-        		.getUserRewards("testUser1");
-
-        // THEN
-        assertNotNull(result);
-
-    }
-
-
-
-	// ##############################################################
-
-    
+      
 
 
     @DisplayName("Check <getTotalRewardPointsForUser>"
@@ -659,7 +488,7 @@ public class TourGuideServiceTest {
     	
         
         // WHEN
-        int result = tourGuideService
+        int result = gpsLocationService
         		.getTotalRewardPointsForUser(user1.getUserName());
 
         // THEN
