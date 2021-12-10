@@ -1,5 +1,7 @@
 package tourGuide.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tourGuide.dto.AttractionDTO;
+import tourGuide.dto.UserRewardDTO;
 import tourGuide.model.Location;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
@@ -19,6 +22,7 @@ import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.util.AttractionMapper;
 import tourGuide.util.DistanceCalculator;
+import tourGuide.util.UserRewardMapper;
 /**
  * The Class RewardsService.
  */
@@ -35,7 +39,10 @@ public class RewardsService implements IRewardService {
 	/** The Constant DEFAULT_PROXIMITY_BUFFER. */
 	public static final int DEFAULT_PROXIMITY_BUFFER = 10;
 
-    /** The gps util micro service. */
+    /** The user service. */
+    private final IUserService userService;
+
+	/** The gps util micro service. */
     private final MicroserviceGpsProxy gpsUtilMicroService;
 	
     /** The rewards micro service. */
@@ -43,6 +50,9 @@ public class RewardsService implements IRewardService {
 
     /** The attraction mapper. */
     private final AttractionMapper attractionMapper;
+
+    /** The attraction mapper. */
+    private final UserRewardMapper userRewardMapper;
 
     /** The distance calculator. */
     private final DistanceCalculator distanceCalculator;
@@ -76,16 +86,54 @@ public class RewardsService implements IRewardService {
     public RewardsService(
     		final MicroserviceGpsProxy gpsUtilMicroService,
     		final MicroserviceRewardsProxy rewardsMicroService,
+    		final IUserService userService,
             final AttractionMapper attractionMapper,
+            final UserRewardMapper userRewardMapper,
             final DistanceCalculator distanceCalculator) {
         this.gpsUtilMicroService = gpsUtilMicroService;
         this.rewardsMicroService = rewardsMicroService;
+        this.userService = userService;
         this.attractionMapper = attractionMapper;
+        this.userRewardMapper = userRewardMapper;
         this.distanceCalculator = distanceCalculator;
     }
 
 
+
 // ##############################################################
+
+
+
+		/**
+		 * Gets the user rewards.
+		 *
+		 * @param userName the user name
+		 * @return the user rewards
+		 */
+		@Override
+		public List<UserRewardDTO> getUserRewards(
+				final String userName) {
+		
+			logger.info("## getUserRewards list for"
+					+ " user {} retrieved ", userName );
+		
+		    User user = userService.getUser(userName);
+		
+		
+		    List<UserRewardDTO> userRewards = new ArrayList<>();
+		    user.getUserRewards().stream()
+		            .forEach(reward -> {
+		                userRewards.add(userRewardMapper
+		                		.toUserRewardDTO(reward));
+		            });
+		
+		    return userRewards;
+			
+		}
+		
+		
+		
+		// ##############################################################
 
 
 	/**

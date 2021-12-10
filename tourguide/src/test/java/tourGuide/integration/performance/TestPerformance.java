@@ -23,8 +23,9 @@ import tourGuide.dto.AttractionDTO;
 import tourGuide.model.User;
 import tourGuide.model.VisitedLocation;
 import tourGuide.proxy.MicroserviceGpsProxy;
+import tourGuide.service.GpsLocationService;
 import tourGuide.service.RewardsService;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.UserService;
 
 @ExtendWith(SpringExtension.class)
 //@ExtendWith(SpringExtension.class)
@@ -40,9 +41,13 @@ public class TestPerformance {
 
     @Autowired
     private RewardsService rewardsService;
+    
 
     @Autowired
-    private TourGuideService tourGuideService;
+    private UserService userService;
+
+    @Autowired
+    private GpsLocationService tourGuideService;
 
 
 
@@ -87,7 +92,7 @@ public class TestPerformance {
 		// Users should be incremented up to 100,000, > 15 minutes and test finishes within 15 minutes
 		// ----------------------------------------------------------------------------
 		
-		List<User> allUsers = tourGuideService.getAllUsers();
+		List<User> allUsers = userService.getAllUsers();
 		allUsers.forEach(u -> u.clearVisitedLocations());
 		
 		// ----------------------------------------------------------------------------
@@ -163,7 +168,7 @@ public class TestPerformance {
 
 
         AttractionDTO attraction = gpsUtilMicroService.getAttractions().get(0);
-		List<User> allUsers = tourGuideService.getAllUsers();
+		List<User> allUsers = userService.getAllUsers();
 		
 		
         allUsers.forEach(u -> {

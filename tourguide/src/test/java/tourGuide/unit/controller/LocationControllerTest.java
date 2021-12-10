@@ -32,7 +32,7 @@ import tourGuide.dto.LocationDTO;
 import tourGuide.dto.NearByAttractionDTO;
 import tourGuide.dto.UserAttractionRecommendationDTO;
 import tourGuide.model.Location;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.GpsLocationService;
 
 @DisplayName("UNIT TESTS - Controller - TourGuide")
 //@ExtendWith(MockitoExtension.class)
@@ -43,7 +43,7 @@ class LocationControllerTest {
 
 	
     @MockBean
-    private TourGuideService tourGuideService;
+    private GpsLocationService tourGuideService;
 
 //    @Autowired
     private MockMvc mockMvc;

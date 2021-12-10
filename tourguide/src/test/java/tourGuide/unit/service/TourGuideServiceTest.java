@@ -49,7 +49,7 @@ import tourGuide.proxy.MicroServiceTripDealsProxy;
 import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.service.RewardsService;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.GpsLocationService;
 import tourGuide.util.DistanceCalculator;
 import tourGuide.util.LocationMapper;
 import tourGuide.util.ProviderMapper;
@@ -62,7 +62,7 @@ import tourGuide.util.VisitedLocationMapper;
 public class TourGuideServiceTest {
 
     @InjectMocks
-    private TourGuideService tourGuideService;
+    private GpsLocationService tourGuideService;
 
     @Mock
     private RewardsService rewardsService;

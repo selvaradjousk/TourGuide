@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import tourGuide.service.TourGuideService;
+import tourGuide.service.GpsLocationService;
 
 @DisplayName("UNIT TESTS - Controller - Home")
 @AutoConfigureMockMvc
@@ -30,7 +30,7 @@ class HomeControllerTest {
 
 	
     @MockBean
-    private TourGuideService tourGuideService;
+    private GpsLocationService tourGuideService;
 
 //    @Autowired
     private MockMvc mockMvc;

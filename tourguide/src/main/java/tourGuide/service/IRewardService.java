@@ -1,5 +1,8 @@
 package tourGuide.service;
 
+import java.util.List;
+
+import tourGuide.dto.UserRewardDTO;
 import tourGuide.model.User;
 
 /**
@@ -14,33 +17,12 @@ public interface IRewardService {
 	 */
 	void calculateRewards(User user);
 
-//	/**
-//	 * Checks if is within attraction proximity.
-//	 *
-//	 * @param attraction the attraction
-//	 * @param location the location
-//	 * @return true, if is within attraction proximity
-//	 */
-//	boolean isWithinAttractionProximity(
-//			Attraction attraction,
-//			Location location);
-//
-//	/**
-//	 * Gets the distance.
-//	 *
-//	 * @param loc1 the loc 1
-//	 * @param loc2 the loc 2
-//	 * @return the distance
-//	 */
-//	double getDistance(Location loc1, Location loc2);
-//
-//	/**
-//	 * Gets the reward points.
-//	 *
-//	 * @param attraction the attraction
-//	 * @param user the user
-//	 * @return the reward points
-//	 */
-//	int getRewardPoints(Attraction attraction,	User user);
+	/**
+	 * Gets the user rewards.
+	 *
+	 * @param userName the user name
+	 * @return the user rewards
+	 */
+	List<UserRewardDTO> getUserRewards(String userName);
 
 }

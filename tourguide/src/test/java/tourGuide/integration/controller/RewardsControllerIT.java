@@ -20,7 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import tourGuide.model.User;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.GpsLocationService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
@@ -33,7 +33,7 @@ public class RewardsControllerIT {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private TourGuideService tourGuideService;
+    private GpsLocationService tourGuideService;
 
     @LocalServerPort
     private int port;

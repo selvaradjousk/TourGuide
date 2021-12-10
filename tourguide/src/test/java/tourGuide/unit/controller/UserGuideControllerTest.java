@@ -26,7 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tourGuide.dto.UserPreferencesDTO;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.GpsLocationService;
 
 @DisplayName("UNIT TESTS - Controller - TourGuide")
 //@ExtendWith(MockitoExtension.class)
@@ -39,7 +39,7 @@ class UserGuideControllerTest {
 //	private TourGuideController tourGuideController;
 	
     @MockBean
-    private TourGuideService tourGuideService;
+    private GpsLocationService tourGuideService;
 
 //    @Autowired
     private MockMvc mockMvc;

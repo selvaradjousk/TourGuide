@@ -36,7 +36,7 @@ import tourGuide.model.UserPreferences;
 import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
 import tourGuide.service.RewardsService;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.GpsLocationService;
 
 @DisplayName("IT - Service - TourGuide")
 //@RunWith(SpringRunner.class)
@@ -52,7 +52,7 @@ public class TestTourGuideService {
 	private RewardsService rewardsService;
 
     @Autowired
-    TourGuideService tourGuideService;
+    GpsLocationService tourGuideService;
 
 
 

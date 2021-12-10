@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tourGuide.dto.ProviderDTO;
 import tourGuide.exception.BadRequestException;
-import tourGuide.service.ITourGuideService;
+import tourGuide.service.ITripDealsService;
 
 /**
  * The Class TourGuideController.
@@ -26,9 +26,10 @@ public class TripDealsController {
 			.getLogger(TripDealsController.class);
 
 
-	/** The tour guide service. */
-	@Autowired
-	ITourGuideService tourGuideService;
+
+	private final ITripDealsService tripDealsService;
+
+
 
 
 	// ##############################################################
@@ -39,9 +40,11 @@ public class TripDealsController {
      *
      * @param tourGuideService the tour guide service
      */
+	@Autowired
     public TripDealsController(
-    		final ITourGuideService tourGuideService) {
-        this.tourGuideService = tourGuideService;
+    		final ITripDealsService tripDealsService) {
+
+    	this.tripDealsService = tripDealsService;
     }
 
 
@@ -67,7 +70,7 @@ public class TripDealsController {
         if (userName.length() == 0) {
             throw new BadRequestException("username is required");
         }
-        List<ProviderDTO> userTripDeals = tourGuideService
+        List<ProviderDTO> userTripDeals = tripDealsService
         		.getUserTripDeals(userName);
 
 

@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.exception.BadRequestException;
 import tourGuide.model.User;
-import tourGuide.service.ITourGuideService;
+import tourGuide.service.IGpsLocationService;
+import tourGuide.service.IUserService;
 
 /**
  * The Class TourGuideController.
@@ -32,9 +33,10 @@ public class UserController {
 
 
 	/** The tour guide service. */
-	@Autowired
-	ITourGuideService tourGuideService;
+	IGpsLocationService tourGuideService;
 
+    /** The user service. */
+    private final IUserService userService;
 
 	// ##############################################################
 
@@ -44,9 +46,13 @@ public class UserController {
      *
      * @param tourGuideService the tour guide service
      */
+	@Autowired
     public UserController(
-    		final ITourGuideService tourGuideService) {
-        this.tourGuideService = tourGuideService;
+    		final IGpsLocationService tourGuideService,
+    		IUserService userService) {
+
+    	this.userService = userService;
+		this.tourGuideService = tourGuideService;
     }
 
 
@@ -73,7 +79,7 @@ public class UserController {
         if (userName.length() == 0) {
             throw new BadRequestException("username is required");
         }
-        UserPreferencesDTO userPreferences = tourGuideService
+        UserPreferencesDTO userPreferences = userService
         		.updateUserPreferences(userName, userPreferencesDTO);
 
         return userPreferences;
@@ -99,7 +105,7 @@ public class UserController {
         logger.info("## getUser "
         		+ " for user {} : ", userName);
 
-    	return tourGuideService.getUser(userName);
+    	return userService.getUser(userName);
     }
 
 

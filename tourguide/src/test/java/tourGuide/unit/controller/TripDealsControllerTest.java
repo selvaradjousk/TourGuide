@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import tourGuide.dto.ProviderDTO;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.GpsLocationService;
 
 @DisplayName("UNIT TESTS - Controller - TourGuide")
 @AutoConfigureMockMvc
@@ -37,7 +37,7 @@ class TripDealsControllerTest {
 
 	
     @MockBean
-    private TourGuideService tourGuideService;
+    private GpsLocationService tourGuideService;
 
 //    @Autowired
     private MockMvc mockMvc;

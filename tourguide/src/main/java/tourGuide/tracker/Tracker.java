@@ -9,14 +9,21 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import tourGuide.dto.VisitedLocationDTO;
 import tourGuide.model.User;
-import tourGuide.service.ITourGuideService;
-import tourGuide.service.TourGuideService;
+import tourGuide.proxy.MicroserviceGpsProxy;
+import tourGuide.service.IRewardService;
+import tourGuide.service.IGpsLocationService;
+import tourGuide.service.IUserService;
+import tourGuide.service.GpsLocationService;
+import tourGuide.util.VisitedLocationMapper;
 
 /**
  * The Class Tracker.
  */
+@Component
 public class Tracker extends Thread {
 
 	/** The logger. */
@@ -39,16 +46,29 @@ public class Tracker extends Thread {
 	/** The executor service. */
 //	private final ExecutorService executorService = Executors
 //    		.newFixedThreadPool(1000);
-	private final ExecutorService executorService = Executors
-			.newSingleThreadExecutor();
+//	private final ExecutorService executorService = Executors
+//			.newSingleThreadExecutor();
+	
+
+    /** The executor service. */
+    private final ExecutorService executorService = Executors
+    		.newFixedThreadPool(1000);
 
     /** The tour guide service. */
-    private final ITourGuideService tourGuideService;
+    private final IGpsLocationService tourGuideService;
 
-//    /** The gps util. */
-//    private final GpsUtil gpsUtil;
+    /** The user service. */
+    private final IUserService userService;
+
+    /** The rewards service. */
+    private final IRewardService rewardsService;
+
+    /** The gps util micro service. */
+    private final MicroserviceGpsProxy gpsUtilMicroService;
 
 
+    /** The visited location mapper. */
+    private VisitedLocationMapper visitedLocationMapper;
 
     /** The stop. */
     private boolean stop = false;
@@ -63,8 +83,16 @@ public class Tracker extends Thread {
 	 *
 	 * @param tourGuideService the tour guide service
 	 */
-	public Tracker(final TourGuideService tourGuideService) {
-        this.tourGuideService = tourGuideService;
+	public Tracker(
+			final GpsLocationService tourGuideService,
+			IRewardService rewardsService,
+			MicroserviceGpsProxy gpsUtilMicroService,
+			IUserService userService) {
+
+		this.tourGuideService = tourGuideService;
+		this.userService = userService;
+		this.rewardsService = rewardsService;
+		this.gpsUtilMicroService = gpsUtilMicroService;
     }
 
 	// ##############################################################
@@ -117,7 +145,7 @@ public class Tracker extends Thread {
 	            	break;
 	            }
 
-	            List<User> users = tourGuideService.getAllUsers();
+	            List<User> users = userService.getAllUsers();
 	            logger.info("Begin Tracker. Tracking "
 	            + users.size() + " users.");
 
@@ -159,7 +187,7 @@ public class Tracker extends Thread {
 			List<User> users) {
 
 		CompletableFuture<?>[] futures = users.stream()
-		        .map(tourGuideService::trackUserLocation)
+		        .map(this::trackUserLocation)
 		        .toArray(CompletableFuture[]::new);
 
 		CompletableFuture.allOf(futures).join();
@@ -190,6 +218,36 @@ public class Tracker extends Thread {
 
 
 	// ##############################################################
+
+
+	/**
+	 * Track user location.
+	 *
+	 * @param user the user
+	 * @return the completable future
+	 */
+	public CompletableFuture<?> trackUserLocation(final User user) {
+    	
+//	logger.info("## trackUserLocation() for"
+//			+ " user {} invoked", user.getUserName());
+
+
+        return CompletableFuture.supplyAsync(() -> {
+
+        	VisitedLocationDTO visitedLocation = gpsUtilMicroService
+            		.getUserLocation(user.getUserId());
+
+        	user.addToVisitedLocations(visitedLocationMapper
+        			.toVisitedLocation(visitedLocation));
+
+        	CompletableFuture.runAsync(() -> {
+                rewardsService.calculateRewards(user);
+            });
+
+        	return visitedLocation;
+
+        }, executorService);
+    }
 
 
 }

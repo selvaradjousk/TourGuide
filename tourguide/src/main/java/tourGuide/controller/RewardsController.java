@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import tourGuide.exception.BadRequestException;
-import tourGuide.service.ITourGuideService;
+import tourGuide.service.IGpsLocationService;
 
 /**
  * The Class TourGuideController.
@@ -23,9 +23,13 @@ public class RewardsController {
 			.getLogger(RewardsController.class);
 
 
-	/** The tour guide service. */
+
 	@Autowired
-	ITourGuideService tourGuideService;
+	IGpsLocationService tourGuideService;
+
+	@Autowired
+	IGpsLocationService gpsLocationService;
+
 
 
 	// ##############################################################
@@ -37,7 +41,7 @@ public class RewardsController {
      * @param tourGuideService the tour guide service
      */
     public RewardsController(
-    		final ITourGuideService tourGuideService) {
+    		final IGpsLocationService tourGuideService) {
         this.tourGuideService = tourGuideService;
     }
 
@@ -63,7 +67,7 @@ public class RewardsController {
         if (userName.length() == 0) {
             throw new BadRequestException("username is required");
         }
-        int userRewards = tourGuideService.getTotalRewardPointsForUser(userName);
+        int userRewards = gpsLocationService.getTotalRewardPointsForUser(userName);
 
         logger.info("## getRewards for user rewardPointsTotalValue"
         		+ " {} requested", userRewards);

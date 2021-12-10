@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tourGuide.dto.LocationDTO;
 import tourGuide.dto.UserAttractionRecommendationDTO;
 import tourGuide.exception.BadRequestException;
-import tourGuide.service.ITourGuideService;
+import tourGuide.service.IGpsLocationService;
 
 /**
  * The Class TourGuideController.
@@ -31,7 +31,7 @@ public class LocationController {
 
 	/** The tour guide service. */
 	@Autowired
-	ITourGuideService tourGuideService;
+	IGpsLocationService tourGuideService;
 
 
 	// ##############################################################
@@ -43,7 +43,7 @@ public class LocationController {
      * @param tourGuideService the tour guide service
      */
     public LocationController(
-    		final ITourGuideService tourGuideService) {
+    		final IGpsLocationService tourGuideService) {
         this.tourGuideService = tourGuideService;
     }
 
