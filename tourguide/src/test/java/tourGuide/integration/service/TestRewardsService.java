@@ -1,11 +1,13 @@
 package tourGuide.integration.service;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
@@ -17,12 +19,15 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import tourGuide.dto.AttractionDTO;
+import tourGuide.dto.UserRewardDTO;
+import tourGuide.model.Attraction;
 import tourGuide.model.Location;
 import tourGuide.model.User;
 import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
 import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.service.RewardsService;
+import tourGuide.service.UserService;
 import tourGuide.util.AttractionMapper;
 
 @DisplayName("IT Test - Service - Rewards")
@@ -38,6 +43,9 @@ public class TestRewardsService {
 
     @Autowired
     private MicroserviceGpsProxy gpsUtilMicroService;
+
+    @Autowired
+    private UserService userService;
 
     
     @Autowired
@@ -385,35 +393,72 @@ public class TestRewardsService {
 
 	// ##############################################################
 
-    
-    
-    
-    
+
+
+    @DisplayName("Check <testGetUserRewards>"
+    		+ " - Given an User with reward,"
+    		+ " WHEN Requested testGetUserRewards,"
+    		+ " then return user rewards as expected")
+    @Test
+    public void testGetUserRewards() {
+
+    	// GIVEN
+    	User user = userService.getUser("internalUser1");
+        user.getUserRewards().clear();
+        VisitedLocation visitedLocation = new VisitedLocation(
+        		user.getUserId(),
+        		new Location(30.881866, -115.90065),
+        		new Date());
         
-    
-////	@Ignore // Needs fixed - can throw ConcurrentModificationException
-//	@Test
-//	public void nearAllAttractions() {
-//
-//		// GpsUtil gpsUtil = new GpsUtil();
-//		// RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-////		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
-//
-////		InternalTestHelper.setInternalUserNumber(1);
-//		TourGuideService tourGuideService = new TourGuideService(gpsUtilMicroService, null, null, rewardsService, null, null, null, null, null, null, null, null);
-//		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");	
-//		List<User> users = new ArrayList<>();
-//
-//		users.add(user);
-//		tracker.trackingUsersWithParallelStreaming(users);	
-//
-////		rewardsService.setDefaultProximityBuffer();
-//
-//		List<UserRewardDTO> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0).toString());
-////		tourGuideService.tracker.stopTracking();
-//
-//		assertEquals(gpsUtilMicroService.getAttractions().size(), userRewards.size());
-//	}
+        Attraction attraction = new Attraction(
+        		UUID.randomUUID(),
+        		"Disneyland" ,
+        		"Anaheim" ,
+                "CA",
+                new Location(33.881866, -115.90065));
+        
+        UserReward userReward = new UserReward(
+        		visitedLocation,
+        		attraction,
+        		1000);
+        
+        user.addUserReward(userReward);
+
+        // WHEN
+        List<UserRewardDTO> result = rewardsService
+        		.getUserRewards("internalUser1");
+
+        // THEN
+        assertNotNull(result);
+        assertEquals(1000, result.get(0).getRewardPoints());
+
+    }
+
+
+
+	// ##############################################################
+
+
+
+    @DisplayName("Check <testGetUserRewards> no rewards"
+    		+ " - Given an User with no reward,"
+    		+ " WHEN Requested testGetUserRewards,"
+    		+ " then return user rewards (empty) as expected")
+    @Test
+    public void testGetUserRewardsWhenNoRewards() {
+
+    	// GIVEN
+    	User user = userService.getUser("internalUser2");
+        user.getUserRewards().clear();
+        
+        // WHEN
+        List<UserRewardDTO> result = rewardsService
+        		.getUserRewards("internalUser2");
+
+        // THEN
+        assertNotNull(result);
+        assertThat(result).isEmpty();
+    }
 
 
 
