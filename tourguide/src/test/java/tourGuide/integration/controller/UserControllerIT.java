@@ -20,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import tourGuide.dto.UserPreferencesDTO;
 import tourGuide.model.User;
-import tourGuide.service.GpsLocationService;
+import tourGuide.service.UserService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
@@ -33,7 +33,7 @@ public class UserControllerIT {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private GpsLocationService tourGuideService;
+    private UserService userService;
 
     @LocalServerPort
     private int port;
@@ -63,7 +63,7 @@ public class UserControllerIT {
                 userPreferencesToUpdate,
                 UserPreferencesDTO.class);
 
-        User user = tourGuideService.getUser("internalUser1");
+        User user = userService.getUser("internalUser1");
 
         assertEquals(
         		userPreferencesToUpdate.getAttractionProximity(),
@@ -108,7 +108,7 @@ public class UserControllerIT {
                 userPreferencesToUpdate,
                 UserPreferencesDTO.class);
 
-        User user = tourGuideService.getUser("internalUser1");
+        User user = userService.getUser("internalUser1");
 
         assertNotEquals(
         		userPreferencesToUpdate.getAttractionProximity(),
