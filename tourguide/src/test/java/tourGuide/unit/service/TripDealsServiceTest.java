@@ -41,6 +41,7 @@ import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TripDealsService;
+import tourGuide.service.UserService;
 import tourGuide.util.DistanceCalculator;
 import tourGuide.util.LocationMapper;
 import tourGuide.util.ProviderMapper;
@@ -57,6 +58,9 @@ public class TripDealsServiceTest {
 
     @Mock
     private RewardsService rewardsService;
+    
+    @Mock
+    private UserService userService;
 
     @Mock
     private MicroserviceGpsProxy gpsUtilMicroService;
@@ -170,12 +174,19 @@ public class TripDealsServiceTest {
 	public void getTripDeals() {
 
     	// GIVEN
+
+    	when(userService.getUser(anyString()))
+    	.thenReturn(user1);
+
+    	when(userService.getUser(anyString()))
+    	.thenReturn(user2);
+    	
         user1.addUserReward(userReward);
         user1.setUserPreferences(userPreferences);
         ProviderDTO providerDTO = new ProviderDTO("name", 100, UUID.randomUUID());
         Provider provider = new Provider("name", 100, UUID.randomUUID());
 
-        when(internalTestHelper
+        lenient().when(internalTestHelper
         		.getInternalUserMap())
         .thenReturn(internalUser);
         
