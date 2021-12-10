@@ -70,7 +70,7 @@ class UserGuideControllerTest {
     	UserPreferencesDTO userPreferencesDTO = new UserPreferencesDTO(999,
                 999, 999, 999, 999, 999, 999);
 
-        when(tourGuideService
+        when(userService
         		.updateUserPreferences(anyString(), any(UserPreferencesDTO.class)))
         .thenReturn(userPreferencesDTO);
 
