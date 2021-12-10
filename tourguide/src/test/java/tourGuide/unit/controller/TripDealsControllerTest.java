@@ -29,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import tourGuide.dto.ProviderDTO;
 import tourGuide.service.TripDealsService;
 
-@DisplayName("UNIT TESTS - Controller - TourGuide")
+@DisplayName("UNIT TESTS - Controller - TripDeals")
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

@@ -26,20 +26,18 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tourGuide.dto.UserPreferencesDTO;
-import tourGuide.service.GpsLocationService;
+import tourGuide.service.UserService;
 
-@DisplayName("UNIT TESTS - Controller - TourGuide")
+@DisplayName("UNIT TESTS - Controller - User")
 //@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserGuideControllerTest {
 
-//	@InjectMocks
-//	private TourGuideController tourGuideController;
 	
     @MockBean
-    private GpsLocationService tourGuideService;
+    private UserService userService;
 
 //    @Autowired
     private MockMvc mockMvc;
