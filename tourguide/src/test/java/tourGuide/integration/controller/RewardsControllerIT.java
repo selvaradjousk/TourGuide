@@ -20,7 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import tourGuide.model.User;
-import tourGuide.service.GpsLocationService;
+import tourGuide.service.UserService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
@@ -33,7 +33,7 @@ public class RewardsControllerIT {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private GpsLocationService tourGuideService;
+    private UserService userService;
 
     @LocalServerPort
     private int port;
@@ -189,7 +189,7 @@ public class RewardsControllerIT {
 	@Test
 	public void testGetRewardsUrlWithUserWithoutVisitedLocationHistory() {
 
-        User user = tourGuideService.getUser("internalUser1");
+        User user = userService.getUser("internalUser1");
         user.clearVisitedLocations();
 
 		ResponseEntity<String> response = restTemplate

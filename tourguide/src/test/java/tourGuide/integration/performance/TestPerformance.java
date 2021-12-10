@@ -42,12 +42,11 @@ public class TestPerformance {
     @Autowired
     private RewardsService rewardsService;
     
-
     @Autowired
     private UserService userService;
 
     @Autowired
-    private GpsLocationService tourGuideService;
+    private GpsLocationService gpsLocationService;
 
 
 
@@ -116,7 +115,7 @@ public class TestPerformance {
 		stopWatch.start();
 		
         CompletableFuture<?>[] futures = allUsers.parallelStream()
-                .map(tourGuideService::trackUserLocation)
+                .map(gpsLocationService::trackUserLocation)
                 .toArray(CompletableFuture[]::new);
         CompletableFuture.allOf(futures).join();
 		
