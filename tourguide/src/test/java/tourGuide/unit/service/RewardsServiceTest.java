@@ -518,47 +518,47 @@ public class RewardsServiceTest {
 
 
 
-	// ##############################################################
-
-    
-
-
-
-    @DisplayName("Check <testGetUserRewards>"
-    		+ " - Given an User with reward,"
-    		+ " WHEN Requested testGetUserRewards,"
-    		+ " then return user rewards as expected")
-    @Test
-    public void testGetUserRewards() {
-
-    	// GIVEN
-    	
-
-    	when(userService.getUser(anyString()))
-    	.thenReturn(user1);
-    	
-        user1.addUserReward(userReward);
-
-        lenient().when(internalTestHelper
-        		.getInternalUserMap())
-        .thenReturn(internalUser);
-        
-        lenient().when(userRewardMapper
-        		.toUserRewardDTO(any(UserReward.class)))
-        .thenReturn(userRewardDTO);
-
-
-        // WHEN
-        List<UserRewardDTO> result = rewardsService
-        		.getUserRewards("testUser1");
-
-        // THEN
-        assertNotNull(result);
-        assertThat(result.get(0).getRewardPoints() > 1);
-
-    }
-
-
+//	// ##############################################################
+//
+//    
+//
+//
+//
+//    @DisplayName("Check <testGetUserRewards>"
+//    		+ " - Given an User with reward,"
+//    		+ " WHEN Requested testGetUserRewards,"
+//    		+ " then return user rewards as expected")
+//    @Test
+//    public void testGetUserRewards() {
+//
+//    	// GIVEN
+//    	
+//
+//    	when(userService.getUser(anyString()))
+//    	.thenReturn(user1);
+//    	
+//        user1.addUserReward(userReward);
+//
+//        lenient().when(internalTestHelper
+//        		.getInternalUserMap())
+//        .thenReturn(internalUser);
+//        
+//        lenient().when(userRewardMapper
+//        		.toUserRewardDTO(any(UserReward.class)))
+//        .thenReturn(userRewardDTO);
+//
+//
+//        // WHEN
+//        List<UserRewardDTO> result = rewardsService
+//        		.getUserRewards("testUser1");
+//
+//        // THEN
+//        assertNotNull(result);
+//        assertThat(result.get(0).getRewardPoints() > 1);
+//
+//    }
+//
+//
 
 	// ##############################################################
 
