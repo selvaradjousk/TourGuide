@@ -35,8 +35,10 @@ import tourGuide.model.User;
 import tourGuide.model.UserPreferences;
 import tourGuide.model.UserReward;
 import tourGuide.model.VisitedLocation;
-import tourGuide.service.RewardsService;
 import tourGuide.service.GpsLocationService;
+import tourGuide.service.RewardsService;
+import tourGuide.service.TripDealsService;
+import tourGuide.service.UserService;
 
 @DisplayName("IT - Service - TourGuide")
 //@RunWith(SpringRunner.class)
@@ -49,11 +51,14 @@ public class TestTourGuideService {
 //	private GpsUtil gpsUtil;
 
 	@Autowired
-	private RewardsService rewardsService;
+	private GpsLocationService gpsLocationService;
 
     @Autowired
-    GpsLocationService tourGuideService;
+    UserService userService;
 
+    @Autowired
+    RewardsService rewardService;   
+ 
 
 
 	// ##############################################################
@@ -70,11 +75,11 @@ public class TestTourGuideService {
 		Locale.setDefault(Locale.US);
 
     	// GIVEN
-        User user = tourGuideService
+        User user = userService
         		.getUser("internalUser1");
 
         // WHEN
-        LocationDTO result = tourGuideService
+        LocationDTO result = gpsLocationService
         		.getUserLocation("internalUser1");
 
         // THEN
@@ -97,7 +102,7 @@ public class TestTourGuideService {
     public void testUserLocationWithVisitedLocation() {
 
     	// GIVEN
-    	User user = tourGuideService.getUser("internalUser1");
+    	User user = userService.getUser("internalUser1");
 
     	Location location = new Location(33.881866, -115.90065);
 
@@ -111,7 +116,7 @@ public class TestTourGuideService {
     	user.addToVisitedLocations(visitedLocation);
 
     	// WHEN
-        LocationDTO result = tourGuideService
+        LocationDTO result = gpsLocationService
         		.getUserLocation("internalUser1");
 
         // THEN
@@ -138,10 +143,10 @@ public class TestTourGuideService {
      			"testUser@email.com");
 
     	// WHEN
-    	tourGuideService.addUser(user);
+     	userService.addUser(user);
 
     	// THEN
-        assertThat(tourGuideService.getAllUsers()).contains(user);
+        assertThat(userService.getAllUsers()).contains(user);
     }
 
 
@@ -160,7 +165,7 @@ public class TestTourGuideService {
  
         // THEN  <== WHEN
         assertThrows(DataAlreadyRegisteredException.class, ()
-        		-> tourGuideService.addUser(user));
+        		-> userService.addUser(user));
     }
     
 
@@ -176,7 +181,7 @@ public class TestTourGuideService {
     public void testGetAllUsers() {
 
     	// WHEN
-    	List<User> users = tourGuideService
+    	List<User> users = userService
     			.getAllUsers();
 
     	// THEN
@@ -198,7 +203,7 @@ public class TestTourGuideService {
     public void testGetUser() {
 
     	// GIVEN // WHEN
-    	User user = tourGuideService
+    	User user = userService
     			.getUser("internalUser1");
 
     	// THEN
@@ -220,7 +225,7 @@ public class TestTourGuideService {
         
         // THEN  <== WHEN
         assertThrows(UserNotFoundException.class, ()
-        		-> tourGuideService
+        		-> userService
         		.getUser("testUserDoesNotExist"));
         
     }
@@ -239,10 +244,10 @@ public class TestTourGuideService {
 	public void testGetAllUsersCurrentLocations() {
 
 		// GIVEN
-        List<User> users = tourGuideService.getAllUsers();
+        List<User> users = userService.getAllUsers();
 
         // WHEN
-        Map<String, LocationDTO> result = tourGuideService
+        Map<String, LocationDTO> result = gpsLocationService
         		.getAllUserRecentLocation();
 
         // THEN
@@ -275,7 +280,7 @@ public class TestTourGuideService {
         		"testUser@email.com");
 
         // WHEN
-        tourGuideService.trackUserLocation(user).join();
+        gpsLocationService.trackUserLocation(user).join();
 
         // THEN
         assertEquals(1, user.getVisitedLocations().size());
@@ -294,7 +299,7 @@ public class TestTourGuideService {
     public void testGetUserAttractionRecommendation() {
 
     	// WHEN <== // GIVEN
-    	UserAttractionRecommendationDTO result = tourGuideService
+    	UserAttractionRecommendationDTO result = gpsLocationService
     			.getUserAttractionRecommendation("internalUser1");
 
     	// THEN
@@ -303,38 +308,6 @@ public class TestTourGuideService {
     }
 
 
-
-
-	// ##############################################################
-
-
-    @DisplayName("Check <getTripDeals>"
-    		+ " - Given an Username,"
-    		+ " WHEN Requested getTripDeals,"
-    		+ " then return trip deals as expected")
-	@Test
-	public void getTripDeals() {
-
-    	// GIVEN
-    	User user = tourGuideService.getUser("internalUser1");
-        user.setUserPreferences(new UserPreferences(
-        		 10,
-        		 Money.of(500, Monetary.getCurrency("USD")),
-        		 Money.of(1000, Monetary.getCurrency("USD")),
-                 5,
-                 5,
-                 2,
-                 3));
-
-         // WHEN
-         List<ProviderDTO> result = tourGuideService
-        		 .getUserTripDeals("internalUser1");
-
-         // THEN
-         assertNotNull(result);
-         assertThat(result).isNotEmpty();
-         assertEquals(5, result.size());
-	}
 
 
 
@@ -360,7 +333,7 @@ public class TestTourGuideService {
                 3);
 
         // WHEN
-        UserPreferencesDTO result = tourGuideService
+        UserPreferencesDTO result = userService
         		.updateUserPreferences("internalUser1", userPreferences);
 
         // THEN
@@ -383,7 +356,7 @@ public class TestTourGuideService {
     public void testGetUserRewards() {
 
     	// GIVEN
-    	User user = tourGuideService.getUser("internalUser1");
+    	User user = userService.getUser("internalUser1");
         user.getUserRewards().clear();
         VisitedLocation visitedLocation = new VisitedLocation(
         		user.getUserId(),
@@ -405,7 +378,7 @@ public class TestTourGuideService {
         user.addUserReward(userReward);
 
         // WHEN
-        List<UserRewardDTO> result = tourGuideService
+        List<UserRewardDTO> result = rewardService
         		.getUserRewards("internalUser1");
 
         // THEN
@@ -428,11 +401,11 @@ public class TestTourGuideService {
     public void testGetUserRewardsWhenNoRewards() {
 
     	// GIVEN
-    	User user = tourGuideService.getUser("internalUser2");
+    	User user = userService.getUser("internalUser2");
         user.getUserRewards().clear();
         
         // WHEN
-        List<UserRewardDTO> result = tourGuideService
+        List<UserRewardDTO> result = rewardService
         		.getUserRewards("internalUser2");
 
         // THEN
@@ -456,7 +429,7 @@ public class TestTourGuideService {
 
         
     	// WHEN <== // GIVEN
-        int result = tourGuideService
+        int result = gpsLocationService
         		.getTotalRewardPointsForUser("internalUser1");
 
         // THEN
