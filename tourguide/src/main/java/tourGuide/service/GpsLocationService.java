@@ -33,7 +33,6 @@ import tourGuide.proxy.MicroserviceRewardsProxy;
 import tourGuide.tracker.Tracker;
 import tourGuide.util.DistanceCalculator;
 import tourGuide.util.LocationMapper;
-import tourGuide.util.UserRewardMapper;
 import tourGuide.util.VisitedLocationMapper;
 
 

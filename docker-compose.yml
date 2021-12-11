@@ -9,10 +9,6 @@ services:
       - "9090:9090"
     networks:
       - web-server-bridge
-    depends_on:
-      - gps-microservice
-      - rewards-microservice
-      - tripdeals-microservice
     build:
       context: tourGuide
       dockerfile: Dockerfile
@@ -36,6 +32,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "9092:9092"
+    depends_on:
+      - gps-microservice
     networks:
       - web-server-bridge
 
