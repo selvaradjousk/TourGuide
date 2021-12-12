@@ -23,10 +23,6 @@ public class RewardsController {
 			.getLogger(RewardsController.class);
 
 
-
-	@Autowired
-	IGpsLocationService tourGuideService;
-
 	@Autowired
 	IGpsLocationService gpsLocationService;
 
@@ -41,8 +37,8 @@ public class RewardsController {
      * @param tourGuideService the tour guide service
      */
     public RewardsController(
-    		final IGpsLocationService tourGuideService) {
-        this.tourGuideService = tourGuideService;
+    		final IGpsLocationService gpsLocationService) {
+        this.gpsLocationService = gpsLocationService;
     }
 
 

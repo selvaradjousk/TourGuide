@@ -31,7 +31,7 @@ public class LocationController {
 
 	/** The tour guide service. */
 	@Autowired
-	IGpsLocationService tourGuideService;
+	IGpsLocationService gpsLocationService;
 
 
 	// ##############################################################
@@ -43,8 +43,8 @@ public class LocationController {
      * @param tourGuideService the tour guide service
      */
     public LocationController(
-    		final IGpsLocationService tourGuideService) {
-        this.tourGuideService = tourGuideService;
+    		final IGpsLocationService gpsLocationService) {
+        this.gpsLocationService = gpsLocationService;
     }
 
 
@@ -74,7 +74,7 @@ public class LocationController {
         if (userName.length() == 0) {
             throw new BadRequestException("username is required");
         }
-        LocationDTO userLocation = tourGuideService.getUserLocation(userName);
+        LocationDTO userLocation = gpsLocationService.getUserLocation(userName);
 
       logger.info("## visitedLocation {} "
 		+ " for user {} : ", userLocation, userName);
@@ -107,7 +107,7 @@ public class LocationController {
         if (userName.length() == 0) {
             throw new BadRequestException("username is required");
         }
-        UserAttractionRecommendationDTO nearByAttractions = tourGuideService
+        UserAttractionRecommendationDTO nearByAttractions = gpsLocationService
         		.getUserAttractionRecommendation(userName);
         
         return nearByAttractions;
@@ -133,7 +133,7 @@ public class LocationController {
 
         logger.info("## getAllCurrentLocations requested");
 
-        Map<String, LocationDTO> usersRecentLocation = tourGuideService
+        Map<String, LocationDTO> usersRecentLocation = gpsLocationService
         		.getAllUserRecentLocation();
         
         return usersRecentLocation;

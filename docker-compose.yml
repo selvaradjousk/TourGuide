@@ -7,11 +7,19 @@ services:
     container_name: tourguide
     ports:
       - "9090:9090"
-    networks:
-      - web-server-bridge
     build:
       context: tourGuide
       dockerfile: Dockerfile
+    depends_on:
+      - gps-microservice
+      - rewards-microservice
+      - tripdeals-microservice
+    links:
+      - gps-microservice
+      - rewards-microservice
+      - tripdeals-microservice
+    networks:
+      - web-server-bridge
 
   gps-microservice:
     image: gps-microservice

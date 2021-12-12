@@ -161,7 +161,7 @@ public class GpsLocationService implements IGpsLocationService {
 
         if (!isPerformanceTest) {
         	
-            this.tracker = new Tracker(this, rewardsService, gpsUtilMicroService, userService);
+            this.tracker = new Tracker(rewardsService, gpsUtilMicroService, userService);
     
     		logger.info("## Tracker instance initiated");
     

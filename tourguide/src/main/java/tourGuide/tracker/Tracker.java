@@ -15,9 +15,7 @@ import tourGuide.dto.VisitedLocationDTO;
 import tourGuide.model.User;
 import tourGuide.proxy.MicroserviceGpsProxy;
 import tourGuide.service.IRewardService;
-import tourGuide.service.IGpsLocationService;
 import tourGuide.service.IUserService;
-import tourGuide.service.GpsLocationService;
 import tourGuide.util.VisitedLocationMapper;
 
 /**
@@ -43,7 +41,6 @@ public class Tracker extends Thread {
 
 	// Concurrency JDK API interface that simplifies running tasks
 	//  in asynchronous mode as threads
-	/** The executor service. */
 //	private final ExecutorService executorService = Executors
 //    		.newFixedThreadPool(1000);
 //	private final ExecutorService executorService = Executors
@@ -53,9 +50,6 @@ public class Tracker extends Thread {
     /** The executor service. */
     private final ExecutorService executorService = Executors
     		.newFixedThreadPool(1000);
-
-    /** The tour guide service. */
-    private final IGpsLocationService tourGuideService;
 
     /** The user service. */
     private final IUserService userService;
@@ -84,12 +78,10 @@ public class Tracker extends Thread {
 	 * @param tourGuideService the tour guide service
 	 */
 	public Tracker(
-			final GpsLocationService tourGuideService,
 			IRewardService rewardsService,
 			MicroserviceGpsProxy gpsUtilMicroService,
 			IUserService userService) {
 
-		this.tourGuideService = tourGuideService;
 		this.userService = userService;
 		this.rewardsService = rewardsService;
 		this.gpsUtilMicroService = gpsUtilMicroService;
