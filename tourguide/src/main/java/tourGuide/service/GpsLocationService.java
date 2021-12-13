@@ -167,6 +167,9 @@ public class GpsLocationService implements IGpsLocationService {
     
             tracker.startTracking();
         }
+
+        addShutDownHook();        
+        
     }
 
 
@@ -210,7 +213,7 @@ public class GpsLocationService implements IGpsLocationService {
 	public Map<String, LocationDTO> getAllUserRecentLocation() {
 
         return userService.getAllUsers()
-        		.stream()
+        		.parallelStream()
         		.collect(
         				Collectors.toMap(
         						u -> u.getUserId().toString(),
@@ -527,5 +530,19 @@ public class GpsLocationService implements IGpsLocationService {
 
 	// ##############################################################
 
+	    /**
+	     * stop users tracking service
+	     */
+	    private void addShutDownHook() {
+	        Runtime.getRuntime().addShutdownHook(new Thread() {
+	            public void run() {
+	                tracker.stopTracking();
+	            }
+	        });
+	    }
+
+
+
+		// ##############################################################
 
 }

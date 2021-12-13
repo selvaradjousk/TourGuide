@@ -2,25 +2,6 @@ version: '3.8'
 
 services:
 
-  tourguide:
-    image: tourguide
-    container_name: tourguide
-    ports:
-      - "9090:9090"
-    build:
-      context: tourGuide
-      dockerfile: Dockerfile
-    depends_on:
-      - gps-microservice
-      - rewards-microservice
-      - tripdeals-microservice
-    links:
-      - gps-microservice
-      - rewards-microservice
-      - tripdeals-microservice
-    networks:
-      - web-server-bridge
-
   gps-microservice:
     image: gps-microservice
     container_name: gps-microservice
@@ -31,6 +12,7 @@ services:
       - "9091:9091"
     networks:
       - web-server-bridge
+    restart: always
 
   rewards-microservice:
     image: rewards-microservice
@@ -44,6 +26,7 @@ services:
       - gps-microservice
     networks:
       - web-server-bridge
+    restart: always
 
   tripdeals-microservice:
     image: tripdeals-microservice
@@ -55,6 +38,29 @@ services:
       - "9093:9093"
     networks:
       - web-server-bridge
+    restart: always
+
+  tourguide:
+    environment:
+      - CLIENT_GPS_BASE_URL=http://gps-microservice:9091/gps
+      - CLIENT_REWARDS_BASE_URL=http://rewards-microservice:9092/rewards
+      - CLIENT_TRIPDEALS_BASE_URL=http://tripdeals-microservice:9093/tripDeals
+    image: tourguide
+    container_name: tourguide
+    ports:
+      - "9090:9090"
+    build:
+      context: tourGuide
+      dockerfile: Dockerfile
+    depends_on:
+      - gps-microservice
+      - rewards-microservice
+      - tripdeals-microservice
+    networks:
+      - web-server-bridge
+    restart: always
+    # restart: unless-stopped
+    # stdin_open: true
 
 networks:
   web-server-bridge:

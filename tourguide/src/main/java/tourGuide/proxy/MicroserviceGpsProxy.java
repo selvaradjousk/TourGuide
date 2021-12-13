@@ -14,7 +14,9 @@ import tourGuide.dto.VisitedLocationDTO;
 /**
  * The Interface MicroserviceGpsProxy.
  */
-@FeignClient(value = "gps-microservice", url = "localhost:9091/gps")
+
+//@FeignClient(value = "gps-microservice", url = "localhost:9091/gps") // this URL FeignClient is for host run (eclipse or gradle commandline)
+@FeignClient(value = "gps-microservice", url = "${CLIENT_GPS_BASE_URL:http://localhost:9091/gps}") // this URL FeignClient is for docker
 public interface MicroserviceGpsProxy {
 
 

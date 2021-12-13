@@ -35,21 +35,15 @@ public class Tracker extends Thread {
 	// JDK API interface that simplifies running tasks in asynchronous mode
 	// automatically provides a pool of threads
 	// and an API for assigning tasks to it
-//	private final ExecutorService executorService
-//						= Executors.newSingleThreadExecutor();
-
-
+	
 	// Concurrency JDK API interface that simplifies running tasks
 	//  in asynchronous mode as threads
+    /** The executor service. */
+	private final ExecutorService executorService = Executors
+									.newSingleThreadExecutor();
 //	private final ExecutorService executorService = Executors
 //    		.newFixedThreadPool(1000);
-//	private final ExecutorService executorService = Executors
-//			.newSingleThreadExecutor();
-	
 
-    /** The executor service. */
-    private final ExecutorService executorService = Executors
-    		.newFixedThreadPool(1000);
 
     /** The user service. */
     private final IUserService userService;
@@ -142,8 +136,9 @@ public class Tracker extends Thread {
 	            + users.size() + " users.");
 
 	            stopWatch.start();
-	            CompletableFuture<?>[] futures = trackingUsersWithSequentialStreaming(
-	            		users);
+//	            CompletableFuture<?>[] futures = trackingUsersWithSequentialStreaming(
+//	            		users);
+	            trackingUsersWithSequentialStreaming(users);
 	            stopWatch.stop();
 
 	            logger.info("Finished tracking users, tracker Time Elapsed: "

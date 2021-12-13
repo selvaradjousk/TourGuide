@@ -13,7 +13,8 @@ import tourGuide.dto.ProviderDTO;
 /**
  * The Interface MicroServiceTripDealsProxy.
  */
-@FeignClient(value = "tripdeals-microservice", url = "localhost:9093/tripDeals")
+//@FeignClient(value = "tripdeals-microservice", url = "localhost:9093/tripDeals") // this URL FeignClient is for host run (eclipse or gradle commandline)
+@FeignClient(value = "tripdeals-microservice", url = "${CLIENT_TRIPDEALS_BASE_URL:http://localhost:9093/tripDeals}") // this URL FeignClient is for docker
 public interface MicroServiceTripDealsProxy {
 
 

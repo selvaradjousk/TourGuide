@@ -159,8 +159,11 @@ public class UserService implements IUserService {
     		final UserPreferencesDTO userPreferencesDTO) {
 
 
-
         User user = getUser(userName);
+		
+//        User user = internalTestHelper
+//        		.getInternalUserMap()
+//        		.get(userName);
 
 
         UserPreferences userPreferences = user

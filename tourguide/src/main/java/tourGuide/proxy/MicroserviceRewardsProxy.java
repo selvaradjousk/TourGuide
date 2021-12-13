@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 /**
  * The Interface MicroserviceRewardsProxy.
  */
-@FeignClient(value = "rewards-microservice", url = "localhost:9092/rewards")
+//@FeignClient(value = "rewards-microservice", url = "localhost:9092/rewards") // this URL FeignClient is for host run (eclipse or gradle commandline)
+@FeignClient(value = "rewards-microservice", url = "${CLIENT_REWARDS_BASE_URL:http://localhost:9092/rewards}") // this URL FeignClient is for docker
 public interface MicroserviceRewardsProxy {
 
 
