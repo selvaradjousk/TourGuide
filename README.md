@@ -44,22 +44,26 @@ TourGuide application is composed of 4 microservices:
 <a href="#"><img width="98%" src="tourguide/asserts/reporting/mcd_microservice_rewards.PNG" alt="TOURGUIDE IMAGE"></a><br>
 <a href="#"><img width="98%" src="tourguide/asserts/reporting/mcd_microservice_tripdeals.PNG" alt="TOURGUIDE IMAGE"></a><br>
 
- // TODO - documentation under progress
 
 ## Application Run configuration
 
 Gradle 
 ```
-gradle bootRun
+gradle bootRun or ./gradle bootRun
 ```
-## Docker deploiement
+```
+gradle bootWar or ./gradle bootWar or ./gradle bootJar
+```
 
-- **Dockerfile** 
- // TODO - documentation under progress
+## Docker
 
-## Endpoints
+Use the **Dockerfile** on the package root containing 4 services:
+- `docker build . -f Dockerfile -t imageNameToBeCreated`
+- `docker run -d -p HostPort:InternalPort --name dockerContainerNameToBeCreated -d DockerImageName`
 
- // TODO - documentation under progress
+To deploy all TourGuide microservices, use the **docker-compose.yml** on the package root containing all 4 services as configured together
+
+- `docker-compose up -d`
 
 
 ## Testing
@@ -67,20 +71,24 @@ gradle bootRun
 Gradle, Junit (Unit & Integration Tests). <br/>
  
 
+
+
+
 ## Reporting
 
- - FinishLine. <br/>
+ ### FinishLine. <br/>
 
  <a href="#"><img width="98%" src="tourguide/asserts/reporting/gradle_build_report_20211205_01.PNG" alt="TOURGUIDE IMAGE"></a><br>
  <a href="#"><img width="98%" src="tourguide/asserts/reporting/jacoco_20211205_01.PNG" alt="TOURGUIDE IMAGE"></a><br>
  <a href="#"><img width="98%" src="tourguide/asserts/reporting/Junit_test_20211205.PNG" alt="TOURGUIDE IMAGE"></a><br>
  
- Gradle tests - StartLine. <br/>
+ ### Gradle tests - StartLine. <br/>
  <a href="#"><img width="98%" src="tourguide/asserts/reporting/gradle_build_report_20211113_01.PNG" alt="TOURGUIDE IMAGE"></a><br>
  
- // TODO - documentation under progress
 
-## Metrics
+
+
+# Metrics
 TestPerformanceon highVolume User Tracking & User Rewards Computations are performed & available.
 
 <a href="#"><img width="98%" src="tourguide/asserts/reporting/Performance_Location_graph_20211207.PNG" alt="Performance report on User Location"></a><br>
@@ -88,8 +96,41 @@ TestPerformanceon highVolume User Tracking & User Rewards Computations are perfo
 <a href="#"><img width="98%" src="tourguide/asserts/reporting/Performance_synopsis_20211207-100000_users.PNG" alt="Performance report on User Location"></a><br>
 <a href="#"><img width="98%" src="tourguide/asserts/reporting/Performance_unit_tests_20211207_100000_users.PNG" alt="Performance report on User Location"></a><br>
 
- // TODO - documentation under progress
+ ## API (Endpoints) documentation 
 
-## Author
+[POSTMAN - TOURGUIDE APIs](https://documenter.getpostman.com/view/16200863/UVR5sV8W){:target="_blank" rel="noopener"}<br>
 
-**@senthil**
+
+
+
+### Authors
+Mentee:  🡆   @Senthil<br>
+Mentor:  🡆   Clément SEZETTRE
+
+### versions
+Version:  🡆 1.0
+
+### License
+@OpenClassrooms & @TourGuide
+
+
+
+Reference Documentation
+===
+For further reference, consider the following sections:
+
+
+* [Spring Web](https://docs.spring.io/spring-boot/docs/2.5.4/reference/htmlsingle/#boot-features-developing-web-applications)
+* [STAN DOCUMENTATION WHITE PAPER](http://stan4j.com/papers/stan-whitepaper.pdf) 
+
+
+Reference Guides
+===
+The following guides illustrate how to use some features concretely:
+
+* [Building a RESTful Web Service with Spring Boot Actuator](https://spring.io/guides/gs/actuator-service/)
+* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
+* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
+* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
+* [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
+* [STAN Structure Analysis for Java](http://stan4j.com/)
