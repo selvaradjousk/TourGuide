@@ -168,7 +168,7 @@ public class GpsLocationService implements IGpsLocationService {
             tracker.startTracking();
         }
 
-        addShutDownHook();        
+//        addShutDownHook();        
         
     }
 
@@ -530,16 +530,16 @@ public class GpsLocationService implements IGpsLocationService {
 
 	// ##############################################################
 
-	    /**
-	     * stop users tracking service
-	     */
-	    private void addShutDownHook() {
-	        Runtime.getRuntime().addShutdownHook(new Thread() {
-	            public void run() {
-	                tracker.stopTracking();
-	            }
-	        });
-	    }
+//	    /**
+//	     * stop users tracking service
+//	     */
+//	    private void addShutDownHook() {
+//	        Runtime.getRuntime().addShutdownHook(new Thread() {
+//	            public void run() {
+//	                tracker.stopTracking();
+//	            }
+//	        });
+//	    }
 
 
 
