@@ -6,6 +6,7 @@ HELP.md
 target
 *target*
 bin/
+**/target
 
 ##############################
 ## Personal log folder
@@ -14,11 +15,11 @@ bin/
 #/info/
 logs/
 /logs/
-
+**/logs/
 ##############################
 # Gradle of project
 ##############################
-.gradle
+**/.gradle
 /build/
 **/build/
 !src/**/build/
@@ -31,32 +32,32 @@ logs/
 ##############################
 # Package Files #
 ##############################
-*.jar
+#*.jar
 *.war
 *.ear
 
 ##############################
 # Eclipse specific git ignore #
 ##############################
-.project
-.metadata
-.project
-.metadata
-bin/**
-tmp/**
-tmp/**/*
+**/.project
+**/.metadata
+**/.project
+**/.metadata
+**/bin/**
+**/tmp/**
+**/tmp/**/*
 *.tmp
 *.bak
 *.swp
 *~.nib
-local.properties
-.classpath
-.settings/
-.loadpath
+**/local.properties
+**/.classpath
+**/.settings/
+**/.loadpath
 # Locally stored "Eclipse launch configurations"
 *.launch
 # External tool builders
-.externalToolBuilders/
+**/.externalToolBuilders/
 
 ##############################
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
@@ -83,11 +84,11 @@ gradle-app.setting
 ##############################
 ### STS ###
 ##############################
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
+**/.apt_generated
+**/.classpath
+**/.factorypath
+**/.project
+**/.settings
 .springBeans
 .sts4-cache
 .apt_generated
@@ -96,7 +97,7 @@ gradle-app.setting
 ##############################
 ### IntelliJ IDEA ###
 ##############################
-.idea
+**/.idea
 *.iws
 *.iml
 *.ipr
